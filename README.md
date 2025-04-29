@@ -18,7 +18,7 @@ Bootstrap v4.6.1
 JQuery v3.6.0
 ### 套件
 1. [Fontawesome 5](https://fontawesome.com/v5/search?ic=free)
-2. [CK Editor 5](https://ckeditor.com/docs/ckeditor5/latest/index.html)
+2. [parsley 前端驗證](https://parsleyjs.org)
 
 ## 後台
 使用 [AdminLTE 3.2](https://adminlte.io/docs/3.2/) 模板
