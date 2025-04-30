@@ -45,6 +45,8 @@ class LoginController extends Controller
             ]);
             adminLog('登入成功', $admin);
             return redirect()->intended(route('admin.dashboard'));
+        }else{
+            adminLog('登入失敗', $credentials);
         }
 
         return back()->withErrors([
@@ -54,9 +56,11 @@ class LoginController extends Controller
 
     public function logout()
     {
+        $admin = Auth::guard('admin')->user();
         Auth::guard('admin')->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+        adminLog('登出成功', $admin);
         return redirect()->route('login');
     }
 }

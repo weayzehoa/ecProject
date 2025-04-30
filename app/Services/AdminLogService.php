@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\AdminLogRepository;
 use Illuminate\Support\Facades\DB;
+use App\Models\AdminLog as AdminLogDB;
 
 class AdminLogService
 {
@@ -77,7 +78,7 @@ class AdminLogService
         }
 
         // 3. 用 Model::create() 寫入
-        $log = AdminLog::create([
+        $log = AdminLogDB::create([
             'admin_id'    => auth('admin')->id(),
             'action'      => $action,
             'description' => $desc,       // 已是 JSON 字串或原生字串
