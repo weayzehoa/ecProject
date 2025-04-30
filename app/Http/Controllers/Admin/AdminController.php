@@ -64,17 +64,7 @@ class AdminController extends Controller
     public function show(string $id)
     {
         $admin = $this->adminService->show($id);
-        $powerActions = config('powerActions');
-        $powerActions = array_map(function($item) {
-            return (object) $item;
-        }, $powerActions);
-        return view('admin.admins.show', ['menuCode' => $this->menuCode, 'roles' => $this->roles, 'powerActions' => $powerActions, 'admin' => $admin]);
-    }
-
-    public function edit(string $id)
-    {
-        $item = $this->adminService->show($id);
-        return view('admin.edit', compact('item')); // 自行調整 view
+        return view('admin.admins.show', ['menuCode' => $this->menuCode, 'roles' => $this->roles, 'admin' => $admin]);
     }
 
     public function update(AdminUpdateRequest $request, string $id)
@@ -90,9 +80,7 @@ class AdminController extends Controller
         $this->adminService->delete($id);
         return redirect()->back();
     }
-    /*
-        啟用或禁用該帳號
-     */
+
     public function active(Request $request)
     {
         isset($request->is_on) ? $is_on = $request->is_on : $is_on = 0;

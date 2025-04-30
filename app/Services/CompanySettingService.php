@@ -13,15 +13,11 @@ class CompanySettingService
         $this->companySettingRepository = $companySettingRepository;
     }
 
-    public function get($where = [])
-    {
-        return $this->companySettingRepository->get($where);
-    }
-
     public function show($id)
     {
         return $this->companySettingRepository->first($id);
     }
+
     public function update($id, array $data)
     {
         return $this->companySettingRepository->update($id, $data);

@@ -164,7 +164,6 @@ class MakeCrud extends Command
         PHP;
     }
 
-
     private function repositoryTemplate(string $class): string
     {
         return <<<PHP
@@ -173,26 +172,19 @@ class MakeCrud extends Command
         namespace App\Repositories;
 
         use App\Models\\$class;
+        use App\Traits\LoggableRepository;
 
         class {$class}Repository
         {
+            use LoggableRepository;
+
             protected \$model;
 
-            public function __construct({$class} \$model)
+            public function __construct($class \$model)
             {
                 \$this->model = \$model;
             }
 
-            /**
-             * 取得資料（可條件搜尋、模糊搜尋、排序、分頁、關聯載入）
-             *
-             * @param  array       \$where     精確條件，例如 ['is_active' => 1]
-             * @param  array       \$search    模糊搜尋，例如 ['name' => '股份']
-             * @param  array       \$with      預載入關聯，例如 ['company', 'users.roles']
-             * @param  array       \$orderBy   多欄排序，例如 [['created_at', 'desc'], ['id', 'asc']]
-             * @param  int|null    \$perPage   每頁筆數，若為 null 則不分頁
-             * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
-             */
             public function get(
                 array \$where = [],
                 array \$search = [],
@@ -202,27 +194,23 @@ class MakeCrud extends Command
             ) {
                 \$query = \$this->model->newQuery();
 
-                // 預載入關聯
                 if (!empty(\$with)) {
                     \$query->with(\$with);
                 }
 
-                // 條件搜尋
                 if (!empty(\$where)) {
                     \$query->where(\$where);
                 }
 
-                // 模糊搜尋（排除空值）
                 foreach (\$search as \$field => \$keyword) {
                     if (\$keyword !== '') {
                         \$query->where(\$field, 'LIKE', '%' . addcslashes(\$keyword, '%_') . '%');
                     }
                 }
 
-                // 多組排序
                 foreach (\$orderBy as \$order) {
                     if (!is_array(\$order) || count(\$order) !== 2) {
-                        continue; // 跳過格式不正確的
+                        continue;
                     }
                     [\$column, \$direction] = \$order;
                     \$direction = strtolower(\$direction) === 'desc' ? 'desc' : 'asc';
@@ -232,7 +220,6 @@ class MakeCrud extends Command
                 return \$perPage ? \$query->paginate(\$perPage) : \$query->get();
             }
 
-
             public function first(\$id)
             {
                 return \$this->model->find(\$id);
@@ -240,17 +227,32 @@ class MakeCrud extends Command
 
             public function create(array \$data)
             {
-                return \$this->model->create(\$data);
+                \$model = \$this->model->create(\$data);
+                \$this->logModelCreated('新增{$class}', \$model);
+                return \$model;
             }
 
+            /**
+             * 更新資料並回傳模型實體
+             *
+             * @param array \$data
+             * @param int \$id
+             * @return \App\Models\\$class
+             */
             public function update(int \$id, array \$data)
             {
-                return \$this->model->findOrFail(\$id)->update(\$data);
+                \$model = \$this->model->findOrFail(\$id);
+                \$original = \$model->getOriginal();
+                \$model->update(\$data);
+                \$this->logModelChanges('修改{$class}', \$model, \$original);
+                return \$model;
             }
 
             public function delete(int \$id)
             {
-                return \$this->model->where('id', \$id)->delete();
+                \$model = \$this->model->findOrFail(\$id);
+                \$this->logModelDeleted('刪除{$class}', \$model);
+                return \$model->delete();
             }
         }
         PHP;
@@ -265,37 +267,28 @@ class MakeCrud extends Command
 
         namespace App\Services;
 
-        use App\Repositories\\{$class}Repository;
+        use App\Repositories\\$classRepository;
 
         class {$class}Service
         {
             protected \${$repositoryVar};
 
-            public function __construct({$class}Repository \${$repositoryVar})
+            public function __construct($classRepository \${$repositoryVar})
             {
                 \$this->{$repositoryVar} = \${$repositoryVar};
             }
 
-            /**
-             * 取得資料（條件搜尋、模糊搜尋、關聯、排序、分頁）
-             *
-             * @param int \$perPage
-             * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
-             */
             public function get(\$perPage)
             {
                 \$with = \$where = \$search = [];
                 \$orderBy = [['id', 'desc']];
 
                 foreach (request()->all() as \$key => \$value) {
-                    \$\$key = \$value;
+                    \${\$key} = \$value;
                 }
 
-                // 自訂搜尋條件
                 if (request()->filled('keyword')) {
-                    \$search = [
-                        'name' => request('keyword')
-                    ];
+                    \$search = ['name' => request('keyword')];
                 }
 
                 return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage);
@@ -306,6 +299,24 @@ class MakeCrud extends Command
                 return \$this->{$repositoryVar}->first(\$id);
             }
 
+            /**
+             * 建立資料並回傳模型實體
+             *
+             * @param array \$data
+             * @return \App\Models\\$class
+             */
+            public function create(array \$data)
+            {
+                return \$this->{$repositoryVar}->create(\$data);
+            }
+
+            /**
+             * 更新資料並回傳模型實體
+             *
+             * @param array \$data
+             * @param int|string \$id
+             * @return \App\Models\\$class
+             */
             public function update(array \$data, \$id)
             {
                 return \$this->{$repositoryVar}->update(\$id, \$data);

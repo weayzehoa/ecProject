@@ -38,10 +38,12 @@ class LoginController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            $admin = Auth::guard('admin')->user()->update([
+            $admin = Auth::guard('admin')->user();
+            $admin->update([
                 'last_login_time' => now(),
                 'last_login_ip' => $this->loginIp,
             ]);
+            adminLog('登入成功', $admin);
             return redirect()->intended(route('admin.dashboard'));
         }
 

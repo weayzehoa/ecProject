@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Auth;
 use App\Models\Mainmenu as MainmenuDB;
-use App\Models\PowerAction as PowerActionDB;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -23,7 +22,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $powerActions = config('powerActions');
+        $powerActions = config('menuSetting.powerActions');
         $powerActions = array_map(function($item) {
             return (object) $item;
         }, $powerActions);
@@ -31,7 +30,7 @@ class ViewServiceProvider extends ServiceProvider
             $mainmenus = MainmenuDB::with('submenu')->where(['is_on' => 1])->orderBy('sort','asc')->get();
             if(Auth::user()){
                 $view->with('mainmenus', $mainmenus);
-                $view->with('poweractions', $powerActions);
+                $view->with('powerActions', $powerActions);
             }
         });
     }

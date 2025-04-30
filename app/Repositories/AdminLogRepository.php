@@ -2,16 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Traits\LoggableRepository;
-use App\Models\Admin;
+use App\Models\AdminLog;
 
-class AdminRepository
+class AdminLogRepository
 {
-    use LoggableRepository;
-
     protected $model;
 
-    public function __construct(Admin $model)
+    public function __construct(AdminLog $model)
     {
         $this->model = $model;
     }
@@ -73,39 +70,16 @@ class AdminRepository
 
     public function create(array $data)
     {
-        isset($data['password']) ? $data['password'] = bcrypt($data['password']) : null;
-
-        $admin = $this->model->create($data);
-
-        $this->logModelCreated('新增管理員', $admin);
-
-        return $admin;
+        return $this->model->create($data);
     }
 
     public function update(int $id, array $data)
     {
-        $admin = $this->model->findOrFail($id);
-        $original = $admin->getOriginal();
-
-        if (!empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']);
-        }
-
-        $admin->update($data);
-
-        $this->logModelChanges('修改管理員資料', $admin, $original);
-
-        return true;
+        return $this->model->findOrFail($id)->update($data);
     }
 
     public function delete(int $id)
     {
-        $admin = $this->model->findOrFail($id);
-
-        $this->logModelDeleted('刪除管理員', $admin);
-
-        return $admin->delete();
+        return $this->model->where('id', $id)->delete();
     }
 }
