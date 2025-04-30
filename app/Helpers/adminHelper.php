@@ -2,13 +2,20 @@
 
 use App\Services\AdminLogService;
 
-if (!function_exists('adminLog')) {
-    function adminLog(string $action, string $description = ''): void
+if (! function_exists('adminLog')) {
+    /**
+     * @param  string                                  $action
+     * @param  \Illuminate\Database\Eloquent\Model|array|string $desc
+     * @return \App\Models\AdminLog|null
+     */
+    function adminLog(string $action, $desc = '')
     {
         try {
-            app(AdminLogService::class)->log($action, $description);
+            // 直接把原始 $desc（可能是 Model、也可能是 array）丟進去
+            return app(AdminLogService::class)->log($action, $desc);
         } catch (\Throwable $e) {
-            \Log::error('Admin log failed: ' . $e->getMessage());
+            \Log::error('Admin log failed: '.$e->getMessage());
+            return null;
         }
     }
 }

@@ -10,15 +10,6 @@ class AdminLog extends Model
         'admin_id',
         'action',
         'description',
-        'ip'
+        'ip',
     ];
-
-    //將description欄位轉換為array格式
-    protected $casts = ['description' => 'array'];
-
-    public function getDescriptionAttribute($value)
-    {
-        return is_array($value) ? $value : json_decode($value, true) ?? $value;
-    }
-
 }

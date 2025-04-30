@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\AdminLogRepository;
+use Illuminate\Support\Facades\DB;
 
 class AdminLogService
 {
@@ -61,33 +62,29 @@ class AdminLogService
 
     public function log(string $action, string|array|object $desc = ''): \App\Models\AdminLog
     {
-        // 統一處理 description 成 json 字串
-        if (is_object($desc)) {
-            // 優先使用 toArray (Eloquent 支援)，否則轉成 JSON 字串
-            if (method_exists($desc, 'toArray')) {
-                $desc = $desc->toArray();
-            } else {
-                try {
-                    $desc = json_encode($desc, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-                } catch (\JsonException $e) {
-                    $desc = '[轉換失敗: ' . $e->getMessage() . ']';
-                }
-            }
+        // 1. 如果傳來的是 Model，就轉陣列
+        if (is_object($desc) && method_exists($desc, 'toArray')) {
+            $desc = $desc->toArray();
         }
 
+        // 2. 陣列一次性 encode 為 JSON（保留中文）
         if (is_array($desc)) {
             try {
-                $desc = json_encode($desc, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+                $desc = json_encode($desc, JSON_UNESCAPED_UNICODE);
             } catch (\JsonException $e) {
-                $desc = '[轉換失敗: ' . $e->getMessage() . ']';
+                $desc = '[JSON 編碼失敗]';
             }
         }
 
-        return $this->adminLogRepository->create([
-            'admin_id'   => auth('admin')->id() ?? null,
-            'ip'         => $this->loginIp,
-            'action'     => $action,
-            'description'=> $desc,
+        // 3. 用 Model::create() 寫入
+        $log = AdminLog::create([
+            'admin_id'    => auth('admin')->id(),
+            'action'      => $action,
+            'description' => $desc,       // 已是 JSON 字串或原生字串
+            'ip'          => $this->loginIp,
         ]);
+
+        return $log;
     }
+
 }
