@@ -49,4 +49,14 @@ class Admin extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getRoleLabelAttribute(): string
+    {
+        return match($this->role) {
+            'develop' => '開發團隊',
+            'admin'   => '管理員',
+            'staff'   => '一般員工',
+            default   => '未知角色',
+        };
+    }
 }

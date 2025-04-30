@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Traits\LoggableRepository;
+use App\Traits\LoggableRepositoryTrait;
 use App\Models\Admin;
 
 class AdminRepository
 {
-    use LoggableRepository;
+    use LoggableRepositoryTrait;
 
     protected $model;
 

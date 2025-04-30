@@ -42,7 +42,7 @@ Route::name('admin.')->group(function() {
         Route::resource('admins', AdminController::class);
 
         // 管理者操作紀錄
-        // Route::resource('adminLogs', AdminLogController::class);
+        Route::resource('adminLogs', AdminLogController::class);
 
         // 會員管理功能
         // Route::post('users/active/{id}', [UserController::class, 'active'])->name('users.active');

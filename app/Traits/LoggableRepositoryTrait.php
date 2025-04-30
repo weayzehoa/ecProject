@@ -32,7 +32,7 @@ trait LoggableRepositoryTrait
         Model $model,
         array $original,
         ?string $logKey = null,
-        array $ignoreFields = ['updated_at']
+        array $ignoreFields = ['created_at', 'updated_at', 'deleted_at'] // ✅ 可自訂忽略欄位
     ): void {
         $after = $model->getAttributes();
         $changed = [];
@@ -52,7 +52,6 @@ trait LoggableRepositoryTrait
         if (!empty($changed)) {
             $logData = ['changed' => $changed];
 
-            // ✅ 自動推斷 log key，如果沒指定
             if (!$logKey) {
                 $logKey = $this->guessLogKey($model);
             }

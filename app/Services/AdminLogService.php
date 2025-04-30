@@ -38,9 +38,7 @@ class AdminLogService
 
         // 自訂搜尋條件
         if (request()->filled('keyword')) {
-            $search = [
-                'name' => request('keyword')
-            ];
+            $search['keyword'] = request('keyword'); // ✅ 改用 keyword 欄位名
         }
 
         return $this->adminLogRepository->get($where, $search, $with, $orderBy, $perPage);
@@ -61,14 +59,14 @@ class AdminLogService
         return $this->adminLogRepository->delete($id);
     }
 
-    public function log(string $action, string|array|object $desc = ''): \App\Models\AdminLog
+    public function log(string $action, string|array|object $desc = '', ?int $adminId = null): \App\Models\AdminLog
     {
-        // 1. 如果傳來的是 Model，就轉陣列
+        // 1. Model to array
         if (is_object($desc) && method_exists($desc, 'toArray')) {
             $desc = $desc->toArray();
         }
 
-        // 2. 陣列一次性 encode 為 JSON（保留中文）
+        // 2. Array to JSON
         if (is_array($desc)) {
             try {
                 $desc = json_encode($desc, JSON_UNESCAPED_UNICODE);
@@ -77,11 +75,11 @@ class AdminLogService
             }
         }
 
-        // 3. 用 Model::create() 寫入
+        // 3. 寫入 log，admin_id 可外部指定（如登出前取得）
         $log = AdminLogDB::create([
-            'admin_id'    => auth('admin')->id(),
+            'admin_id'    => $adminId ?? auth('admin')->id(),
             'action'      => $action,
-            'description' => $desc,       // 已是 JSON 字串或原生字串
+            'description' => $desc,
             'ip'          => $this->loginIp,
         ]);
 

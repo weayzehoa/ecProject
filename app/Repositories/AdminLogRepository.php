@@ -28,35 +28,41 @@ class AdminLogRepository
         array $search = [],
         array $with = [],
         array $orderBy = [['id', 'desc']],
-        int $perPage = null
+        ?int $perPage = null
     ) {
         $query = $this->model->newQuery();
 
-        // 預載入關聯
         if (!empty($with)) {
             $query->with($with);
         }
 
-        // 條件搜尋
         if (!empty($where)) {
             $query->where($where);
         }
 
-        // 模糊搜尋（排除空值）
-        foreach ($search as $field => $keyword) {
-            if ($keyword !== '') {
-                $query->where($field, 'LIKE', '%' . addcslashes($keyword, '%_') . '%');
-            }
+        // 🔍 多欄 keyword 搜尋（含 admin 關聯）
+        if (!empty($search['keyword'])) {
+            $keyword = $search['keyword'];
+
+            $query->where(function ($q) use ($keyword) {
+                $q->where('action', 'like', "%{$keyword}%")
+                  ->orWhere('description', 'like', "%{$keyword}%")
+                  ->orWhere('ip', 'like', "%{$keyword}%")
+                  ->orWhereHas('admin', function ($q2) use ($keyword) {
+                      $q2->where('name', 'like', "%{$keyword}%")
+                         ->orWhere('role', 'like', "%{$keyword}%")
+                         ->orWhere('email', 'like', "%{$keyword}%")
+                         ->orWhere('tel', 'like', "%{$keyword}%")
+                         ->orWhere('mobile', 'like', "%{$keyword}%");
+                  });
+            });
         }
 
-        // 多組排序
         foreach ($orderBy as $order) {
-            if (!is_array($order) || count($order) !== 2) {
-                continue; // 跳過格式不正確的
+            if (is_array($order) && count($order) === 2) {
+                [$column, $direction] = $order;
+                $query->orderBy($column, strtolower($direction) === 'desc' ? 'desc' : 'asc');
             }
-            [$column, $direction] = $order;
-            $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
-            $query->orderBy($column, $direction);
         }
 
         return $perPage ? $query->paginate($perPage) : $query->get();

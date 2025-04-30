@@ -29,7 +29,7 @@ class MainmenuSeeder extends Seeder
                 ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'M', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-money-check"></i>', 'name' => '公司資料設定', 'url' => 'companySettings', 'func_code' => ''],
                 ['sort' => 2, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'M', 'allow_roles' => 'develop,admin', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '系統參數設定', 'url' => 'systemSettings', 'func_code' => ''],
                 ['sort' => 3, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,D,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-users-cog""></i>', 'name' => '管理員帳號', 'url' => 'admins', 'func_code' => ''],
-                ['sort' => 4, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin', 'icon' => '<i class="nav-icon fas fa-clipboard-list"></i>', 'name' => '管理者操作紀錄', 'url' => 'adminLog', 'func_code' => ''],
+                ['sort' => 4, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin', 'icon' => '<i class="nav-icon fas fa-clipboard-list"></i>', 'name' => '管理者操作紀錄', 'url' => 'adminLogs', 'func_code' => ''],
                 ['sort' => 5, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '', 'func_code' => ''],
             ],
             [ //會員管理

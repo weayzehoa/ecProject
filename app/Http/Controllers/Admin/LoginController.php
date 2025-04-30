@@ -43,7 +43,7 @@ class LoginController extends Controller
                 'last_login_time' => now(),
                 'last_login_ip' => $this->loginIp,
             ]);
-            adminLog('登入成功', $admin);
+            adminLog('登入成功', '管理者 '.$admin->name.' 已登入。');
             return redirect()->intended(route('admin.dashboard'));
         }else{
             adminLog('登入失敗', $credentials);
@@ -60,7 +60,7 @@ class LoginController extends Controller
         Auth::guard('admin')->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
-        adminLog('登出成功', $admin);
+        adminLog('登出成功', '管理者 '.$admin->name.' 已登出。', $admin->id);
         return redirect()->route('login');
     }
 }
