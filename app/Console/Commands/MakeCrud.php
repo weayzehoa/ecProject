@@ -172,11 +172,11 @@ class MakeCrud extends Command
         namespace App\Repositories;
 
         use App\Models\\$class;
-        use App\Traits\LoggableRepository;
+        use App\Traits\LoggableRepositoryTrait;
 
         class {$class}Repository
         {
-            use LoggableRepository;
+            use LoggableRepositoryTrait;
 
             protected \$model;
 

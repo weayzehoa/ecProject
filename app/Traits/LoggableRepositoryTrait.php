@@ -5,7 +5,7 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-trait LoggableRepository
+trait LoggableRepositoryTrait
 {
     protected function logModelCreated(string $action, Model $model): void
     {
