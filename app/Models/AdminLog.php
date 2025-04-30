@@ -28,7 +28,7 @@ class AdminLog extends Model
 
             $sections = [];
 
-            foreach (['changed' => '變更', 'created' => '建立', 'deleted' => '刪除'] as $key => $label) {
+            foreach (['changed', 'created', 'deleted'] as $key) {
                 if (empty($parsed[$key]) || !is_array($parsed[$key])) {
                     continue;
                 }
@@ -45,11 +45,12 @@ class AdminLog extends Model
                         }
                     }
 
-                    if ($this->created_at) {
-                        $lines[] = "變更時間: " . $this->created_at->format('Y-m-d H:i:s');
+                    if (!empty($lines)) {
+                        $sections[] = implode("\n", $lines); // ⛔ 不加 "變更：" 前綴
                     }
 
-                } elseif ($key === 'created') {
+                } else {
+                    // created / deleted：只顯示 id、name、title 欄位值，不加任何 label
                     foreach (['id', 'name', 'title'] as $field) {
                         if (isset($data[$field])) {
                             $value = is_scalar($data[$field]) ? $data[$field] : json_encode($data[$field], JSON_UNESCAPED_UNICODE);
@@ -57,26 +58,9 @@ class AdminLog extends Model
                         }
                     }
 
-                    if (isset($data['created_at'])) {
-                        $lines[] = "建立時間: {$data['created_at']}";
+                    if (!empty($lines)) {
+                        $sections[] = implode("\n", $lines); // ⛔ 不加 created/deleted label
                     }
-
-                } elseif ($key === 'deleted') {
-                    foreach (['id', 'name', 'title'] as $field) {
-                        if (isset($data[$field])) {
-                            $value = is_scalar($data[$field]) ? $data[$field] : json_encode($data[$field], JSON_UNESCAPED_UNICODE);
-                            $lines[] = "{$field}: {$value}";
-                        }
-                    }
-
-                    $deletedTime = $data['deleted_at'] ?? $this->created_at?->format('Y-m-d H:i:s') ?? '';
-                    if ($deletedTime) {
-                        $lines[] = "刪除時間: {$deletedTime}";
-                    }
-                }
-
-                if (!empty($lines)) {
-                    $sections[] = "{$label}：\n" . implode("\n", $lines);
                 }
             }
 
@@ -84,12 +68,8 @@ class AdminLog extends Model
 
         } catch (\JsonException) {
             $content = trim(preg_replace('/\s+/', ' ', $desc));
-            $createdAt = $this->created_at?->format('Y-m-d H:i:s');
-            return $createdAt
-                ? "{$content}\n操作時間: {$createdAt}"
-                : $content;
+            return $content;
         }
     }
-
 
 }

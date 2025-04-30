@@ -79,8 +79,8 @@
                                         <th class="text-left" width="10%">管理員</th>
                                         <th class="text-left" width="10%">群組</th>
                                         <th class="text-left" width="15%">動作</th>
-                                        <th class="text-left" width="45%">詳細</th>
-                                        <th class="text-left" width="10%">連線IP</th>
+                                        <th class="text-left" width="45%">內容</th>
+                                        <th class="text-left" width="10%">IP</th>
                                         <th class="text-left" width="10%">時間</th>
                                     </tr>
                                 </thead>
