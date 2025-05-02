@@ -25,8 +25,9 @@ class ArticleService
             ${$key} = $value;
         }
 
+        // 自訂搜尋條件
         if (request()->filled('keyword')) {
-            $search = ['name' => request('keyword')];
+            $search['keyword'] = request('keyword'); // ✅ 改用 keyword 欄位名
         }
 
         return $this->articleRepository->get($where, $search, $with, $orderBy, $perPage);

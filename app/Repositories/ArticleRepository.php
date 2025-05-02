@@ -33,10 +33,16 @@ class ArticleRepository
             $query->where($where);
         }
 
-        foreach ($search as $field => $keyword) {
-            if ($keyword !== '') {
-                $query->where($field, 'LIKE', '%' . addcslashes($keyword, '%_') . '%');
-            }
+        // 🔍 多欄 keyword 搜尋（含 admin 關聯）
+        if (!empty($search['keyword'])) {
+            $keyword = $search['keyword'];
+
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', "%{$keyword}%")
+                  ->orWhere('description', 'like', "%{$keyword}%")
+                  ->orWhere('content', 'like', "%{$keyword}%")
+                  ->orWhere('url', 'like', "%{$keyword}%");
+            });
         }
 
         foreach ($orderBy as $order) {

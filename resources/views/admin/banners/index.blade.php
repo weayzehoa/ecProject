@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', '管理員管理')
+@section('title', '輪播管理')
 
 @section('content')
 
@@ -57,22 +57,10 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <label for="name">姓名:</label>
-                                                <input type="text" class="form-control" id="name" name="name" placeholder="請輸入姓名" value="{{ isset($name) ? $name : '' }}" autocomplete="off" />
+                                                <label for="keyword">關鍵字搜尋:</label>
+                                                <input type="text" class="form-control" id="keyword" name="keyword" placeholder="請輸入關鍵字" value="{{ isset($keyword) ? $keyword : '' }}" autocomplete="off" />
                                             </div>
-                                            <div class="col-md-3">
-                                                <label for="email">電子郵件:</label>
-                                                <input type="text" class="form-control" id="email" name="email" placeholder="請輸入電子郵件" value="{{ isset($email) ? $email : '' }}" autocomplete="off" />
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label for="tel">聯絡電話:</label>
-                                                <input type="text" class="form-control" id="tel" name="tel" placeholder="請輸入聯絡電話" value="{{ isset($tel) ?     $tel : '' }}" autocomplete="off" />
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label for="mobile">行動電話:</label>
-                                                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="請輸入行動電話" value="{{ isset($mobile) ? $mobile : '' }}" autocomplete="off" />
-                                            </div>
-                                            <div class="col-md-2 mt-2">
+                                            <div class="col-md-2">
                                                 <label class="control-label" for="list">每頁筆數:</label>
                                                 <select class="form-control" id="list" name="list">
                                                     @foreach ($lists as $key => $value)
