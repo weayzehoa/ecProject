@@ -25,11 +25,11 @@ class DatabaseSeeder extends Seeder
             }else{
                 echo "AdminSeeder 已被關閉\n";
             }
-            // if(env('DB_SEED_SETTING')){
-            //     $this->call(SettingSeeder::class);
-            // }else{
-            //     echo "SettingSeeder 已被關閉\n";
-            // }
+            if(env('DB_SEED_ARTICLE')){
+                $this->call(ArticleSeeder::class);
+            }else{
+                echo "ArticleSeeder 已被關閉\n";
+            }
             // if(env('DB_SEED_PRODUCT')){
             //     $this->call(ProductSeeder::class);
             // }else{
