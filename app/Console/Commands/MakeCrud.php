@@ -260,74 +260,62 @@ class MakeCrud extends Command
 
     private function serviceTemplate(string $class): string
     {
-        $repositoryVar = lcfirst($class) . 'Repository';
+        $repositoryClass = "{$class}Repository";
+        $repositoryVar = lcfirst($repositoryClass); // e.g., companySettingRepository
 
         return <<<PHP
-        <?php
+    <?php
 
-        namespace App\Services;
+    namespace App\Services;
 
-        use App\Repositories\\$classRepository;
+    use App\Repositories\\{$repositoryClass};
 
-        class {$class}Service
+    class {$class}Service
+    {
+        protected \${$repositoryVar};
+
+        public function __construct({$repositoryClass} \${$repositoryVar})
         {
-            protected \${$repositoryVar};
-
-            public function __construct($classRepository \${$repositoryVar})
-            {
-                \$this->{$repositoryVar} = \${$repositoryVar};
-            }
-
-            public function get(\$perPage)
-            {
-                \$with = \$where = \$search = [];
-                \$orderBy = [['id', 'desc']];
-
-                foreach (request()->all() as \$key => \$value) {
-                    \${\$key} = \$value;
-                }
-
-                if (request()->filled('keyword')) {
-                    \$search = ['name' => request('keyword')];
-                }
-
-                return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage);
-            }
-
-            public function show(\$id)
-            {
-                return \$this->{$repositoryVar}->first(\$id);
-            }
-
-            /**
-             * 建立資料並回傳模型實體
-             *
-             * @param array \$data
-             * @return \App\Models\\$class
-             */
-            public function create(array \$data)
-            {
-                return \$this->{$repositoryVar}->create(\$data);
-            }
-
-            /**
-             * 更新資料並回傳模型實體
-             *
-             * @param array \$data
-             * @param int|string \$id
-             * @return \App\Models\\$class
-             */
-            public function update(array \$data, \$id)
-            {
-                return \$this->{$repositoryVar}->update(\$id, \$data);
-            }
-
-            public function delete(\$id)
-            {
-                return \$this->{$repositoryVar}->delete(\$id);
-            }
+            \$this->{$repositoryVar} = \${$repositoryVar};
         }
-        PHP;
+
+        public function get(\$perPage)
+        {
+            \$with = \$where = \$search = [];
+            \$orderBy = [['id', 'desc']];
+
+            foreach (request()->all() as \$key => \$value) {
+                \${\$key} = \$value;
+            }
+
+            if (request()->filled('keyword')) {
+                \$search = ['name' => request('keyword')];
+            }
+
+            return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage);
+        }
+
+        public function show(\$id)
+        {
+            return \$this->{$repositoryVar}->first(\$id);
+        }
+
+        public function create(array \$data)
+        {
+            return \$this->{$repositoryVar}->create(\$data);
+        }
+
+        public function update(array \$data, \$id)
+        {
+            return \$this->{$repositoryVar}->update(\$id, \$data);
+        }
+
+        public function delete(\$id)
+        {
+            return \$this->{$repositoryVar}->delete(\$id);
+        }
+    }
+    PHP;
     }
 
     private function requestTemplate(string $namespace, string $class): array

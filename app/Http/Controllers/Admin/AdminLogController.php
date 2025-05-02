@@ -42,7 +42,7 @@ class AdminLogController extends Controller
 
         $adminLogs = $this->adminLogService->get($list);
         $compact = array_merge($compact, ['appends', 'menuCode', 'lists', 'roles', 'adminLogs']);
-        return view('admin.adminLogs.index', compact($compact)); // 自行調整 view
+        return view('admin.settings.adminLog', compact($compact)); // 自行調整 view
     }
 
     public function create()
