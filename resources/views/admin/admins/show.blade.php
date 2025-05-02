@@ -37,16 +37,20 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="email"><span class="text-red">* </span>EMail帳號</label>
+                                @if(isset($admin) && !in_array(Auth::user()->role,['develop','admin']))
+                                <input type="hidden" name="email" value="{{ $admin->email }}">
+                                <input type="email" class="form-control" value="{{ $admin->email }}" disabled>
+                                @else
                                 <input type="email"
                                        class="form-control @error('email') is-invalid @enderror"
                                        id="email"
                                        name="email"
-                                       value="{{ old('email', $admin->email ?? '') }}"
                                        placeholder="請輸入電子郵件"
-                                       required
+                                       value="{{ old('email', $admin->email ?? '') }}"
                                        data-parsley-type="email"
                                        data-parsley-trigger="change"
-                                       {{ isset($admin) && $admin->id == auth('admin')->user()->id ? 'disabled' : '' }}>
+                                       required>
+                                @endif
                                 @error('email')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
@@ -111,36 +115,60 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="role">角色群組</label>
-                                <select class="form-control @error('role') is-invalid @enderror"
-                                        id="role"
-                                        name="role"
-                                        required
-                                        data-parsley-trigger="change"
-                                        {{ isset($admin) && $admin->id == auth('admin')->user()->id ? 'disabled' : '' }}>
+                                @if(isset($admin) && !in_array(Auth::user()->role,['develop','admin']))
+                                <input type="hidden" name="role" value="{{ $admin->role }}">
+                                <select class="form-control" disabled>
                                     @foreach($roles as $key => $value)
                                         @if(auth('admin')->user()->role == 'develop' || $key != 'develop')
                                         <option value="{{ $key }}" {{ old('role', $admin->role ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
                                         @endif
                                     @endforeach
                                 </select>
+                                @else
+                                <select class="form-control @error('role') is-invalid @enderror"
+                                    id="role" name="role" required data-parsley-trigger="change">
+                                    @foreach($roles as $key => $value)
+                                        @if(auth('admin')->user()->role == 'develop' || $key != 'develop')
+                                        <option value="{{ $key }}" {{ old('role', $admin->role ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @endif
                                 @error('role')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="active"><span class="text-red">* </span>狀態</label>
+                                @if(isset($admin) && !in_array($admin->role,['develop','admin']))
+                                <input type="hidden" name="is_on" value="{{ $admin->is_on }}">
                                 <div class="form-group clearfix">
                                     <div class="icheck-green d-inline mr-2">
-                                        <input type="radio" id="active_pass" name="is_on" value="1" {{ isset($admin) ? $admin->is_on == 1 ? 'checked' : '' : 'checked' }} {{ isset($admin) && $admin->id == auth('admin')->user()->id ? 'disabled' : '' }}>
+                                        <input type="radio" id="active_pass" name="is_on" value="1" {{ isset($admin) ? $admin->is_on == 1 ? 'checked' : '' : 'checked' }} disabled>
                                         <label for="active_pass">啟用</label>
                                     </div>
                                     <div class="icheck-danger d-inline mr-2">
-                                        <input type="radio" id="active_denie" name="is_on" value="0" {{ isset($admin) ? $admin->is_on == 0 ? 'checked' : '' : '' }} {{ isset($admin) && $admin->id == auth('admin')->user()->id ? 'disabled' : '' }}>
+                                        <input type="radio" id="active_denie" name="is_on" value="0" {{ isset($admin) ? $admin->is_on == 0 ? 'checked' : '' : '' }} disabled>
                                         <label for="active_denie">停權</label>
                                     </div>
                                 </div>
+                                @else
+                                <div class="form-group clearfix">
+                                    <div class="icheck-green d-inline mr-2">
+                                        <input type="radio" id="active_pass" name="is_on" value="1" {{ isset($admin) ? $admin->is_on == 1 ? 'checked' : '' : 'checked' }}>
+                                        <label for="active_pass">啟用</label>
+                                    </div>
+                                    <div class="icheck-danger d-inline mr-2">
+                                        <input type="radio" id="active_denie" name="is_on" value="0" {{ isset($admin) ? $admin->is_on == 0 ? 'checked' : '' : '' }}>
+                                        <label for="active_denie">停權</label>
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
+                        @if(isset($admin) && !in_array(Auth::user()->role,['develop','admin']))
+                        <input type="hidden" name="permissions" value="{{ $admin->permissions }}">
+                        @else
                         @if(isset($admin) && isset($menuCode) && in_array($menuCode.'M' , explode(',',Auth::user()->permissions)))
                         <div class="card-primary card-outline col-12 mb-2"></div>
                         <div class="col-md-12">
@@ -197,6 +225,7 @@
                             </div>
                         </div>
                         @endif
+                        @endif
                     </div>
                     <div class="card-footer text-center bg-white">
                         <button id="modifyBtn" type="button" class="btn btn-primary">{{ isset($admin) ? '修改' : '新增' }}</button>
@@ -232,6 +261,7 @@
     });
 
     $('#modifyBtn').click(function () {
+        let adminRole = '{{ Auth::user()->role }}';
         let form = $('#myform');
         if (form.parsley().validate()) {
             let power = [];
@@ -240,7 +270,9 @@
                 $("input[name='mypower']").remove();
             });
             let powerString = power.join(',');
-            form.append($('<input type="hidden" name="permissions">').val(powerString));
+            if (adminRole == 'develop' || adminRole == 'admin') {
+                form.append($('<input type="hidden" name="permissions">').val(powerString));
+            }
             form.submit();
         }
     });

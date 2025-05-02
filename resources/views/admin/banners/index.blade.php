@@ -33,7 +33,7 @@
                                 <div class="col-6">
                                     <div class="float-left d-flex align-items-center">
                                         <button id="showForm" class="btn btn-sm btn-success mr-2" title="使用欄位查詢">使用欄位查詢</button>
-                                        @if(in_array($menuCode.'N',explode(',',Auth::user()->permissions)) || in_array(Auth::user()->role,['develop','admin']))
+                                        @if(in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
                                         <a href="{{ route('admin.banners.create') }}" class="btn btn-sm btn-primary mr-1"><i class="fas fa-plus mr-1"></i>新增</a>
                                         @endif
                                     </div>
@@ -106,7 +106,7 @@
                                     @foreach ($banners as $banner)
                                     <tr>
                                         <td class="text-left align-middle">
-                                            @if($banner->id == Auth::user()->id || in_array(Auth::user()->role,['develop','admin']))
+                                            @if(in_array($menuCode.'M',explode(',',Auth::user()->permissions)))
                                             <span class=""><a href="{{ route('admin.banners.show', $banner->id ) }}">{{ $banner->title }}</a></span>
                                             @else
                                             <span class="">{{ $banner->title }}</span>
@@ -121,18 +121,27 @@
                                         <td class="text-left align-middle">{{ $banner->start_time }}</td>
                                         <td class="text-left align-middle">{{ $banner->end_time }}</td>
                                         <td class="text-center align-middle">
+                                            @if(in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
                                             <form action="{{ url('banners/active/' . $banner->id) }}" method="POST">
                                                 @csrf
                                                 <input type="checkbox" name="is_on" value="{{ $banner->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($banner) ? $banner->is_on == 1 ? 'checked' : '' : '' }}>
                                             </form>
+                                            @else
+                                            <input type="checkbox" name="is_on" value="{{ $banner->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($banner) ? $banner->is_on == 1 ? 'checked' : '' : '' }} disabled>
+                                            @endif
                                         </td>
                                         <td class="text-center align-middle">
+                                            @if(in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
                                             <form action="{{ url('banners/preview/' . $banner->id) }}" method="POST">
                                                 @csrf
                                                 <input type="checkbox" name="is_preview" value="{{ $banner->is_preview == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($banner) ? $banner->is_preview == 1 ? 'checked' : '' : '' }}>
                                             </form>
+                                            @else
+                                            <input type="checkbox" name="is_preview" value="{{ $banner->is_preview == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($banner) ? $banner->is_preview == 1 ? 'checked' : '' : '' }} disabled>
+                                            @endif
                                         </td>
                                         <td class="text-center align-middle">
+                                            @if(in_array($menuCode.'S',explode(',',Auth::user()->permissions)))
                                             @if($loop->iteration != 1)
                                             <a href="{{ url('banners/sortup/' . $banner->id) }}" class="text-navy">
                                                 <i class="fas fa-arrow-alt-circle-up text-lg"></i>
@@ -143,9 +152,9 @@
                                                 <i class="fas fa-arrow-alt-circle-down text-lg"></i>
                                             </a>
                                             @endif
+                                            @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if(in_array(Auth::user()->role,['develop','admin']) && $banner->id != Auth::user()->id && $banner->role != 'develop')
                                             @if(in_array($menuCode.'D',explode(',',Auth::user()->permissions)))
                                             <form action="{{ route('admin.banners.destroy', $banner->id) }}" method="POST">
                                                 @csrf
@@ -154,7 +163,6 @@
                                                     <i class="far fa-trash-alt"></i>
                                                 </button>
                                             </form>
-                                            @endif
                                             @endif
                                         </td>
                                     </tr>

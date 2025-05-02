@@ -96,7 +96,7 @@
                                         <td class="text-left align-middle">
                                             {{ $adminLog->action }}
                                         </td>
-                                        <td class="text-left align-middle">{!! nl2br(e($adminLog->descriptionText)) !!}</td>
+                                        <td class="text-left align-middle text-warp">{!! nl2br(e($adminLog->descriptionText)) !!}</td>
                                         <td class="text-left align-middle">{{ $adminLog->ip }}</td>
                                         <td class="text-left align-middle">{{ $adminLog->created_at }}</td>
                                     </tr>
