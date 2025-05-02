@@ -5,8 +5,6 @@
 @section('content')
 <div class="content-wrapper">
     <div class="content-header">
-        {{-- alert訊息 --}}
-        {{-- @include('admin.layouts.alert_message') --}}
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -15,189 +13,126 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ env('APP_NAME') }}</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ url('banners') }}">輪播管理</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('banners') }}">輪播管理</a></li>
                         <li class="breadcrumb-item active">{{ isset($banner) ? '修改' : '新增' }}輪播</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
+
     <section class="content">
         <div class="container-fluid">
-            <form id="myform" action="{{ isset($banner) ? route('admin.banners.update', $banner->id) : route('admin.banners.store') }}" method="POST" data-parsley-validate>
+            <form id="myform"
+                  action="{{ isset($banner) ? route('admin.banners.update', $banner->id) : route('admin.banners.store') }}"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  data-parsley-validate>
                 @csrf
-                @if(isset($banner))
-                <input type="hidden" name="_method" value="PATCH">
-                @endif
+                @if(isset($banner)) @method('PATCH') @endif
+                <input type="hidden" name="type" value="banner">
+
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">{{ $banner->name ?? '新增' }} 帳號資料</h3>
+                        <h3 class="card-title">{{ $banner->title ?? '新增' }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="form-group col-md-3">
-                                <label for="email"><span class="text-red">* </span>EMail帳號</label>
-                                <input type="email"
-                                       class="form-control @error('email') is-invalid @enderror"
-                                       id="email"
-                                       name="email"
-                                       value="{{ old('email', $banner->email ?? '') }}"
-                                       placeholder="請輸入電子郵件"
-                                       required
-                                       data-parsley-type="email"
-                                       data-parsley-trigger="change"
-                                       {{ isset($banner) && $banner->id == auth('admin')->user()->id ? 'disabled' : '' }}>
-                                @error('email')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="name"><span class="text-red">* </span>姓名</label>
+                            <div class="form-group col-md-4">
+                                <label for="title"><span class="text-red">*</span> {{ __('validation.attributes.banner.title') }}</label>
                                 <input type="text"
-                                       class="form-control @error('name') is-invalid @enderror"
-                                       id="name"
-                                       name="name"
-                                       value="{{ old('name', $banner->name ?? '') }}"
-                                       placeholder="請輸入姓名"
-                                       required
+                                       class="form-control @error('title') is-invalid @enderror"
+                                       id="title" name="title"
+                                       value="{{ old('title', $banner->title ?? '') }}"
+                                       placeholder="{{ __('請輸入') . __('validation.attributes.banner.title') }}"
+                                       required data-parsley-maxlength="30"
                                        data-parsley-trigger="change">
-                                @error('name')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
+                                @error('title')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
-                            <div class="form-group col-md-3">
-                                <label for="password"><span class="text-red">* </span>密碼</label>
+
+                            <div class="form-group col-md-4">
+                                <label for="description">{{ __('validation.attributes.banner.description') }}</label>
                                 <input type="text"
-                                       class="form-control @error('password') is-invalid @enderror"
-                                       id="password"
-                                       name="password"
-                                       value="{{ old('password') }}"
-                                       placeholder="{{ isset($banner) ? '不修改請留空白' : '請輸入密碼' }}"
-                                       {{ isset($banner) ? '' : 'required' }}
-                                       data-parsley-minlength="6"
-                                       data-parsley-trigger="change">
-                                @error('password')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
+                                       class="form-control @error('description') is-invalid @enderror"
+                                       id="description" name="description"
+                                       value="{{ old('description', $banner->description ?? '') }}"
+                                       placeholder="{{ __('請輸入') . __('validation.attributes.banner.description') }}"
+                                       data-parsley-maxlength="120" data-parsley-trigger="change">
+                                @error('description')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
-                            <div class="form-group col-md-3">
-                                <label for="mobile"><span class="text-red">* </span>行動電話號碼</label>
-                                <input type="text"
-                                        class="form-control @error('mobile') is-invalid @enderror"
-                                        id="mobile"
-                                        name="mobile"
-                                        value="{{ old('mobile', $banner->mobile ?? '') }}"
-                                        placeholder="請輸入行動電話號碼"
-                                        required
-                                        data-parsley-pattern="^09\d{2}-?\d{3}-?\d{3}$"
-                                        data-parsley-pattern-message="請輸入正確的手機號碼，例如 0928123456 或 0928-123-456"
-                                        data-parsley-trigger="change">
-                                @error('mobile')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
+
+                            <div class="form-group col-md-4">
+                                <label for="url">{{ __('validation.attributes.banner.url') }}</label>
+                                <input type="url"
+                                       class="form-control @error('url') is-invalid @enderror"
+                                       id="url" name="url"
+                                       value="{{ old('url', $banner->url ?? '') }}"
+                                       placeholder="https://www.example.com"
+                                       data-parsley-type="url" data-parsley-maxlength="255" data-parsley-trigger="change">
+                                @error('url')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
-                            <div class="form-group col-md-3">
-                                <label for="tel">聯絡電話</label>
-                                <input type="text"
-                                        class="form-control @error('tel') is-invalid @enderror"
-                                        id="tel"
-                                        name="tel"
-                                        value="{{ old('tel', $banner->tel ?? '') }}"
-                                        placeholder="請輸入聯絡電話"
-                                        data-parsley-trigger="change">
-                                @error('tel')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="role">角色群組</label>
-                                <select class="form-control @error('role') is-invalid @enderror"
-                                        id="role"
-                                        name="role"
-                                        required
-                                        data-parsley-trigger="change"
-                                        {{ isset($banner) && $banner->id == auth('admin')->user()->id ? 'disabled' : '' }}>
-                                    @foreach($roles as $key => $value)
-                                        @if(auth('admin')->user()->role == 'develop' || $key != 'develop')
-                                        <option value="{{ $key }}" {{ old('role', $banner->role ?? '') == $key ? 'selected' : '' }}>{{ $value }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                @error('role')
-                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="active"><span class="text-red">* </span>狀態</label>
-                                <div class="form-group clearfix">
-                                    <div class="icheck-green d-inline mr-2">
-                                        <input type="radio" id="active_pass" name="is_on" value="1" {{ isset($banner) ? $banner->is_on == 1 ? 'checked' : '' : 'checked' }} {{ isset($banner) && $banner->id == auth('admin')->user()->id ? 'disabled' : '' }}>
-                                        <label for="active_pass">啟用</label>
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="start_time">{{ __('validation.attributes.banner.start_time') }}</label>
+                                        <input type="text"
+                                               class="form-control datetimepicker @error('start_time') is-invalid @enderror"
+                                               id="start_time" name="start_time"
+                                               value="{{ old('start_time', $banner->start_time ?? '') }}"
+                                               placeholder="2025-01-01 00:00:00"
+                                               data-parsley-pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
+                                        @error('start_time')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                     </div>
-                                    <div class="icheck-danger d-inline mr-2">
-                                        <input type="radio" id="active_denie" name="is_on" value="0" {{ isset($banner) ? $banner->is_on == 0 ? 'checked' : '' : '' }} {{ isset($banner) && $banner->id == auth('admin')->user()->id ? 'disabled' : '' }}>
-                                        <label for="active_denie">停權</label>
+                                    <div class="form-group col-md-6">
+                                        <label for="end_time">{{ __('validation.attributes.banner.end_time') }}</label>
+                                        <input type="text"
+                                               class="form-control datetimepicker @error('end_time') is-invalid @enderror"
+                                               id="end_time" name="end_time"
+                                               value="{{ old('end_time', $banner->end_time ?? '') }}"
+                                               placeholder="2025-12-31 23:59:59"
+                                               data-parsley-pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
+                                        @error('end_time')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <label for="img">{{ __('validation.attributes.banner.img') }}</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file"
+                                                       class="custom-file-input @error('img') is-invalid @enderror"
+                                                       id="img" name="img"
+                                                       accept="image/*"
+                                                       data-parsley-filemaxmegabytes="2"
+                                                       data-parsley-filemimetypes="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
+                                                <label class="custom-file-label" for="img">{{ __('選擇圖片') }}</label>
+                                            </div>
+                                        </div>
+                                        @error('img')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                                        @if(isset($banner) && $banner->img)
+                                            <div class="mt-2">
+                                                <img src="{{ asset('storage/upload/' . $banner->img) }}" width="400" alt="{{ $banner->title }}">
+                                            </div>
+                                        @endif
+                                        <div id="img-preview-wrapper" class="mt-2" style="display: none;">
+                                            <img id="img-preview" src="#" width="400" alt="預覽圖片" class="border rounded">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        @if(isset($banner) && isset($menuCode) && in_array($menuCode.'M' , explode(',',Auth::user()->permissions)))
-                        <div class="card-primary card-outline col-12 mb-2"></div>
-                        <div class="col-md-12">
-                            <label for="">權限設定</label>
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="checkAll" onclick="toggleSelect('#myform',this)">
-                                <label for="checkAll">選擇全部</label>
+
+                            <div class="form-group col-md-6">
+                                <label for="content">{{ __('validation.attributes.banner.content') }}</label>
+                                <textarea class="form-control @error('content') is-invalid @enderror"
+                                          id="content" name="content" rows="5"
+                                          placeholder="{{ __('請輸入') . __('validation.attributes.banner.content') }}"
+                                          data-parsley-maxlength="255"
+                                          data-parsley-trigger="change">{{ old('content', $banner->content ?? '') }}</textarea>
+                                @error('content')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="row">
-                                @foreach($mainmenus as $mainmenu)
-                                <div class="col-md-4" id="mmid_{{ $mainmenu->id }}">
-                                    <div class="icheck-primary col-md-12">
-                                        <input type="checkbox" onclick="toggleSelect('#mmid_{{ $mainmenu->id }}',this)" name="mypower" value="{{ $mainmenu->code }}" id="mmchkbox{{ $mainmenu->id }}" {{ isset($banner) ? in_array($mainmenu->code,explode(',',$banner->permissions)) ? 'checked' : '' : ''}}>
-                                        <label for="mmchkbox{{ $mainmenu->id }}">{!! $mainmenu->fa5icon !!} {{ $mainmenu->name }}</label>
-                                    </div>
-                                    @if($mainmenu->url_type == 1)
-                                    <div class="col-md-12">
-                                        @foreach($powerActions as $powerAction)
-                                        <input type="checkbox" name="mypower" value="{{ $mainmenu->code.$powerAction->code }}" {{ isset($banner) ? in_array($mainmenu->code.$powerAction->code,explode(',',$banner->permissions)) ? 'checked' : '' : ''}}><span> {{ $powerAction->name }}</span>
-                                        @endforeach
-                                    </div>
-                                    @elseif($mainmenu->power_action)
-                                    <div class="col-md-12">
-                                        @foreach($powerActions as $powerAction)
-                                        @if(in_array($powerAction->code,explode(',',$mainmenu->power_action)))
-                                        <input type="checkbox" name="mypower" value="{{ $mainmenu->code.$powerAction->code }}" {{ isset($banner) ? in_array($mainmenu->code.$powerAction->code,explode(',',$banner->permissions)) ? 'checked' : '' : ''}}><span> {{ $powerAction->name }}</span>
-                                        @endif
-                                        @endforeach
-                                    </div>
-                                    @endif
-                                    <div class="col-md-12">
-                                        <ol>
-                                            @foreach($mainmenu->submenu as $submenu)
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" onclick="toggleSelect('#smid_{{ $submenu->id }}',this)" name="mypower" value="{{ $submenu->code }}" id="smchkbox{{ $submenu->id }}" {{ isset($banner) ? in_array($submenu->code,explode(',',$banner->permissions)) ? 'checked' : '' : ''}}>
-                                                <label for="smchkbox{{ $submenu->id }}">{!! $submenu->icon !!} {{ $submenu->name }}</label>
-                                            </div>
-                                            <div class="col-md-12" id="smid_{{ $submenu->id }}">
-                                                <ol>
-                                                    @foreach($powerActions as $powerAction)
-                                                    @if(in_array($powerAction->code,explode(',',$submenu->power_action)))
-                                                    <input type="checkbox" name="mypower" value="{{ $submenu->code.$powerAction->code }}" {{ isset($banner) ? in_array($submenu->code.$powerAction->code,explode(',',$banner->permissions)) ? 'checked' : '' : ''}}><span> {{ $powerAction->name }}</span>
-                                                    @endif
-                                                    @endforeach
-                                                </ol>
-                                            </div>
-                                            @endforeach
-                                        </ol>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        @endif
                     </div>
+
                     <div class="card-footer text-center bg-white">
                         <button id="modifyBtn" type="button" class="btn btn-primary">{{ isset($banner) ? '修改' : '新增' }}</button>
                         <a href="{{ url('banners') }}" class="btn btn-info">
@@ -214,72 +149,100 @@
 @push('styles')
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/parsley/parsley.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/jqueryui-timepicker/dist/jquery-ui-timepicker-addon.min.css') }}">
 @endpush
 
 @push('scripts')
 <script src="{{ asset('vendor/parsley/parsley.min.js') }}"></script>
 <script src="{{ asset('vendor/parsley/zh_tw.js') }}"></script>
-<script>
-(function($) {
-    "use strict";
+<script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('vendor/jqueryui-timepicker/dist/jquery-ui-timepicker-addon.min.js') }}"></script>
+<script src="{{ asset('vendor/jqueryui-timepicker/dist/i18n/jquery-ui-timepicker-zh-TW.js') }}"></script>
 
+<script>
+    // 日期時間選擇器
+    $('.datetimepicker').datetimepicker({
+        timeFormat: "HH:mm:ss",
+        dateFormat: "yy-mm-dd",
+    });
+
+    // 顯示選擇的圖片檔名
+    $('#img').on('change', function () {
+        const file = this.files[0];
+
+        // 顯示檔名
+        const fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+
+        // 預覽圖片
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#img-preview').attr('src', e.target.result);
+                $('#img-preview-wrapper').show();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            $('#img-preview-wrapper').hide();
+            $('#img-preview').attr('src', '#');
+        }
+    });
+
+    // 自定 Parsley 驗證器
+    window.Parsley.addValidator('filemaxmegabytes', {
+        requirementType: 'number',
+        validateString: function (_value, maxMb, parsleyInstance) {
+            const files = parsleyInstance.$element[0].files;
+            return files.length === 0 || files[0].size <= maxMb * 1048576;
+        },
+        messages: {
+            zh_tw: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 2]) }}",
+            zh_cn: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 2]) }}",
+            en: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 2]) }}",
+        }
+    });
+
+    window.Parsley.addValidator('filemimetypes', {
+        requirementType: 'string',
+        validateString: function (_value, types, parsleyInstance) {
+            const files = parsleyInstance.$element[0].files;
+            if (files.length === 0) return true;
+            const allowed = types.split(',');
+            return allowed.includes(files[0].type);
+        },
+        messages: {
+            zh_tw: "{{ __('validation.attributes.banner.messages.img.filemimetypes', ['types' => 'jpeg, png, jpg, gif, svg']) }}",
+            zh_cn: "{{ __('validation.attributes.banner.messages.img.filemimetypes', ['types' => 'jpeg, png, jpg, gif, svg']) }}",
+            en: "{{ __('validation.attributes.banner.messages.img.filemimetypes', ['types' => 'jpeg, png, jpg, gif, svg']) }}",
+        }
+    });
+
+    // Parsley 初始化
     $('#myform').parsley({
         errorClass: 'is-invalid',
         successClass: 'is-valid',
-        errorsWrapper: '<span class="invalid-feedback d-block" role="alert"></span>',
+        errorsWrapper: '<div class="invalid-feedback d-block" role="alert"></div>',
         errorTemplate: '<span></span>',
-        trigger: 'change'
-    });
-
-    $('#modifyBtn').click(function () {
-        let form = $('#myform');
-        if (form.parsley().validate()) {
-            let power = [];
-            $.each($("input[name='mypower']:checked"), function(){
-                power.push($(this).val());
-                $("input[name='mypower']").remove();
-            });
-            let powerString = power.join(',');
-            form.append($('<input type="hidden" name="permissions">').val(powerString));
-            form.submit();
-        }
-    });
-})(jQuery);
-
-function chkall(input1, input2) {
-        var objForm = document.forms[input1];
-        var objLen = objForm.length;
-        for (var iCount = 0; iCount < objLen; iCount++) {
-            var objChk = $(objForm.elements[iCount]);
-            if (!objChk.hasClass("toggle-switch") && !objChk.hasClass("disabled")) { //去除 上線,disabled
-                if (input2.checked == true) {
-                    if (objForm.elements[iCount].type == "checkbox") {
-                        objForm.elements[iCount].checked = true;
-                    }
-                } else {
-                    if (objForm.elements[iCount].type == "checkbox") {
-                        objForm.elements[iCount].checked = false;
-                    }
-                }
+        trigger: 'change',
+        errorsContainer: function (ParsleyField) {
+            // 若為 file 欄位，顯示在 form-group 下
+            if (ParsleyField.$element.is(':file')) {
+                return ParsleyField.$element.closest('.form-group');
             }
+            return ParsleyField.$element.parent();
         }
-    }
+    });
 
-    function toggleSelect(parentId, trigger) {
-        var option_list = document.querySelectorAll(`${parentId} input`);
-        if (trigger.checked) {
-            option_list.forEach((el) => {
-                if (!el.classList.contains("disabled") && el.getAttribute("type") !== "radio") {
-                    el.checked = true;
-                }
-            });
+    // 提交按鈕觸發驗證
+    $('#modifyBtn').click(function () {
+        const form = $('#myform');
+        if (form.parsley().validate()) {
+            $(this).attr('disabled', true);
+            form.submit();
         } else {
-            option_list.forEach((el) => {
-                if (!el.classList.contains("disabled") && el.getAttribute("type") !== "radio") {
-                    el.checked = false;
-                }
-            });
+            $(this).attr('disabled', false);
         }
-    }
+    });
 </script>
 @endpush

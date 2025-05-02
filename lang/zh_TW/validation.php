@@ -189,5 +189,24 @@ return [
             'is_on' => '帳號狀態',
             'password_same_as_old' => '新密碼不能與舊密碼相同',
         ],
+        'banner' => [
+            'title' => '標題',
+            'description' => '描述',
+            'content' => '內容說明',
+            'img' => '輪播圖片',
+            'url' => '連結',
+            'start_time' => '開始時間',
+            'end_time' => '結束時間',
+            'messages' => [
+                'title' => [
+                    'required' => '請輸入 :attribute',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+                'img' => [
+                    'filemaxmegabytes' => '圖片大小不可超過 :max MB',
+                    'filemimetypes' => '圖片格式不正確，允許格式為：:types',
+                ],
+            ],
+        ],
     ]
 ];

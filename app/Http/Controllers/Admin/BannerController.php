@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ArticleService;
-use App\Http\Requests\Admin\ArticleCreateRequest;
-use App\Http\Requests\Admin\ArticleUpdateRequest;
+use App\Http\Requests\Admin\BannerRequest;
 
 class BannerController extends Controller
 {
@@ -48,16 +47,17 @@ class BannerController extends Controller
         return view('admin.banners.show');
     }
 
-    public function store(ArticleCreateRequest $request)
+    public function store(BannerRequest $request)
     {
+        dd($request->all());
         $this->articleService->create($request->validated());
         return redirect()->back();
     }
 
     public function show(string $id)
     {
-        $item = $this->articleService->show($id);
-        return view('admin.banners.show', compact('item'));
+        $banner = $this->articleService->show($id);
+        return view('admin.banners.show', compact('banner'));
     }
 
     public function edit(string $id)
@@ -66,8 +66,9 @@ class BannerController extends Controller
         return view('admin.banners.show', compact('item'));
     }
 
-    public function update(ArticleUpdateRequest $request, string $id)
+    public function update(BannerRequest $request, string $id)
     {
+        dd($request->all());
         $this->articleService->update($request->validated(), $id);
         return redirect()->back();
     }
