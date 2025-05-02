@@ -65,17 +65,12 @@ Route::name('admin.')->group(function() {
         // 運費折扣設定
         // Route::resource('shippingFees', ShippingFeeController::class);
 
-        // 關於我們
-        // Route::post('aboutUs/active/{id}', [AboutUsController::class, 'active'])->name('aboutUs.active');
-        // Route::get('aboutUs/sortup/{id}',[AboutUsController::class, 'sortup'])->name('aboutUs.sortup');
-        // Route::get('aboutUs/sortdown/{id}',[AboutUsController::class, 'sortdown'])->name('aboutUs.sortdown');
-        // Route::resource('aboutUs', AboutUsController::class);
-
         // 輪播管理
-        // Route::post('banners/active/{id}', [BannerController::class, 'active'])->name('banners.active');
-        // Route::get('banners/sortup/{id}',[BannerController::class, 'sortup'])->name('banners.sortup');
-        // Route::get('banners/sortdown/{id}',[BannerController::class, 'sortdown'])->name('banners.sortdown');
-        // Route::resource('banners', BannerController::class);
+        Route::post('banners/preview/{id}', [BannerController::class, 'preview'])->name('banners.preview');
+        Route::post('banners/active/{id}', [BannerController::class, 'active'])->name('banners.active');
+        Route::get('banners/sortup/{id}',[BannerController::class, 'sortup'])->name('banners.sortup');
+        Route::get('banners/sortdown/{id}',[BannerController::class, 'sortdown'])->name('banners.sortdown');
+        Route::resource('banners', BannerController::class);
 
         // 最新消息
         // Route::post('news/active/{id}', [NewsController::class, 'active'])->name('news.active');
