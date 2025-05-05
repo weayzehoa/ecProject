@@ -5,6 +5,8 @@
 @section('content')
 <div class="content-wrapper">
     <div class="content-header">
+        {{-- alert訊息 --}}
+        @include('admin.layouts.alert_message')
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -39,35 +41,36 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="title"><span class="text-red">*</span> {{ __('validation.attributes.banner.title') }}</label>
+                                {{-- <label for="title"><span class="text-red">*</span> {{ __('validation.attributes.banner.title') }}</label> --}}
+                                <label for="title"><span class="text-red">*</span> 標題</label>
                                 <input type="text"
                                        class="form-control @error('title') is-invalid @enderror"
                                        id="title" name="title"
                                        value="{{ old('title', $banner->title ?? '') }}"
-                                       placeholder="{{ __('請輸入') . __('validation.attributes.banner.title') }}"
+                                       placeholder="請輸入標題"
                                        required data-parsley-maxlength="30"
                                        data-parsley-trigger="change">
                                 @error('title')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="description">{{ __('validation.attributes.banner.description') }}</label>
+                                <label for="description">描述</label>
                                 <input type="text"
                                        class="form-control @error('description') is-invalid @enderror"
                                        id="description" name="description"
                                        value="{{ old('description', $banner->description ?? '') }}"
-                                       placeholder="{{ __('請輸入') . __('validation.attributes.banner.description') }}"
+                                       placeholder="請輸入描述"
                                        data-parsley-maxlength="120" data-parsley-trigger="change">
                                 @error('description')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="url">{{ __('validation.attributes.banner.url') }}</label>
+                                <label for="url">連結</label>
                                 <input type="url"
                                        class="form-control @error('url') is-invalid @enderror"
                                        id="url" name="url"
                                        value="{{ old('url', $banner->url ?? '') }}"
-                                       placeholder="https://www.example.com"
+                                       placeholder="請輸入連結，EX: https://www.example.com"
                                        data-parsley-type="url" data-parsley-maxlength="255" data-parsley-trigger="change">
                                 @error('url')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
@@ -75,45 +78,57 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label for="start_time">{{ __('validation.attributes.banner.start_time') }}</label>
+                                        <label for="start_time">開始時間</label>
                                         <input type="text"
                                                class="form-control datetimepicker @error('start_time') is-invalid @enderror"
                                                id="start_time" name="start_time"
                                                value="{{ old('start_time', $banner->start_time ?? '') }}"
-                                               placeholder="2025-01-01 00:00:00"
+                                               placeholder="請輸入開始時間，ex: 2025-01-01 00:00:00"
                                                data-parsley-pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                                         @error('start_time')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="end_time">{{ __('validation.attributes.banner.end_time') }}</label>
+                                        <label for="end_time">結束時間</label>
                                         <input type="text"
                                                class="form-control datetimepicker @error('end_time') is-invalid @enderror"
                                                id="end_time" name="end_time"
                                                value="{{ old('end_time', $banner->end_time ?? '') }}"
-                                               placeholder="2025-12-31 23:59:59"
+                                               placeholder="請輸入結束時間，ex:2025-12-31 23:59:59"
                                                data-parsley-pattern="^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$">
                                         @error('end_time')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label for="img">{{ __('validation.attributes.banner.img') }}</label>
+                                        <label for="img">輪播圖片 (@if($imageSetting->height > 0)上傳圖片高度超過 {{ $imageSetting->height }}px，將會等比例自動調整@endif)</label>
                                         <div class="input-group">
                                             <div class="custom-file">
                                                 <input type="file"
                                                        class="custom-file-input @error('img') is-invalid @enderror"
                                                        id="img" name="img"
                                                        accept="image/*"
-                                                       data-parsley-filemaxmegabytes="2"
+                                                       data-parsley-filemaxmegabytes="5"
                                                        data-parsley-filemimetypes="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
-                                                <label class="custom-file-label" for="img">{{ __('選擇圖片') }}</label>
+                                                <label class="custom-file-label" for="img" id="img-label">
+                                                    {{ old('img', isset($banner) && $banner->img ? basename($banner->img) : __('選擇圖片')) }}
+                                                </label>
                                             </div>
                                         </div>
-                                        @error('img')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
-                                        @if(isset($banner) && $banner->img)
-                                            <div class="mt-2">
-                                                <img src="{{ asset('storage/upload/' . $banner->img) }}" width="400" alt="{{ $banner->title }}">
+
+                                        {{-- Laravel 後端錯誤訊息，強制顯示在 form-group 下 --}}
+                                        @if ($errors->has('img'))
+                                            <div class="invalid-feedback d-block mt-1" role="alert">
+                                                <strong>{{ $errors->first('img') }}</strong>
                                             </div>
                                         @endif
+
+                                        {{-- 已存在圖片（編輯時） --}}
+                                        @if(isset($banner) && $banner->img)
+                                        <div class="mt-2">
+                                            <img src="{{ asset('storage/upload/' . $banner->img) }}" width="400" alt="{{ $banner->title }}" class="border rounded old-image">
+                                        </div>
+                                        @endif
+
+                                        {{-- 圖片預覽（上傳後） --}}
                                         <div id="img-preview-wrapper" class="mt-2" style="display: none;">
                                             <img id="img-preview" src="#" width="400" alt="預覽圖片" class="border rounded">
                                         </div>
@@ -122,10 +137,10 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="content">{{ __('validation.attributes.banner.content') }}</label>
+                                <label for="content">內容說明</label>
                                 <textarea class="form-control @error('content') is-invalid @enderror"
                                           id="content" name="content" rows="5"
-                                          placeholder="{{ __('請輸入') . __('validation.attributes.banner.content') }}"
+                                          placeholder="請輸入內容說明"
                                           data-parsley-maxlength="255"
                                           data-parsley-trigger="change">{{ old('content', $banner->content ?? '') }}</textarea>
                                 @error('content')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
@@ -134,7 +149,9 @@
                     </div>
 
                     <div class="card-footer text-center bg-white">
+                        @if((isset($banner) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
                         <button id="modifyBtn" type="button" class="btn btn-primary">{{ isset($banner) ? '修改' : '新增' }}</button>
+                        @endif
                         <a href="{{ url('banners') }}" class="btn btn-info">
                             <span class="text-white"><i class="fas fa-history"></i> 取消</span>
                         </a>
@@ -161,31 +178,40 @@
 <script src="{{ asset('vendor/jqueryui-timepicker/dist/i18n/jquery-ui-timepicker-zh-TW.js') }}"></script>
 
 <script>
+    // 保存原始圖片預覽與檔名
+    const originalImgSrc = '{{ isset($banner) && $banner->img ? asset("storage/upload/" . $banner->img) : "" }}';
+    const originalImgName = '{{ isset($banner) && $banner->img ? basename($banner->img) : __("選擇圖片") }}';
+
     // 日期時間選擇器
     $('.datetimepicker').datetimepicker({
         timeFormat: "HH:mm:ss",
         dateFormat: "yy-mm-dd",
     });
 
-    // 顯示選擇的圖片檔名
     $('#img').on('change', function () {
-        const file = this.files[0];
+        const fileInput = this;
+        const file = fileInput.files[0];
+        const label = $('#img-label');
 
-        // 顯示檔名
-        const fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').addClass("selected").html(fileName);
-
-        // 預覽圖片
         if (file && file.type.startsWith('image/')) {
+            // 設定新的檔名
+            label.text(file.name).addClass('selected');
+
+            // 預覽新圖片
             const reader = new FileReader();
             reader.onload = function (e) {
                 $('#img-preview').attr('src', e.target.result);
                 $('#img-preview-wrapper').show();
+                $('img.old-image').hide(); // 隱藏舊圖
             };
             reader.readAsDataURL(file);
         } else {
+            // 如果使用者取消選取檔案（或不合法），還原原始圖片與檔名
+            fileInput.value = '';
+            label.text(originalImgName).removeClass('selected');
             $('#img-preview-wrapper').hide();
             $('#img-preview').attr('src', '#');
+            $('img.old-image').show(); // 顯示舊圖
         }
     });
 
@@ -197,9 +223,9 @@
             return files.length === 0 || files[0].size <= maxMb * 1048576;
         },
         messages: {
-            zh_tw: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 2]) }}",
-            zh_cn: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 2]) }}",
-            en: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 2]) }}",
+            zh_tw: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 5]) }}",
+            zh_cn: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 5]) }}",
+            en: "{{ __('validation.attributes.banner.messages.img.filemaxmegabytes', ['max' => 5]) }}",
         }
     });
 
@@ -226,7 +252,6 @@
         errorTemplate: '<span></span>',
         trigger: 'change',
         errorsContainer: function (ParsleyField) {
-            // 若為 file 欄位，顯示在 form-group 下
             if (ParsleyField.$element.is(':file')) {
                 return ParsleyField.$element.closest('.form-group');
             }

@@ -15,6 +15,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         if(env('DB_SEED')){
+            if(env('DB_SEED_SETTING')){
+                $this->call(SettingSeeder::class);
+            }else{
+                echo "SettingSeeder 已被關閉\n";
+            }
             if(env('DB_SEED_MENU')){
                 $this->call(MainmenuSeeder::class);
             }else{

@@ -3,14 +3,18 @@
 namespace App\Services;
 
 use App\Repositories\ArticleRepository;
+use Illuminate\Http\Request;
+use App\Services\UploadImageService;
 
 class ArticleService
 {
     protected $articleRepository;
+    protected $uploadImageService;
 
-    public function __construct(ArticleRepository $articleRepository)
+    public function __construct(ArticleRepository $articleRepository, UploadImageService $uploadImageService)
     {
         $this->articleRepository = $articleRepository;
+        $this->uploadImageService = $uploadImageService;
     }
 
     public function get(
@@ -20,14 +24,12 @@ class ArticleService
         array $orderBy = [],
         int $perPage = null
     ) {
-
         foreach (request()->all() as $key => $value) {
             ${$key} = $value;
         }
 
-        // 自訂搜尋條件
         if (request()->filled('keyword')) {
-            $search['keyword'] = request('keyword'); // ✅ 改用 keyword 欄位名
+            $search['keyword'] = request('keyword');
         }
 
         return $this->articleRepository->get($where, $search, $with, $orderBy, $perPage);
@@ -38,18 +40,63 @@ class ArticleService
         return $this->articleRepository->first($id);
     }
 
-    public function create(array $data)
+    /**
+     * 新增資料與圖片
+     */
+    public function create(Request $request)
     {
+        $data = $request->validated();
+
+        if ($request->hasFile('img') && $request->file('img')->isValid()) {
+            $result = $this->uploadImageService->upload(
+                $request->file('img'),
+                $data['type'] ?? 'default'
+            );
+            if (is_string($result) && str_starts_with($result, 'ERROR:')) {
+                return substr($result, 6); // 回傳錯誤訊息給 controller
+            }
+            $data['img'] = $result;
+        }
+
         return $this->articleRepository->create($data);
     }
 
-    public function update(array $data, $id)
+    /**
+     * 更新資料與圖片
+     */
+    public function update(Request $request, $id)
     {
+        $data = $request->validated();
+        $model = $this->articleRepository->first($id);
+
+        if ($request->hasFile('img') && $request->file('img')->isValid()) {
+            $result = $this->uploadImageService->upload(
+                $request->file('img'),
+                $data['type'] ?? 'default',
+                $model->img ?? null
+            );
+            if (is_string($result) && str_starts_with($result, 'ERROR:')) {
+                return substr($result, 6);
+            }
+            $data['img'] = $result;
+        } else {
+            unset($data['img']);
+        }
+
         return $this->articleRepository->update($id, $data);
     }
 
+    /**
+     * 刪除資料並一併刪除圖片
+     */
     public function delete($id)
     {
+        $model = $this->articleRepository->first($id);
+
+        if ($model && $model->img) {
+            $this->uploadImageService->delete($model->img, $model->type ?? 'default');
+        }
+
         return $this->articleRepository->delete($id);
     }
 
@@ -57,11 +104,12 @@ class ArticleService
     {
         $article = $this->articleRepository->first($id);
 
-        if($upDown == 'up') {
+        if ($upDown == 'up') {
             $sort = ($article->sort) - 1.5;
-        }else{
+        } else {
             $sort = ($article->sort) + 1.5;
         }
+
         $this->articleRepository->update($id, ['sort' => $sort]);
     }
 }

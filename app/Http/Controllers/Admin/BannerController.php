@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ArticleService;
 use App\Http\Requests\Admin\BannerRequest;
+use App\Models\ImageSetting as ImageSettingDB;
 
 class BannerController extends Controller
 {
@@ -16,6 +17,7 @@ class BannerController extends Controller
     public function __construct(ArticleService $articleService)
     {
         $this->articleService = $articleService;
+        $this->imageSetting = ImageSettingDB::where('type','banner')->first();
     }
 
     public function index()
@@ -39,25 +41,29 @@ class BannerController extends Controller
 
         $banners = $this->articleService->get([['type','banner']], $search, $with, [['sort','asc']], $list);
         $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'banners']);
-        return view('admin.banners.index', compact($compact)); // 自行調整 view
+        return view('admin.banners.index', compact($compact));
     }
 
     public function create()
     {
-        return view('admin.banners.show');
+        return view('admin.banners.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting]);
     }
 
     public function store(BannerRequest $request)
     {
-        dd($request->all());
-        $this->articleService->create($request->validated());
-        return redirect()->back();
+        $result = $this->articleService->create($request);
+        if (is_string($result)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $result);
+        }
+        return redirect()->route('admin.banners.index')->with('success', '新增成功');
     }
 
     public function show(string $id)
     {
         $banner = $this->articleService->show($id);
-        return view('admin.banners.show', compact('banner'));
+        return view('admin.banners.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'banner' => $banner]);
     }
 
     public function edit(string $id)
@@ -68,48 +74,48 @@ class BannerController extends Controller
 
     public function update(BannerRequest $request, string $id)
     {
-        dd($request->all());
-        $this->articleService->update($request->validated(), $id);
-        return redirect()->back();
+        $result = $this->articleService->update($request, $id);
+        if (is_string($result)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $result);
+        }
+        return redirect()->back()->with('success', '修改成功');
     }
 
     public function destroy(string $id)
     {
         $this->articleService->delete($id);
-        return redirect()->back();
+        return redirect()->back()->with('success', '刪除成功');
     }
-    /*
-        啟用或停用
-     */
+
     public function active(Request $request, $id)
     {
-        isset($request->is_on) ? $is_on = $request->is_on : $is_on = 0;
+        $is_on = $request->input('is_on', 0);
         $this->articleService->update(['is_on' => $is_on], $id);
         return redirect()->back();
     }
-    /*
-        預覽啟用或停用
-     */
+
     public function preview(Request $request, $id)
     {
-        isset($request->is_preview) ? $is_preview = $request->is_preview : $is_preview = 0;
+        $is_preview = $request->input('is_preview', 0);
         $this->articleService->update(['is_preview' => $is_preview], $id);
         return redirect()->back();
     }
-    /*
-        向上排序
-    */
+
     public function sortup(Request $request)
     {
-        is_numeric($request->id) ? $this->articleService->sort('banner', 'up', $request->id) : '';
+        if (is_numeric($request->id)) {
+            $this->articleService->sort('banner', 'up', $request->id);
+        }
         return redirect()->back();
     }
-    /*
-        向下排序
-    */
+
     public function sortdown(Request $request)
     {
-        is_numeric($request->id) ? $this->articleService->sort('banner', 'down', $request->id) : '';
+        if (is_numeric($request->id)) {
+            $this->articleService->sort('banner', 'down', $request->id);
+        }
         return redirect()->back();
     }
 }

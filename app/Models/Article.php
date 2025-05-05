@@ -25,4 +25,8 @@ class Article extends Model
     public function admin(){
         return $this->belongsTo(Admin::class);
     }
+
+    public function imageSetting(){
+        return $this->belongsTo(ImageSetting::class,'type','type');
+    }
 }

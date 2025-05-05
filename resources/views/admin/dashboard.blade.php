@@ -3,7 +3,6 @@
 @section('title', '資訊看板')
 
 @section('content')
-
 <div class="content-wrapper">
     <div class="content-header">
         {{-- alert訊息 --}}
