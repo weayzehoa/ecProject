@@ -229,5 +229,25 @@ return [
                 ],
             ],
         ],
+        'news' => [
+            'type'  => '類别',
+            'title' => '标题',
+            'description' => '描述',
+            'content' => '内容说明',
+            'img' => '轮播图片',
+            'url' => '链接',
+            'start_time' => '开始时间',
+            'end_time' => '结束时间',
+            'messages' => [
+                'title' => [
+                    'required' => '请输入 :attribute',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+                'img' => [
+                    'filemaxmegabytes' => '图片大小不能超过 :max MB',
+                    'filemimetypes' => '图片格式不正确，允许格式为：:types',
+                ],
+            ],
+        ],
     ]
 ];

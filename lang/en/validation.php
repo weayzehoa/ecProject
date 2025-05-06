@@ -227,5 +227,24 @@ return [
                 ],
             ],
         ],
+        'news' => [
+            'title' => 'Title',
+            'description' => 'Description',
+            'content' => 'Content',
+            'img' => 'Banner Image',
+            'url' => 'Link',
+            'start_time' => 'Start Time',
+            'end_time' => 'End Time',
+            'messages' => [
+                'title' => [
+                    'required' => 'Please enter :attribute',
+                    'max' => ':attribute must not exceed :max characters.',
+                ],
+                'img' => [
+                    'filemaxmegabytes' => 'Image size must not exceed :max MB',
+                    'filemimetypes' => 'Invalid image format. Allowed types: :types',
+                ],
+            ],
+        ],
     ]
 ];

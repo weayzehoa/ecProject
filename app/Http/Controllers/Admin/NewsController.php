@@ -5,24 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ArticleService;
-use App\Http\Requests\Admin\FoodMenuRequest;
+use App\Http\Requests\Admin\NewsRequest;
 use App\Models\ImageSetting as ImageSettingDB;
 
-class FoodMenuController extends Controller
+class NewsController extends Controller
 {
     protected $articleService;
-    protected $menuCode = 'M5S8';
+    protected $menuCode = 'M5S7';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(ArticleService $articleService)
     {
         $this->articleService = $articleService;
-        $this->imageSetting = ImageSettingDB::where('type','foodmenu')->first();
+        $this->imageSetting = ImageSettingDB::where('type','news')->first();
     }
 
     public function index()
     {
-        $where = $search = $with = $orderBy = $foodmenus = $appends = $compact = [];
+        $where = $search = $with = $orderBy = $news = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
 
@@ -39,17 +39,17 @@ class FoodMenuController extends Controller
             $compact = array_merge($compact, ['list']);
         }
 
-        $foodmenus = $this->articleService->get([['type','foodmenu']], $search, $with, [['sort','asc']], $list);
-        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'foodmenus']);
-        return view('admin.foodmenus.index', compact($compact));
+        $news = $this->articleService->get([['type','news']], $search, $with, [['sort','asc']], $list);
+        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'news']);
+        return view('admin.news.index', compact($compact));
     }
 
     public function create()
     {
-        return view('admin.foodmenus.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting]);
+        return view('admin.news.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting]);
     }
 
-    public function store(FoodMenuRequest $request)
+    public function store(NewsRequest $request)
     {
         $result = $this->articleService->create($request);
         if (is_string($result)) {
@@ -57,16 +57,16 @@ class FoodMenuController extends Controller
                 ->withInput()
                 ->with('error', $result);
         }
-        return redirect()->route('admin.foodmenus.index')->with('success', '新增成功');
+        return redirect()->route('admin.news.index')->with('success', '新增成功');
     }
 
     public function show(string $id)
     {
-        $foodmenu = $this->articleService->show($id);
-        return view('admin.foodmenus.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'foodmenu' => $foodmenu]);
+        $new = $this->articleService->show($id);
+        return view('admin.news.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'new' => $new]);
     }
 
-    public function update(FoodMenuRequest $request, string $id)
+    public function update(NewsRequest $request, string $id)
     {
         $result = $this->articleService->update($request, $id);
         if (is_string($result)) {
@@ -100,7 +100,7 @@ class FoodMenuController extends Controller
     public function sortup(Request $request)
     {
         if (is_numeric($request->id)) {
-            $this->articleService->sort('foodmenu', 'up', $request->id);
+            $this->articleService->sort('new', 'up', $request->id);
         }
         return redirect()->back();
     }
@@ -108,7 +108,7 @@ class FoodMenuController extends Controller
     public function sortdown(Request $request)
     {
         if (is_numeric($request->id)) {
-            $this->articleService->sort('foodmenu', 'down', $request->id);
+            $this->articleService->sort('new', 'down', $request->id);
         }
         return redirect()->back();
     }

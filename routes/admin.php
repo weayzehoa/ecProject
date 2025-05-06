@@ -73,16 +73,11 @@ Route::name('admin.')->group(function() {
         Route::resource('banners', BannerController::class);
 
         // 最新消息
-        // Route::post('news/active/{id}', [NewsController::class, 'active'])->name('news.active');
-        // Route::get('news/sortup/{id}',[NewsController::class, 'sortup'])->name('news.sortup');
-        // Route::get('news/sortdown/{id}',[NewsController::class, 'sortdown'])->name('news.sortdown');
-        // Route::resource('news', NewsController::class);
-
-        // 分店資訊
-        // Route::post('stores/active/{id}', [StoreController::class, 'active'])->name('stores.active');
-        // Route::get('stores/sortup/{id}',[StoreController::class, 'sortup'])->name('stores.sortup');
-        // Route::get('stores/sortdown/{id}',[StoreController::class, 'sortdown'])->name('stores.sortdown');
-        // Route::resource('stores', StoreController::class);
+        Route::post('news/preview/{id}', [NewsController::class, 'preview'])->name('news.preview');
+        Route::post('news/active/{id}', [NewsController::class, 'active'])->name('news.active');
+        Route::get('news/sortup/{id}',[NewsController::class, 'sortup'])->name('news.sortup');
+        Route::get('news/sortdown/{id}',[NewsController::class, 'sortdown'])->name('news.sortdown');
+        Route::resource('news', NewsController::class);
 
         // 菜單資訊
         Route::post('foodmenus/preview/{id}', [FoodMenuController::class, 'preview'])->name('foodmenus.preview');
@@ -90,6 +85,12 @@ Route::name('admin.')->group(function() {
         Route::get('foodmenus/sortup/{id}',[FoodMenuController::class, 'sortup'])->name('foodmenus.sortup');
         Route::get('foodmenus/sortdown/{id}',[FoodMenuController::class, 'sortdown'])->name('foodmenus.sortdown');
         Route::resource('foodmenus', FoodMenuController::class);
+
+        // 分店資訊
+        // Route::post('stores/active/{id}', [StoreController::class, 'active'])->name('stores.active');
+        // Route::get('stores/sortup/{id}',[StoreController::class, 'sortup'])->name('stores.sortup');
+        // Route::get('stores/sortdown/{id}',[StoreController::class, 'sortdown'])->name('stores.sortdown');
+        // Route::resource('stores', StoreController::class);
 
         // 測試功能
         Route::get('testing', [DashboardController::class, 'testing'])->name('testing');
