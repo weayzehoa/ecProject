@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\ArticleService;
-use App\Http\Requests\Admin\BannerRequest;
+use App\Http\Requests\Admin\FoodMenuRequest;
 use App\Models\ImageSetting as ImageSettingDB;
 
-class BannerController extends Controller
+class FoodMenuController extends Controller
 {
     protected $articleService;
     protected $menuCode = 'M5S6';
@@ -17,12 +17,12 @@ class BannerController extends Controller
     public function __construct(ArticleService $articleService)
     {
         $this->articleService = $articleService;
-        $this->imageSetting = ImageSettingDB::where('type','banner')->first();
+        $this->imageSetting = ImageSettingDB::where('type','foodmenu')->first();
     }
 
     public function index()
     {
-        $where = $search = $with = $orderBy = $banners = $appends = $compact = [];
+        $where = $search = $with = $orderBy = $foodmenus = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
 
@@ -39,17 +39,17 @@ class BannerController extends Controller
             $compact = array_merge($compact, ['list']);
         }
 
-        $banners = $this->articleService->get([['type','banner']], $search, $with, [['sort','asc']], $list);
-        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'banners']);
-        return view('admin.banners.index', compact($compact));
+        $foodmenus = $this->articleService->get([['type','foodmenu']], $search, $with, [['sort','asc']], $list);
+        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'foodmenus']);
+        return view('admin.foodmenus.index', compact($compact));
     }
 
     public function create()
     {
-        return view('admin.banners.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting]);
+        return view('admin.foodmenus.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting]);
     }
 
-    public function store(BannerRequest $request)
+    public function store(FoodMenuRequest $request)
     {
         $result = $this->articleService->create($request);
         if (is_string($result)) {
@@ -57,22 +57,16 @@ class BannerController extends Controller
                 ->withInput()
                 ->with('error', $result);
         }
-        return redirect()->route('admin.banners.index')->with('success', '新增成功');
+        return redirect()->route('admin.foodmenus.index')->with('success', '新增成功');
     }
 
     public function show(string $id)
     {
-        $banner = $this->articleService->show($id);
-        return view('admin.banners.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'banner' => $banner]);
+        $foodmenu = $this->articleService->show($id);
+        return view('admin.foodmenus.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'foodmenu' => $foodmenu]);
     }
 
-    public function edit(string $id)
-    {
-        $item = $this->articleService->show($id);
-        return view('admin.banners.show', compact('item'));
-    }
-
-    public function update(BannerRequest $request, string $id)
+    public function update(FoodMenuRequest $request, string $id)
     {
         $result = $this->articleService->update($request, $id);
         if (is_string($result)) {
@@ -106,7 +100,7 @@ class BannerController extends Controller
     public function sortup(Request $request)
     {
         if (is_numeric($request->id)) {
-            $this->articleService->sort('banner', 'up', $request->id);
+            $this->articleService->sort('foodmenu', 'up', $request->id);
         }
         return redirect()->back();
     }
@@ -114,7 +108,7 @@ class BannerController extends Controller
     public function sortdown(Request $request)
     {
         if (is_numeric($request->id)) {
-            $this->articleService->sort('banner', 'down', $request->id);
+            $this->articleService->sort('foodmenu', 'down', $request->id);
         }
         return redirect()->back();
     }

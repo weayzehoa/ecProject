@@ -46,7 +46,6 @@ class ArticleService
     public function create(Request $request)
     {
         $data = $request->validated();
-
         if ($request->hasFile('img') && $request->file('img')->isValid()) {
             $result = $this->uploadImageService->upload(
                 $request->file('img'),
@@ -111,5 +110,10 @@ class ArticleService
         }
 
         $this->articleRepository->update($id, ['sort' => $sort]);
+    }
+
+    public function onOff(array $data, $id)
+    {
+        return $this->articleRepository->update($id, $data);
     }
 }
