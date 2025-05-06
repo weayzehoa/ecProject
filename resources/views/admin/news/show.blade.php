@@ -5,7 +5,6 @@
 @section('content')
 <div class="content-wrapper">
     <div class="content-header">
-        {{-- alert訊息 --}}
         @include('admin.layouts.alert_message')
         <div class="container-fluid">
             <div class="row mb-2">
@@ -41,7 +40,6 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                {{-- <label for="title"><span class="text-red">*</span> {{ __('validation.attributes.news.title') }}</label> --}}
                                 <label for="title"><span class="text-red">*</span> 標題</label>
                                 <input type="text"
                                        class="form-control @error('title') is-invalid @enderror"
@@ -52,7 +50,6 @@
                                        data-parsley-trigger="change">
                                 @error('title')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
-
 
                             <div class="form-group col-md-3">
                                 <label for="start_time">開始時間</label>
@@ -77,10 +74,8 @@
                             <div class="form-group col-md-12">
                                 <label for="content">消息內容</label>
                                 <textarea class="form-control @error('content') is-invalid @enderror"
-                                          id="content" name="content" rows="5"
-                                          placeholder="請輸入消息內容"
-                                          data-parsley-maxlength="255"
-                                          data-parsley-trigger="change">{{ old('content', $new->content ?? '') }}</textarea>
+                                          id="content" name="content" rows="10"
+                                          placeholder="請輸入消息內容">{{ old('content', $new->content ?? '') }}</textarea>
                                 @error('content')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                         </div>
@@ -114,8 +109,19 @@
 <script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('vendor/jqueryui-timepicker/dist/jquery-ui-timepicker-addon.min.js') }}"></script>
 <script src="{{ asset('vendor/jqueryui-timepicker/dist/i18n/jquery-ui-timepicker-zh-TW.js') }}"></script>
-
+<script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
 <script>
+    // 初始化 CKEditor
+    CKEDITOR.replace('content', {
+        height: 300,
+        language: 'zh',
+    });
+
+    // 觸發 CKEditor 與 Parsley 驗證整合
+    CKEDITOR.instances.content.on('change', function () {
+        $('#content').val(CKEDITOR.instances.content.getData()).trigger('change');
+    });
+
     // 日期時間選擇器
     $('.datetimepicker').datetimepicker({
         timeFormat: "HH:mm:ss",
@@ -140,6 +146,7 @@
     // 提交按鈕觸發驗證
     $('#modifyBtn').click(function () {
         const form = $('#myform');
+        $('#content').val(CKEDITOR.instances.content.getData()); // 取出 CKEditor 內容寫回 textarea
         if (form.parsley().validate()) {
             $(this).attr('disabled', true);
             form.submit();

@@ -17,7 +17,7 @@ class NewsRequest extends FormRequest
             'type' => 'required|string|in:news',
             'title' => 'required|string|max:30',
             'description' => 'nullable|string|max:120',
-            'content' => 'nullable|string|max:255',
+            'content' => 'nullable|string|max:10000',
             'img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'url' => 'nullable|url|max:255',
             'start_time' => 'nullable|date_format:Y-m-d H:i:s',
