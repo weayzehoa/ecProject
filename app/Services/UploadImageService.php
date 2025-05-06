@@ -42,12 +42,15 @@ class UploadImageService
             $image->save($originalPath);
             OptimizerChainFactory::create()->optimize($originalPath);
 
-            if (!$this->generateVariant($file->getRealPath(), $dir, $filename, $origExt, $type, '_m', 2, $imageManager)) {
-                return 'ERROR:中圖處理失敗';
-            }
+            $setting = $this->getSizeFromSetting($type);
+            if (!isset($setting['small_pic']) || $setting['small_pic']) {
+                if (!$this->generateVariant($file->getRealPath(), $dir, $filename, $origExt, $type, '_m', 2, $imageManager)) {
+                    return 'ERROR:中圖處理失敗';
+                }
 
-            if (!$this->generateVariant($file->getRealPath(), $dir, $filename, $origExt, $type, '_s', 4, $imageManager)) {
-                return 'ERROR:小圖處理失敗';
+                if (!$this->generateVariant($file->getRealPath(), $dir, $filename, $origExt, $type, '_s', 4, $imageManager)) {
+                    return 'ERROR:小圖處理失敗';
+                }
             }
 
             return "$type/{$filename}.{$origExt}";
@@ -109,10 +112,6 @@ class UploadImageService
                 $path = "$dir/{$base}{$suffix}.{$ext}";
                 if (File::exists($path)) {
                     File::delete($path);
-                } else {
-                    Log::warning("圖片刪除失敗: 檔案不存在 - {$path}");
-                    Session::flash('warning', "圖片刪除失敗: 檔案不存在 - {$path}");
-                    return 'ERROR:圖片刪除失敗';
                 }
             }
         } catch (Exception $e) {
@@ -136,7 +135,8 @@ class UploadImageService
 
         return $setting ? [
             'width' => $setting->width,
-            'height' => $setting->height
+            'height' => $setting->height,
+            'small_pic' => (int) $setting->small_pic, // ← 加入這行
         ] : null;
     }
 

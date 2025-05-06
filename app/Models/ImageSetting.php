@@ -10,5 +10,9 @@ class ImageSetting extends Model
         'type',
         'width',
         'height',
+        'small_pic',
+        'crop_mode',
+        'crop_width',
+        'crop_height',
     ];
 }

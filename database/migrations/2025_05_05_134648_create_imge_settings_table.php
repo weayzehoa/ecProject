@@ -18,6 +18,10 @@ return new class extends Migration
                 $table->string('type')->comment('類別');
                 $table->integer('width')->nullable()->comment('寬度限制');
                 $table->integer('height')->nullable()->comment('高度限制');
+                $table->boolean('small_pic')->nullable()->default(0)->comment('不須縮圖');
+                $table->string('crop_mode')->nullable()->default('none')->comment('裁切模式');
+                $table->integer('crop_width')->nullable()->comment('裁切寬度');
+                $table->integer('crop_height')->nullable()->comment('裁切高度');
                 $table->timestamps();
             });
         }

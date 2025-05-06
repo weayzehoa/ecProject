@@ -21,24 +21,31 @@ class SettingSeeder extends Seeder
                     'type' => 'default',
                     'width' => 1920,
                     'height' => 1080,
+                    'small_pic' => 0,
                 ],
                 [
                     'name' => 'Logo',
                     'type' => 'logo',
                     'width' => 600,
                     'height' => 400,
+                    'small_pic' => 1,
                 ],
                 [
                     'name' => '輪播',
                     'type' => 'banner',
                     'width' => null,
                     'height' => 500,
+                    'small_pic' => 0,
+                    'crop_mode' => 'right-top',
+                    'crop_width' => 600,
+                    'crop_height' => 400,
                 ],
                 [
                     'name' => '菜單',
                     'type' => 'foodmenu',
                     'width' => 1200,
                     'height' => null,
+                    'small_pic' => 1,
                 ],
             ];
             for($i=0; $i<count($data); $i++){
