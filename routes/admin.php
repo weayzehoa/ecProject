@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\FoodMenuController;
+use App\Http\Controllers\Admin\CKEditorController;
 
 // 防止未定義的路由錯誤
 Route::fallback(function () {
@@ -95,6 +96,8 @@ Route::name('admin.')->group(function() {
         // 測試功能
         Route::get('testing', [DashboardController::class, 'testing'])->name('testing');
 
+        Route::post('ckeditorUpload', [CKEditorController::class, 'upload'])->name('ckeditorUpload');
+        Route::post('ckeditorDelete', [CKEditorController::class, 'delete'])->name('ckeditorDelete');
         // 登出
         Route::get('logout', [LoginController::class, 'logout'])->name('logout');
     });

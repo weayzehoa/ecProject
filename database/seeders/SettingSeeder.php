@@ -24,6 +24,13 @@ class SettingSeeder extends Seeder
                     'small_pic' => 0,
                 ],
                 [
+                    'name' => 'CKEditor',
+                    'type' => 'ckeditor',
+                    'width' => 1920,
+                    'height' => 1080,
+                    'small_pic' => 0,
+                ],
+                [
                     'name' => 'Logo',
                     'type' => 'logo',
                     'width' => 600,

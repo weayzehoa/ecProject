@@ -249,5 +249,15 @@ return [
                 ],
             ],
         ],
+        'ckeditor' => [
+            'upload' => '上傳檔案',
+            'messages' => [
+                'upload' => [
+                    'required' => '請選擇 :attribute。',
+                    'max' => ':attribute 大小不可超過 :max KB。',
+                    'mimes' => ':attribute 格式不正確，允許格式為：:values。',
+                ],
+            ],
+        ],
     ]
 ];

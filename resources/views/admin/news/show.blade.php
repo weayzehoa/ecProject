@@ -115,20 +115,104 @@
     CKEDITOR.replace('content', {
         height: 300,
         language: 'zh',
+
+        //開啟上傳功能
+        filebrowserUploadUrl: '{{ route("admin.ckeditorUpload") }}',
+        filebrowserUploadMethod: 'form',
+
+        // 啟用拖拉上傳圖片
+        extraPlugins: 'uploadimage,uploadfile',
+        filebrowserUploadUrl: '{{ route("admin.ckeditorUpload") }}?_token={{ csrf_token() }}',
+        removeDialogTabs: 'link:upload;image:Upload',
     });
 
-    // 觸發 CKEditor 與 Parsley 驗證整合
+    CKEDITOR.on('instanceReady', function (evt) {
+        const editor = evt.editor;
+
+        // 加入右鍵選單項目
+        editor.addMenuGroup('customGroup');
+        editor.addMenuItem('deleteImageItem', {
+            label: '刪除圖片',
+            icon: CKEDITOR.basePath + 'plugins/delete/icons/delete.png', // 可自訂圖示
+            command: 'deleteImage',
+            group: 'customGroup',
+        });
+
+        editor.contextMenu.addListener(function (element) {
+            if (element.getName() === 'img' && element.getAttribute('src').includes('/storage/upload/ckeditor/')) {
+                return { deleteImageItem: CKEDITOR.TRISTATE_OFF };
+            }
+        });
+
+        editor.addCommand('deleteImage', {
+            exec: function (editor) {
+                const selection = editor.getSelection();
+                const element = selection.getStartElement();
+                if (element && element.getName() === 'img') {
+                    const imgUrl = element.getAttribute('src');
+                    confirmAndDeleteImage(imgUrl, () => {
+                        element.remove(); // 刪除圖片 DOM
+                    });
+                }
+            }
+        });
+
+        // 鍵盤刪除行為（Delete 鍵）
+        editor.on('contentDom', function () {
+            const editable = editor.editable();
+            editable.attachListener(editable, 'keydown', function (e) {
+                if (e.data.$.key === 'Delete') {
+                    const selection = editor.getSelection();
+                    const element = selection.getStartElement();
+                    if (element && element.getName() === 'img') {
+                        const imgUrl = element.getAttribute('src');
+                        confirmAndDeleteImage(imgUrl, () => {
+                            element.remove();
+                        });
+                    }
+                }
+            });
+        });
+    });
+
+    function confirmAndDeleteImage(imgUrl, onSuccess) {
+        if (!imgUrl.includes('/storage/upload/ckeditor/')) return;
+
+        if (!confirm('確定要刪除此圖片嗎？這將會永久刪除伺服器上的圖片檔案。')) {
+            return;
+        }
+
+        fetch('{{ route("admin.ckeditorDelete") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ url: imgUrl })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.deleted) {
+                if (typeof onSuccess === 'function') onSuccess();
+            } else {
+                alert('圖片刪除失敗，請稍後再試。');
+            }
+        })
+        .catch(() => {
+            alert('圖片刪除過程中發生錯誤。');
+        });
+    }
+
+    // CKEditor 內容寫回 textarea 給 Parsley 用
     CKEDITOR.instances.content.on('change', function () {
         $('#content').val(CKEDITOR.instances.content.getData()).trigger('change');
     });
 
-    // 日期時間選擇器
     $('.datetimepicker').datetimepicker({
         timeFormat: "HH:mm:ss",
         dateFormat: "yy-mm-dd",
     });
 
-    // Parsley 初始化
     $('#myform').parsley({
         errorClass: 'is-invalid',
         successClass: 'is-valid',
@@ -136,17 +220,13 @@
         errorTemplate: '<span></span>',
         trigger: 'change',
         errorsContainer: function (ParsleyField) {
-            if (ParsleyField.$element.is(':file')) {
-                return ParsleyField.$element.closest('.form-group');
-            }
-            return ParsleyField.$element.parent();
+            return ParsleyField.$element.closest('.form-group');
         }
     });
 
-    // 提交按鈕觸發驗證
     $('#modifyBtn').click(function () {
         const form = $('#myform');
-        $('#content').val(CKEDITOR.instances.content.getData()); // 取出 CKEditor 內容寫回 textarea
+        $('#content').val(CKEDITOR.instances.content.getData());
         if (form.parsley().validate()) {
             $(this).attr('disabled', true);
             form.submit();
