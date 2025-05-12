@@ -73,7 +73,7 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="content">消息內容</label>
-                                <textarea class="form-control @error('content') is-invalid @enderror"
+                                <textarea class="ckeditor form-control @error('content') is-invalid @enderror"
                                           id="content" name="content" rows="10"
                                           placeholder="請輸入消息內容">{{ old('content', $new->content ?? '') }}</textarea>
                                 @error('content')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
@@ -112,16 +112,9 @@
 <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
 <script src="{{ asset('js/ckeditor-setup.js') }}"></script>
 <script>
-    initCKEditor(
-        'content',
-        '{{ csrf_token() }}',
-        '{{ route("admin.ckeditorUpload") }}',
-        '{{ route("admin.ckeditorDelete") }}'
-    );
-    // initCKEditor(
-    //     'content',
-    //     '{{ csrf_token() }}'
-    // );
+    //class=ckeditor 啟動CKEditor
+    initCKEditor('{{ csrf_token() }}', '{{ route("admin.ckeditorUpload") }}', '{{ route("admin.ckeditorDelete") }}');
+
     $('.datetimepicker').datetimepicker({
         timeFormat: "HH:mm:ss",
         dateFormat: "yy-mm-dd",
