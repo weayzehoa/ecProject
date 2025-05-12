@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use File;
 
+use Illuminate\Validation\ValidationException;
+
 class CKEditorController extends Controller
 {
     protected UploadImageService $uploadImageService;
@@ -21,10 +23,17 @@ class CKEditorController extends Controller
 
     public function upload(CKEditorRequest $request)
     {
-        if ($request->hasFile('upload')) {
+        try {
+            if (!$request->hasFile('upload')) {
+                return response()->json([
+                    'uploaded' => 0,
+                    'error' => ['message' => '沒有選擇檔案或檔案無效'],
+                ]);
+            }
+
             $file = $request->file('upload');
 
-            // ✅ 使用 service 上傳圖片，並指定存放類型為 'ckeditor'
+            // ✅ 正常處理
             $result = $this->uploadImageService->upload($file, 'ckeditor');
 
             if (str_starts_with($result, 'ERROR')) {
@@ -34,20 +43,26 @@ class CKEditorController extends Controller
                 ]);
             }
 
-            // ✅ 回傳完整圖片網址
-            $url = Storage::url("upload/{$result}"); // 因 uploadImageService 回傳的為 ckeditor/xxx.jpg
+            $url = Storage::url("upload/{$result}");
 
             return response()->json([
                 'uploaded' => 1,
                 'fileName' => basename($result),
-                'url'      => $url,
+                'url' => $url,
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'uploaded' => 0,
+                'error' => ['message' => $e->validator->errors()->first('upload')],
+            ], 200);
+        } catch (\Throwable $e) {
+            \Log::error('CKEditor 上傳錯誤：' . $e->getMessage());
+
+            return response()->json([
+                'uploaded' => 0,
+                'error' => ['message' => '伺服器錯誤，請稍後再試或聯絡管理員'],
             ]);
         }
-
-        return response()->json([
-            'uploaded' => 0,
-            'error' => ['message' => '沒有上傳檔案'],
-        ]);
     }
 
     public function delete(Request $request)

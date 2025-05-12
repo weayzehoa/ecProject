@@ -13,11 +13,10 @@ use App\Models\ImageSetting;
 
 class UploadImageService
 {
-    public function upload(UploadedFile $file, string $type = 'default', ?string $oldFilename = null, ?ImageManager $imageManager = null): string|null
+    public function upload(UploadedFile $file, string $type = 'default', ?string $oldFilename = null, ?ImageManager $imageManager = null): ?string
     {
         try {
             $imageManager = $imageManager ?: app(ImageManager::class);
-            $origExt = $file->getClientOriginalExtension();
             $filename = $type . '_' . time();
             $dir = storage_path("app/public/upload/{$type}");
 
@@ -30,14 +29,11 @@ class UploadImageService
                 if ($deleteError) return $deleteError;
             }
 
-            $originalPath = "$dir/{$filename}.{$origExt}";
-
-            // 檢查並強制將 DPI 降為 100（使用 imagick）
+            // Imagick DPI 處理（如有）
             if (extension_loaded('imagick')) {
                 try {
                     $imagick = new \Imagick($file->getRealPath());
                     $dpi = $imagick->getImageResolution();
-
                     if (($dpi['x'] ?? 0) > 100 || ($dpi['y'] ?? 0) > 100) {
                         $imagick->setImageResolution(100, 100);
                         $imagick->resampleImage(100, 100, \Imagick::FILTER_UNDEFINED, 1);
@@ -50,26 +46,31 @@ class UploadImageService
             }
 
             $image = $imageManager->read($file->getRealPath());
+            $mime = $image->origin()->mediaType();
+            $ext = match ($mime) {
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+                default => $file->getClientOriginalExtension(),
+            };
 
-            $resizedImage = $this->resizeBySetting($image, $type, $imageManager);
-            if (!$resizedImage) {
-                $resizedImage = $image; // 尺寸不大於設定時使用原圖
-            }
+            $originalPath = "$dir/{$filename}.{$ext}";
 
-            $resizedImage->save($originalPath);
+            $resizedImage = $this->resizeBySetting($image, $type, $imageManager) ?? $image;
+            $resizedImage->save($originalPath); // ✅ 正確儲存方式
             OptimizerChainFactory::create()->optimize($originalPath);
 
             $setting = $this->getSizeFromSetting($type);
             if (!isset($setting['small_pic']) || $setting['small_pic']) {
-                if (!$this->generateVariantFromImage($resizedImage, $dir, $filename, $origExt, $type, '_m', 2, $imageManager)) {
+                if (!$this->generateVariantFromImage($resizedImage, $dir, $filename, $ext, $type, '_m', 2, $imageManager)) {
                     return 'ERROR:中圖處理失敗';
                 }
-                if (!$this->generateVariantFromImage($resizedImage, $dir, $filename, $origExt, $type, '_s', 4, $imageManager)) {
+                if (!$this->generateVariantFromImage($resizedImage, $dir, $filename, $ext, $type, '_s', 4, $imageManager)) {
                     return 'ERROR:小圖處理失敗';
                 }
             }
 
-            return "$type/{$filename}.{$origExt}";
+            return "$type/{$filename}.{$ext}";
         } catch (Exception $e) {
             Log::error('圖片上傳失敗: ' . $e->getMessage());
             Session::flash('error', '圖片上傳處理失敗');
@@ -89,7 +90,7 @@ class UploadImageService
 
             $variant = $baseImage->scaleDown($targetWidth, $targetHeight);
             $path = "$dir/{$filename}{$suffix}.{$ext}";
-            $variant->save($path);
+            $variant->save($path); // ✅ 正確儲存方式
             OptimizerChainFactory::create()->optimize($path);
 
             return true;
@@ -130,7 +131,7 @@ class UploadImageService
         return $setting ? [
             'width' => $setting->width,
             'height' => $setting->height,
-            'small_pic' => (int) $setting->small_pic,
+            'small_pic' => (int)$setting->small_pic,
         ] : null;
     }
 
@@ -139,8 +140,8 @@ class UploadImageService
         $setting = $this->getSizeFromSetting($type);
         if (!$setting) return null;
 
-        $targetWidth = isset($setting['width']) && is_numeric($setting['width']) && $setting['width'] > 0 ? (int) $setting['width'] : null;
-        $targetHeight = isset($setting['height']) && is_numeric($setting['height']) && $setting['height'] > 0 ? (int) $setting['height'] : null;
+        $targetWidth = isset($setting['width']) && $setting['width'] > 0 ? (int)$setting['width'] : null;
+        $targetHeight = isset($setting['height']) && $setting['height'] > 0 ? (int)$setting['height'] : null;
 
         if ($targetWidth === null && $targetHeight === null) return null;
 
@@ -148,40 +149,62 @@ class UploadImageService
         $originalHeight = $image->height();
 
         if (($targetWidth && $originalWidth <= $targetWidth) && ($targetHeight && $originalHeight <= $targetHeight)) {
-            return null; // 不需要 resize
+            return null;
         }
 
         return $this->resizeWithSingleOrDoubleLimit($image, $targetWidth, $targetHeight, $imageManager);
     }
 
-    protected function resizeWithSingleOrDoubleLimit($image, ?int $maxWidth, ?int $maxHeight, ImageManager $imageManager)
+    protected function resizeWithSingleOrDoubleLimit($image, ?int $targetWidth, ?int $targetHeight, ImageManager $imageManager)
     {
         $originalWidth = $image->width();
         $originalHeight = $image->height();
         $newWidth = $originalWidth;
         $newHeight = $originalHeight;
 
-        if ($maxWidth && $originalWidth > $maxWidth) {
-            $scale = $maxWidth / $originalWidth;
-            $newWidth = $maxWidth;
-            $newHeight = intval($originalHeight * $scale);
+        // 規則 1：只限制寬
+        if ($targetWidth && !$targetHeight) {
+            if ($originalWidth > $targetWidth) {
+                $scale = $targetWidth / $originalWidth;
+                $newWidth = $targetWidth;
+                $newHeight = intval($originalHeight * $scale);
+            }
+            return $image->resize($newWidth, $newHeight);
         }
 
-        if ($maxHeight && $newHeight > $maxHeight) {
-            $scale = $maxHeight / $newHeight;
-            $newHeight = $maxHeight;
-            $newWidth = intval($newWidth * $scale);
+        // 規則 2：只限制高
+        if (!$targetWidth && $targetHeight) {
+            if ($originalHeight > $targetHeight) {
+                $scale = $targetHeight / $originalHeight;
+                $newHeight = $targetHeight;
+                $newWidth = intval($originalWidth * $scale);
+            }
+            return $image->resize($newWidth, $newHeight);
         }
 
+        // 規則 3：寬高皆 null，不處理
+        if (!$targetWidth && !$targetHeight) {
+            return $image;
+        }
+
+        // 規則 4：寬高皆有，補白至滿版
+        $scale = min($targetWidth / $originalWidth, $targetHeight / $originalHeight);
+        $newWidth = intval($originalWidth * $scale);
+        $newHeight = intval($originalHeight * $scale);
         $resized = $image->resize($newWidth, $newHeight);
 
-        $finalWidth = $maxWidth ?? $resized->width();
-        $finalHeight = $maxHeight ?? $resized->height();
+        // 若尺寸剛好符合，不需補白
+        if ($newWidth === $targetWidth && $newHeight === $targetHeight) {
+            return $resized;
+        }
 
-        $transparentSupported = in_array($image->mime(), ['image/png', 'image/webp']);
+        // 補白處理
+        $mime = $image->origin()->mediaType();
+        $transparentSupported = in_array($mime, ['image/png', 'image/webp']);
         $background = $transparentSupported ? 'rgba(0,0,0,0)' : '#000000';
 
-        $canvas = $imageManager->create($finalWidth, $finalHeight)->fill($background);
+        $canvas = $imageManager->create($targetWidth, $targetHeight)->fill($background);
         return $canvas->place($resized, 'center');
     }
+
 }
