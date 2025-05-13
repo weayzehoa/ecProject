@@ -101,9 +101,13 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
+                                            @if(!empty($foodmenu->img))
                                             <a href="{{ asset('storage/upload/' . $foodmenu->img) }}" data-toggle="lightbox" data-title="{{ $foodmenu->title .' 菜單圖片 ' }}" data-gallery="gallery" data-max-width="1440">
                                             <img height="50" class="banner_image_{{ $foodmenu->id }}" src="{{ asset('storage/upload/' . $foodmenu->img) }}" alt="{{ $foodmenu->title }}">
                                             </a>
+                                            @else
+                                            No Image
+                                            @endif
                                         </td>
                                         <td class="text-left align-middle">{{ $foodmenu->description }}</td>
                                         <td class="text-left align-middle">{{ $foodmenu->start_time }}</td>

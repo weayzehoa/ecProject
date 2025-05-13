@@ -25,6 +25,11 @@
 
     <section class="content">
         <div class="container-fluid">
+            @if(isset($banner))
+            <form id="delImgForm" action="{{ route('admin.banners.delimg', $banner->id) }}" method="POST">
+                @csrf
+            </form>
+            @endif
             <form id="myform"
                   action="{{ isset($banner) ? route('admin.banners.update', $banner->id) : route('admin.banners.store') }}"
                   method="POST"
@@ -112,6 +117,11 @@
                                                     {{ old('img', isset($banner) && $banner->img ? basename($banner->img) : __('選擇圖片')) }}
                                                 </label>
                                             </div>
+                                            @if(isset($banner) && in_array($menuCode.'M',explode(',',Auth::user()->permissions)))
+                                            <div class="input-group-append">
+                                                <span class="input-group-text text-danger btn del-img"><i class="fas fa-trash-alt"></i></span>
+                                            </div>
+                                            @endif
                                         </div>
 
                                         {{-- Laravel 後端錯誤訊息，強制顯示在 form-group 下 --}}
@@ -268,6 +278,12 @@
         } else {
             $(this).attr('disabled', false);
         }
+    });
+
+    $('.del-img').click(function(){
+        if(confirm('請確認是否要刪除這張圖片?')){
+            $('#delImgForm').submit();
+        };
     });
 </script>
 @endpush

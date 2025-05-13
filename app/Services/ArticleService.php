@@ -116,4 +116,9 @@ class ArticleService
     {
         return $this->articleRepository->update($id, $data);
     }
+
+    public function delimg(int $id)
+    {
+        return $this->articleRepository->delimg($id);
+    }
 }

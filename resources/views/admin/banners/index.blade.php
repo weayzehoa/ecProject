@@ -101,9 +101,13 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
+                                            @if($banner->img)
                                             <a href="{{ asset('storage/upload/' . $banner->img) }}" data-toggle="lightbox" data-title="{{ $banner->title .' 輪播圖片 ' }}" data-gallery="gallery" data-max-width="1440">
                                             <img height="50" class="banner_image_{{ $banner->id }}" src="{{ asset('storage/upload/' . $banner->img) }}" alt="{{ $banner->title }}">
                                             </a>
+                                            @else
+                                            No Image
+                                            @endif
                                         </td>
                                         <td class="text-left align-middle">{{ $banner->description }}</td>
                                         <td class="text-left align-middle">{{ $banner->start_time }}</td>

@@ -14,6 +14,7 @@ class ArticleRepository
     public function __construct(Article $model)
     {
         $this->model = $model;
+        $this->folder = storage_path("app/public/upload/");
     }
 
     public function get(
@@ -65,8 +66,7 @@ class ArticleRepository
     public function create(array $data)
     {
         $model = $this->model->create($data);
-        $type = $this->type($model->type);
-        $this->logModelCreated('新增'.$type, $model);
+        $this->logModelCreated('新增'.$this->type($model->type), $model);
         return $model;
     }
 
@@ -81,19 +81,28 @@ class ArticleRepository
     {
         $model = $this->model->findOrFail($id);
         $original = $model->getOriginal();
-        $type = $this->type($model->type);
         $model->update($data);
-        $this->sort($model->type);
-        $this->logModelChanges('修改'.$type, $model, $original);
+        $original['sort'] != $model->sort ?  $this->sort($model->type) : '';
+        $this->logModelChanges('修改'.$this->type($model->type), $model, $original);
         return $model;
     }
 
     public function delete(int $id)
     {
         $model = $this->model->findOrFail($id);
-        $type = $this->type($model->type);
-        $this->logModelDeleted('刪除'.$type, $model);
+        !empty($model->img) && file_exists($this->folder.$model->img) ? unlink($this->folder.$model->img) : '';
+        $this->logModelDeleted('刪除'.$this->type($model->type), $model);
         return $model->delete();
+    }
+
+    public function delimg(int $id)
+    {
+        $model = $this->model->findOrFail($id);
+        $original = $model->getOriginal();
+        !empty($model->img) && file_exists($this->folder.$model->img) ? unlink($this->folder.$model->img) : '';
+        $model->update(['img' => null, 'is_on' => 0]);
+        $this->logModelChanges('刪除'.$this->type($model->type).'圖片', $model, $original);
+        return $model;
     }
 
     public function sort($type)

@@ -16,6 +16,7 @@ class AdminLog extends Model
     public function admin(){
         return $this->belongsTo(Admin::class);
     }
+
     public function getDescriptionTextAttribute(): string
     {
         $desc = $this->description;
@@ -37,29 +38,34 @@ class AdminLog extends Model
                 $lines = [];
 
                 if ($key === 'changed') {
+                    // 額外顯示 id（若有）
+                    if (isset($parsed['article_id'])) {
+                        $lines[] = "id: " . $this->formatValue($parsed['article_id']);
+                    }
+
                     foreach ($data as $field => $change) {
-                        if (is_array($change) && isset($change['before'], $change['after'])) {
-                            $before = is_scalar($change['before']) ? $change['before'] : json_encode($change['before'], JSON_UNESCAPED_UNICODE);
-                            $after  = is_scalar($change['after'])  ? $change['after']  : json_encode($change['after'], JSON_UNESCAPED_UNICODE);
+                        if (is_array($change) && array_key_exists('before', $change) && array_key_exists('after', $change)) {
+                            $before = $this->formatValue($change['before']);
+                            $after  = $this->formatValue($change['after']);
                             $lines[] = "{$field}: {$before} → {$after}";
                         }
                     }
 
                     if (!empty($lines)) {
-                        $sections[] = implode("\n", $lines); // ⛔ 不加 "變更：" 前綴
+                        $sections[] = implode("\n", $lines);
                     }
 
                 } else {
-                    // created / deleted：只顯示 id、name、title 欄位值，不加任何 label
+                    // created / deleted：只顯示 id、name、title
                     foreach (['id', 'name', 'title'] as $field) {
                         if (isset($data[$field])) {
-                            $value = is_scalar($data[$field]) ? $data[$field] : json_encode($data[$field], JSON_UNESCAPED_UNICODE);
+                            $value = $this->formatValue($data[$field]);
                             $lines[] = "{$field}: {$value}";
                         }
                     }
 
                     if (!empty($lines)) {
-                        $sections[] = implode("\n", $lines); // ⛔ 不加 created/deleted label
+                        $sections[] = implode("\n", $lines);
                     }
                 }
             }
@@ -67,9 +73,24 @@ class AdminLog extends Model
             return implode("\n\n", $sections);
 
         } catch (\JsonException) {
-            $content = trim(preg_replace('/\s+/', ' ', $desc));
-            return $content;
+            return trim(preg_replace('/\s+/', ' ', $desc));
         }
     }
 
+    protected function formatValue($value): string
+    {
+        if (is_null($value)) {
+            return 'null';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        if (is_scalar($value)) {
+            return (string)$value;
+        }
+
+        return json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
 }

@@ -112,4 +112,12 @@ class BannerController extends Controller
         }
         return redirect()->back();
     }
+
+    public function delimg(Request $request, $id)
+    {
+        if (is_numeric($id)) {
+            $this->articleService->delimg($id);
+        }
+        return redirect()->back();
+    }
 }

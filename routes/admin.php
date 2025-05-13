@@ -67,6 +67,7 @@ Route::name('admin.')->group(function() {
         // Route::resource('shippingFees', ShippingFeeController::class);
 
         // 輪播管理
+        Route::post('banners/delimg/{id}', [BannerController::class, 'delimg'])->name('banners.delimg');
         Route::post('banners/preview/{id}', [BannerController::class, 'preview'])->name('banners.preview');
         Route::post('banners/active/{id}', [BannerController::class, 'active'])->name('banners.active');
         Route::get('banners/sortup/{id}',[BannerController::class, 'sortup'])->name('banners.sortup');
@@ -81,6 +82,7 @@ Route::name('admin.')->group(function() {
         Route::resource('news', NewsController::class);
 
         // 菜單資訊
+        Route::post('foodmenus/delimg/{id}', [FoodMenuController::class, 'delimg'])->name('foodmenus.delimg');
         Route::post('foodmenus/preview/{id}', [FoodMenuController::class, 'preview'])->name('foodmenus.preview');
         Route::post('foodmenus/active/{id}', [FoodMenuController::class, 'active'])->name('foodmenus.active');
         Route::get('foodmenus/sortup/{id}',[FoodMenuController::class, 'sortup'])->name('foodmenus.sortup');
