@@ -39,8 +39,8 @@ class AdminLog extends Model
 
                 if ($key === 'changed') {
                     // 額外顯示 id（若有）
-                    if (isset($parsed['article_id'])) {
-                        $lines[] = "id: " . $this->formatValue($parsed['article_id']);
+                    if (isset($parsed['id'])) {
+                        $lines[] = "id: " . $this->formatValue($parsed['id']);
                     }
 
                     foreach ($data as $field => $change) {

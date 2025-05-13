@@ -9,20 +9,16 @@ trait LoggableRepositoryTrait
 {
     protected function logModelCreated(string $action, Model $model): void
     {
-        $logKey = $this->guessLogKey($model);
-
         adminLog($action, [
-            $logKey => $model->getKey(),
+            'id' => $model->getKey(),
             'created' => $model->getAttributes(),
         ]);
     }
 
     protected function logModelDeleted(string $action, Model $model): void
     {
-        $logKey = $this->guessLogKey($model);
-
         adminLog($action, [
-            $logKey => $model->getKey(),
+            'id' => $model->getKey(),
             'deleted' => $model->getAttributes(),
         ]);
     }
@@ -50,15 +46,10 @@ trait LoggableRepositoryTrait
         }
 
         if (!empty($changed)) {
-            $logData = ['changed' => $changed];
-
-            if (!$logKey) {
-                $logKey = $this->guessLogKey($model);
-            }
-
-            $logData[$logKey] = $model->getKey();
-
-            adminLog($action, $logData);
+            adminLog($action, [
+                'id' => $model->getKey(),
+                'changed' => $changed,
+            ]);
         }
     }
 
