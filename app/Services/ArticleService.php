@@ -119,6 +119,10 @@ class ArticleService
 
     public function delimg(int $id)
     {
-        return $this->articleRepository->delimg($id);
+        $model = $this->articleRepository->first($id);
+        if(!empty($model)){
+            !empty($model->img) ? $this->uploadImageService->delete($model->img, $model->type ?? 'default') : '';
+            return $this->articleRepository->update($id, ['img' => null, 'is_on' => 0]);
+        }
     }
 }

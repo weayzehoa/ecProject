@@ -14,7 +14,6 @@ class ArticleRepository
     public function __construct(Article $model)
     {
         $this->model = $model;
-        $this->folder = storage_path("app/public/upload/");
     }
 
     public function get(
@@ -90,19 +89,8 @@ class ArticleRepository
     public function delete(int $id)
     {
         $model = $this->model->findOrFail($id);
-        !empty($model->img) && file_exists($this->folder.$model->img) ? unlink($this->folder.$model->img) : '';
         $this->logModelDeleted('刪除'.$this->type($model->type), $model);
         return $model->delete();
-    }
-
-    public function delimg(int $id)
-    {
-        $model = $this->model->findOrFail($id);
-        $original = $model->getOriginal();
-        !empty($model->img) && file_exists($this->folder.$model->img) ? unlink($this->folder.$model->img) : '';
-        $model->update(['img' => null, 'is_on' => 0]);
-        $this->logModelChanges('刪除'.$this->type($model->type).'圖片', $model, $original);
-        return $model;
     }
 
     public function sort($type)
