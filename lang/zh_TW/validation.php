@@ -259,5 +259,25 @@ return [
                 ],
             ],
         ],
+        'store' => [
+            'messages' => [
+                'img' => [
+                    'filemaxmegabytes' => '圖片大小不可超過 :max MB。',
+                    'filemimetypes' => '僅允許上傳圖片格式（:types）。',
+                ],
+            ],
+            'name' => '分店名稱',
+            'tel' => '電話',
+            'address' => '地址',
+            'service_time_start' => '營業開始時間',
+            'service_time_end' => '營業結束時間',
+            'fb_url' => 'FB粉絲頁連結',
+            'ig_url' => 'Instagram粉絲頁連結',
+            'line_id' => 'Line ID',
+            'line_qrcode' => 'Line Qr-Code 網址',
+            'lon' => '經度',
+            'lat' => '緯度',
+            'img' => '圖片',
+        ],
     ]
 ];

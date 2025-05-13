@@ -8,6 +8,7 @@ use App\Models\Admin as AdminDB;
 use App\Models\Mainmenu as MainmenuDB;
 use App\Models\Submenu as SubmenuDB;
 use App\Models\CompanySetting as CompanySettingDB;
+use App\Models\Store as StoreDB;
 
 class AdminSeeder extends Seeder
 {
@@ -114,6 +115,36 @@ class AdminSeeder extends Seeder
                 'admin_id' => 2,
             ]);
             echo "COMPANY Setting 建立完成\n";
+        }
+
+        if (env('DB_MIGRATE_STORES')) {
+            StoreDB::create([
+                'name' => '台北店',
+                'intro' => '台北店簡介',
+                'description' => '台北店詳細介紹',
+                'boss' => '陳威宏',
+                'contact' => 'Roger Wu',
+                'tax_num' => '12853714',
+                'tel' => '02-22553653',
+                'fax' => '02-22553431',
+                'address' => '220新北市板橋區四川路一段23號9號',
+                'email' => null,
+                'img' => null,
+                'lon' => '25.00713236992322',
+                'lat' => '121.45955676734683',
+                'service_time_start' => '早上 09:00',
+                'service_time_end' => '下午 18:00',
+                'url' => 'https://www.dgfactor.com',
+                'fb_url' => 'https://facebook.com',
+                'ig_url' => 'https://instagram.com',
+                'line_id' => null,
+                'line_qrcode' => null,
+                'wechat_id' => null,
+                'is_on' => 1,
+                'is_preview' => 0,
+                'sort' => 1,
+            ]);
+            echo "Store 分店建立完成\n";
         }
     }
 }

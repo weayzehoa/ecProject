@@ -90,10 +90,12 @@ Route::name('admin.')->group(function() {
         Route::resource('foodmenus', FoodMenuController::class);
 
         // 分店資訊
-        // Route::post('stores/active/{id}', [StoreController::class, 'active'])->name('stores.active');
-        // Route::get('stores/sortup/{id}',[StoreController::class, 'sortup'])->name('stores.sortup');
-        // Route::get('stores/sortdown/{id}',[StoreController::class, 'sortdown'])->name('stores.sortdown');
-        // Route::resource('stores', StoreController::class);
+        Route::post('stores/delimg/{id}', [StoreController::class, 'delimg'])->name('stores.delimg');
+        Route::post('stores/preview/{id}', [StoreController::class, 'preview'])->name('stores.preview');
+        Route::post('stores/active/{id}', [StoreController::class, 'active'])->name('stores.active');
+        Route::get('stores/sortup/{id}',[StoreController::class, 'sortup'])->name('stores.sortup');
+        Route::get('stores/sortdown/{id}',[StoreController::class, 'sortdown'])->name('stores.sortdown');
+        Route::resource('stores', StoreController::class);
 
         // 測試功能
         Route::get('testing', [DashboardController::class, 'testing'])->name('testing');

@@ -31,6 +31,13 @@ class SettingSeeder extends Seeder
                     'small_pic' => 0,
                 ],
                 [
+                    'name' => '分店',
+                    'type' => 'store',
+                    'width' => 1920,
+                    'height' => null,
+                    'small_pic' => 0,
+                ],
+                [
                     'name' => 'Logo',
                     'type' => 'logo',
                     'width' => 600,

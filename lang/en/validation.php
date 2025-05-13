@@ -246,5 +246,26 @@ return [
                 ],
             ],
         ],
+        'store' => [
+            'messages' => [
+                'img' => [
+                    'filemaxmegabytes' => 'The image must not be greater than :max MB.',
+                    'filemimetypes' => 'Only image files are allowed (types: :types).',
+                ],
+            ],
+            'name' => 'Store Name',
+            'tel' => 'Phone',
+            'fax' => 'Fax',
+            'address' => 'Address',
+            'service_time_start' => 'Opening Time',
+            'service_time_end' => 'Closing Time',
+            'fb_url' => 'Facebook URL',
+            'ig_url' => 'Instagram URL',
+            'line_id' => 'LINE ID',
+            'line_qrcode' => 'LINE QR Code URL',
+            'lon' => 'Longitude',
+            'lat' => 'Latitude',
+            'img' => 'Image',
+        ],
     ]
 ];

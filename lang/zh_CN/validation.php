@@ -249,5 +249,26 @@ return [
                 ],
             ],
         ],
+        'store' => [
+            'messages' => [
+                'img' => [
+                    'filemaxmegabytes' => '图片大小不能超过 :max MB。',
+                    'filemimetypes' => '仅允许上传图片格式（类型：:types）。',
+                ],
+            ],
+            'name' => '分店名称',
+            'tel' => '电话',
+            'fax' => '传真',
+            'address' => '地址',
+            'service_time_start' => '营业开始时间',
+            'service_time_end' => '营业结束时间',
+            'fb_url' => 'Facebook 链接',
+            'ig_url' => 'Instagram 链接',
+            'line_id' => 'LINE ID',
+            'line_qrcode' => 'LINE 二维码链接',
+            'lon' => '经度',
+            'lat' => '纬度',
+            'img' => '图片',
+        ],
     ]
 ];
