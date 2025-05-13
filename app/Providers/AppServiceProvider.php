@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use App\Services\GoogleRecaptchaService;
 use Intervention\Image\ImageManager;
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrapFour();
         $helperPath = app_path('Helpers/adminHelper.php');
         if (file_exists($helperPath)) {
             require_once $helperPath;
