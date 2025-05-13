@@ -47,35 +47,31 @@ class AdminLogController extends Controller
 
     public function create()
     {
-        return view('admin.create'); // 自行調整 view
+        return redirect()->back();
     }
 
-    public function store(AdminLogCreateRequest $request)
+    public function store(Request $request)
     {
-        $this->adminLogService->create($request->validated());
         return redirect()->back();
     }
 
     public function show(string $id)
     {
-        $item = $this->adminLogService->show($id);
-        return view('admin.show', compact('item')); // 自行調整 view
+        return redirect()->back();
     }
 
     public function edit(string $id)
     {
-        //
+        return redirect()->back();
     }
 
-    public function update(AdminLogUpdateRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
-        $this->adminLogService->update($request->validated(), $id);
         return redirect()->back();
     }
 
     public function destroy(string $id)
     {
-        $this->adminLogService->delete($id);
         return redirect()->back();
     }
 }

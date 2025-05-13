@@ -68,7 +68,7 @@ class BannerController extends Controller
 
     public function edit(string $id)
     {
-        //
+        return redirect()->back();
     }
 
     public function update(BannerRequest $request, string $id)

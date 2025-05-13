@@ -68,7 +68,7 @@ class NewsController extends Controller
 
     public function edit(string $id)
     {
-        //
+        return redirect()->back();
     }
 
     public function update(NewsRequest $request, string $id)

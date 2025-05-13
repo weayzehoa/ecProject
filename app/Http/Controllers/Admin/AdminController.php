@@ -69,7 +69,7 @@ class AdminController extends Controller
 
     public function edit(string $id)
     {
-        //
+        return redirect()->back();
     }
 
     public function update(AdminUpdateRequest $request, string $id)

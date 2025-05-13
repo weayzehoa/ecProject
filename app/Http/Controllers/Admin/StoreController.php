@@ -69,7 +69,7 @@ class StoreController extends Controller
 
     public function edit(string $id)
     {
-        //
+        return redirect()->back();
     }
 
     public function update(StoreRequest $request, string $id)
