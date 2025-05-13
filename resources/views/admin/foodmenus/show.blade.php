@@ -117,7 +117,7 @@
                                                     {{ old('img', isset($foodmenu) && $foodmenu->img ? basename($foodmenu->img) : __('選擇圖片')) }}
                                                 </label>
                                             </div>
-                                            @if(isset($foodmenu) && in_array($menuCode.'M',explode(',',Auth::user()->permissions)))
+                                            @if(isset($foodmenu))
                                             <div class="input-group-append">
                                                 <span class="input-group-text text-danger btn del-img"><i class="fas fa-trash-alt"></i></span>
                                             </div>
