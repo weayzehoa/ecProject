@@ -66,6 +66,11 @@ class FoodMenuController extends Controller
         return view('admin.foodmenus.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'foodmenu' => $foodmenu]);
     }
 
+    public function edit(string $id)
+    {
+        //
+    }
+
     public function update(FoodMenuRequest $request, string $id)
     {
         $result = $this->articleService->update($request, $id);

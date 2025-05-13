@@ -64,8 +64,7 @@ class AdminLogController extends Controller
 
     public function edit(string $id)
     {
-        $item = $this->adminLogService->show($id);
-        return view('admin.edit', compact('item')); // 自行調整 view
+        //
     }
 
     public function update(AdminLogUpdateRequest $request, string $id)

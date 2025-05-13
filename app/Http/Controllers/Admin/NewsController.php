@@ -66,6 +66,11 @@ class NewsController extends Controller
         return view('admin.news.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'new' => $new]);
     }
 
+    public function edit(string $id)
+    {
+        //
+    }
+
     public function update(NewsRequest $request, string $id)
     {
         $result = $this->articleService->update($request, $id);
