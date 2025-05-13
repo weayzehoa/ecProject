@@ -117,7 +117,7 @@
                                                     {{ old('img', isset($banner) && $banner->img ? basename($banner->img) : __('選擇圖片')) }}
                                                 </label>
                                             </div>
-                                            @if(isset($banner))
+                                            @if(isset($banner) && !empty($banner->img))
                                             <div class="input-group-append">
                                                 <span class="input-group-text text-danger btn del-img"><i class="fas fa-trash-alt"></i></span>
                                             </div>
