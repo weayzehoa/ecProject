@@ -13,9 +13,6 @@ class CompanySettingRequest extends FormRequest
 
     public function rules(): array
     {
-        $urlRegex = '/^(https?:\/\/)?[\w\.-]+(?:\.[\w\.-]+)+[\w\-._~:\/?#\[\]@!$&\'()*+,;=.]+$/';
-
-
         return [
             'name' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
@@ -29,12 +26,12 @@ class CompanySettingRequest extends FormRequest
             'service_email' => 'nullable|email|max:255',
             'service_time_start' => 'required|string|max:20',
             'service_time_end' => 'required|string|max:20',
-            'website' => ['required', 'string', 'max:255', "regex:$urlRegex"],
-            'url' => ['required', 'string', 'max:255', "regex:$urlRegex"],
-            'fb_url' => ['nullable', 'string', 'max:255', "regex:$urlRegex"],
-            'Instagram_url' => ['nullable', 'string', 'max:255', "regex:$urlRegex"],
+            'website' => ['required', 'string', 'max:255', 'regex:/^[\w\.-]+(?:\.[\w\.-]+)+(\/[\w\-._~:\/?#\[\]@!$&\'()*+,;=.]*)?$/i'],
+            'url' => ['required', 'url', 'max:255'],
+            'fb_url' => ['nullable', 'url', 'max:255'],
+            'Instagram_url' => ['nullable', 'url', 'max:255'],
             'line' => 'nullable|string|max:100',
-            'line_qrcode' => ['nullable', 'string', 'max:255', "regex:$urlRegex"],
+            'line_qrcode' => ['nullable', 'url', 'max:255'],
             'lon' => 'nullable|string|max:50',
             'lat' => 'nullable|string|max:50',
             'wechat_id' => 'nullable|string|max:100',

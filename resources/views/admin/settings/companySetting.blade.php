@@ -95,7 +95,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="website">官網網址(不含https://)</label>
-                                <input type="text" class="form-control @error('website') is-invalid @enderror" id="website" name="website" value="{{ old('website', $company->website ?? '') }}" required data-parsley-maxlength="255" data-parsley-pattern="^[\w\.-]+(?:\.[\w\.-]+)+[\w\-._~:/?#\[\]@!$&'()*+,;=.]+$" data-parsley-pattern-message="請輸入正確的網址格式" data-parsley-trigger="change" placeholder="請輸入官網網址">
+                                <input type="text" class="form-control @error('website') is-invalid @enderror" id="website" name="website" value="{{ old('website', $company->website ?? '') }}" required data-parsley-maxlength="255" data-parsley-pattern="^[\w\.-]+(?:\.[\w\.-]+)+(\/[\w\-._~:\/?#\[\]@!$&'()*+,;=.]*)?$" data-parsley-pattern-message="請輸入正確的網址格式" data-parsley-trigger="change" placeholder="請輸入官網網址">
                                 @error('website')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="form-group col-md-3">
