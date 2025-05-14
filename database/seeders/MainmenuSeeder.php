@@ -18,7 +18,7 @@ class MainmenuSeeder extends Seeder
     {
         $mainmenu = [
             ['sort' => 1, 'is_on' => 1, 'url_type' => 0, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-cogs"></i>', 'name' => '系統管理', 'url' => '', 'func_code' => 'system'],
-            ['sort' => 2, 'is_on' => 0, 'url_type' => 0, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-users"></i>', 'name' => '會員管理', 'url' => '', 'func_code' => 'users'],
+            ['sort' => 2, 'is_on' => 1, 'url_type' => 0, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-users"></i>', 'name' => '會員管理', 'url' => '', 'func_code' => 'users'],
             ['sort' => 3, 'is_on' => 1, 'url_type' => 0, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-store"></i>', 'name' => '產品管理', 'url' => '', 'func_code' => 'products'],
             ['sort' => 4, 'is_on' => 1, 'url_type' => 0, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-clipboard-list"></i>', 'name' => '訂單管理', 'url' => '', 'func_code' => 'orders'],
             ['sort' => 5, 'is_on' => 1, 'url_type' => 0, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-ad"></i>', 'name' => '網站管理', 'url' => '', 'func_code' => 'website'],

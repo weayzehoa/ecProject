@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\CheckPermissionAccess;
 use App\Http\Controllers\Admin\{
     LoginController,
     DashboardController,
@@ -67,6 +66,11 @@ Route::name('admin.')->group(function () {
         // // 商品管理
         // Route::middleware(['checkPermission:products'])->group(function () {
         //     Route::resource('products', ProductController::class);
+        // });
+
+        // // 商品管理
+        // Route::middleware(['checkPermission:users'])->group(function () {
+        //     Route::resource('users', UserController::class);
         // });
 
         // // 商品分類
