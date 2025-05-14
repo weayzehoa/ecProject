@@ -21,6 +21,7 @@ class CreateSubmenusTable extends Migration
                 $table->string('name')->comment('名稱');
                 $table->string('icon')->nullable()->comment('圖示');
                 $table->string('power_action')->nullable()->comment('提供的功能');
+                $table->string('allow_roles')->nullable()->comment('允許的腳色');
                 $table->string('url')->nullable()->comment('連結位置');
                 $table->integer('url_type')->default(0)->comment('連結類型, 0:次選單, 1:內部, 2:外部');
                 $table->boolean('open_window')->default(0)->comment('另開視窗, 0:No, 1:Yes');

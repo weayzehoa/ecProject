@@ -43,7 +43,6 @@ class AdminSeeder extends Seeder
                 }
             }
             $premission = implode(',', $premissions);
-            $premission = implode(',', $premissions);
             $staffPremission = implode(',', $staffPremissions);
             $admins = [
                 [
@@ -53,7 +52,7 @@ class AdminSeeder extends Seeder
                     'tel' => '02-2953-0353',
                     'mobile' => '0928-589-779',
                     'password' => Hash::make('dg12853714'),
-                    'permissions' => $premission,
+                    'permissions' => null,
                     'is_on' => 1,
                     'is_lock' => 0,
                 ],

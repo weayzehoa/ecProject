@@ -23,7 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             ->group(base_path('routes/api.php'));
     })
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'checkPermission' => \App\Http\Middleware\CheckPermissionAccess::class,
+        ]);
     })
     ->withProviders([
         \App\Providers\ViewServiceProvider::class,

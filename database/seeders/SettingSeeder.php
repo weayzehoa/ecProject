@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\ImageSetting as ImageSettingDB;
+use App\Models\FuncCode as FuncCodeDB;
 
 class SettingSeeder extends Seeder
 {

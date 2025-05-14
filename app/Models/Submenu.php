@@ -23,6 +23,7 @@ class Submenu extends Model
         'is_on',
         'sort',
         'power_action',
+        'allow_roles',
         'func_code',
     ];
 
