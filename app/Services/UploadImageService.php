@@ -84,13 +84,15 @@ class UploadImageService
             $setting = $this->getSizeFromSetting($type);
             if (!is_array($setting)) return false;
 
-            $targetWidth = isset($setting['width']) ? intdiv((int)$setting['width'], $scale) : null;
-            $targetHeight = isset($setting['height']) ? intdiv((int)$setting['height'], $scale) : null;
-            if ($targetWidth === null && $targetHeight === null) return false;
+            $originalWidth = $baseImage->width();
+            $originalHeight = $baseImage->height();
+
+            $targetWidth = isset($setting['width']) && $setting['width'] ? intdiv((int)$setting['width'], $scale) : intdiv($originalWidth, $scale);
+            $targetHeight = isset($setting['height']) && $setting['height'] ? intdiv((int)$setting['height'], $scale) : intdiv($originalHeight, $scale);
 
             $variant = $baseImage->scaleDown($targetWidth, $targetHeight);
             $path = "$dir/{$filename}{$suffix}.{$ext}";
-            $variant->save($path); // ✅ 正確儲存方式
+            $variant->save($path);
             OptimizerChainFactory::create()->optimize($path);
 
             return true;

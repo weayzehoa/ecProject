@@ -18,7 +18,7 @@ class ImageSettingRequest extends FormRequest
             'type' => 'required|string|max:30',
             'width' => 'nullable|numeric',
             'height' => 'nullable|numeric',
-            'small_pic' => 'nullable|numeric|in:0,1',
+            'small_pic' => 'required|numeric|in:0,1',
         ];
     }
 
