@@ -64,35 +64,35 @@ Route::name('admin.')->group(function () {
             Route::resource('adminLogs', AdminLogController::class);
         });
 
-        // 商品管理
-        Route::middleware(['checkPermission:products'])->group(function () {
-            Route::resource('products', ProductController::class);
-        });
+        // // 商品管理
+        // Route::middleware(['checkPermission:products'])->group(function () {
+        //     Route::resource('products', ProductController::class);
+        // });
 
-        // 商品分類
-        Route::middleware(['checkPermission:categories'])->group(function () {
-            Route::resource('categories', CategoryController::class);
-        });
+        // // 商品分類
+        // Route::middleware(['checkPermission:categories'])->group(function () {
+        //     Route::resource('categories', CategoryController::class);
+        // });
 
-        // 訂單管理
-        Route::middleware(['checkPermission:orders'])->group(function () {
-            Route::resource('orders', OrderController::class);
-        });
+        // // 訂單管理
+        // Route::middleware(['checkPermission:orders'])->group(function () {
+        //     Route::resource('orders', OrderController::class);
+        // });
 
-        // 付款方式設定
-        Route::middleware(['checkPermission:payMethods'])->group(function () {
-            Route::resource('payMethods', PayMethodController::class);
-        });
+        // // 付款方式設定
+        // Route::middleware(['checkPermission:payMethods'])->group(function () {
+        //     Route::resource('payMethods', PayMethodController::class);
+        // });
 
-        // 運費折扣設定
-        Route::middleware(['checkPermission:shippingFees'])->group(function () {
-            Route::resource('shippingFees', ShippingFeeController::class);
-        });
+        // // 運費折扣設定
+        // Route::middleware(['checkPermission:shippingFees'])->group(function () {
+        //     Route::resource('shippingFees', ShippingFeeController::class);
+        // });
 
-        // 關於我們
-        Route::middleware(['checkPermission:aboutUs'])->group(function () {
-            Route::resource('aboutUs', AboutUsController::class);
-        });
+        // // 關於我們
+        // Route::middleware(['checkPermission:aboutUs'])->group(function () {
+        //     Route::resource('aboutUs', AboutUsController::class);
+        // });
 
         // 輪播管理
         Route::middleware(['checkPermission:banners'])->group(function () {

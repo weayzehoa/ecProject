@@ -23,25 +23,26 @@ class AdminSeeder extends Seeder
             $staffPremission = $premission =null; $mpower = $staffPremissions = $premissions = [];
             $mainmenus = MainmenuDB::with('submenu')->get();
             foreach ($mainmenus as $mainmenu) {
-                $staffPremissions[] = $mainmenu->code;
                 $mpower = explode(',',$mainmenu->power_action);
                 if(count($mpower) > 0){
                     for($i=0;$i<count($mpower);$i++){
-                        $premissions[] = $mainmenu->code.$mpower[$i];
+                        in_array('admin',explode(',',$mainmenu->allow_roles)) ? $premissions[] = $mainmenu->code.$mpower[$i] : '';
                     }
                 }
-                $staffPremissions[] = $premissions[] = $mainmenu->code;
+                in_array('staff',explode(',',$mainmenu->allow_roles)) ? $staffPremissions[] = $mainmenu->code : '';
+                in_array('admin',explode(',',$mainmenu->allow_roles)) ? $premissions[] = $mainmenu->code : '';
                 foreach ($mainmenu->submenu as $submenu) {
-                    $staffPremissions[] = $submenu->code;
+                    in_array('staff',explode(',',$submenu->allow_roles)) ? $staffPremissions[] = $submenu->code : '';
+                    in_array('admin',explode(',',$submenu->allow_roles)) ? $premissions[] = $submenu->code : '';
                     $spower = explode(',',$submenu->power_action);
                     if(count($spower) > 0){
                         for($i=0;$i<count($spower);$i++){
-                            $premissions[] = $submenu->code.$spower[$i];
+                            in_array('admin',explode(',',$submenu->allow_roles)) ? $premissions[] = $submenu->code.$spower[$i] : '';
                         }
                     }
-                    $premissions[] = $submenu->code;
                 }
             }
+            $staffPremissions[] = 'M1S3M';
             $premission = implode(',', $premissions);
             $staffPremission = implode(',', $staffPremissions);
             $admins = [
