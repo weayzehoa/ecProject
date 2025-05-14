@@ -33,7 +33,7 @@
                                 <div class="col-6">
                                     <div class="float-left d-flex align-items-center">
                                         <button id="showForm" class="btn btn-sm btn-success mr-2" title="使用欄位查詢">使用欄位查詢</button>
-                                        @if(in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
+                                        @if(Auth::user()->role == 'develop' || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
                                         <a href="{{ route('admin.news.create') }}" class="btn btn-sm btn-primary mr-1"><i class="fas fa-plus mr-1"></i>新增</a>
                                         @endif
                                     </div>
@@ -93,7 +93,7 @@
                                     @foreach ($news as $new)
                                     <tr>
                                         <td class="text-left align-middle">
-                                            @if(in_array($menuCode.'M',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'M',explode(',',Auth::user()->permissions)))
                                             <span class=""><a href="{{ route('admin.news.show', $new->id ) }}">{{ $new->title }}</a></span>
                                             @else
                                             <span class="">{{ $new->title }}</span>
@@ -103,7 +103,7 @@
                                         <td class="text-left align-middle">{{ $new->start_time }}</td>
                                         <td class="text-left align-middle">{{ $new->end_time }}</td>
                                         <td class="text-center align-middle">
-                                            @if(in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
                                             <form action="{{ url('news/active/' . $new->id) }}" method="POST">
                                                 @csrf
                                                 <input type="checkbox" name="is_on" value="{{ $new->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($new) ? $new->is_on == 1 ? 'checked' : '' : '' }}>
@@ -113,7 +113,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if(in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
                                             <form action="{{ url('news/preview/' . $new->id) }}" method="POST">
                                                 @csrf
                                                 <input type="checkbox" name="is_preview" value="{{ $new->is_preview == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($new) ? $new->is_preview == 1 ? 'checked' : '' : '' }}>
@@ -123,7 +123,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if(in_array($menuCode.'S',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'S',explode(',',Auth::user()->permissions)))
                                             @if($loop->iteration != 1)
                                             <a href="{{ url('news/sortup/' . $new->id) }}" class="text-navy">
                                                 <i class="fas fa-arrow-alt-circle-up text-lg"></i>
@@ -137,7 +137,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if(in_array($menuCode.'D',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'D',explode(',',Auth::user()->permissions)))
                                             <form action="{{ route('admin.news.destroy', $new->id) }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="_method" value="DELETE">

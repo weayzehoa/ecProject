@@ -82,7 +82,7 @@
                     </div>
 
                     <div class="card-footer text-center bg-white">
-                        @if((isset($new) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
+                        @if(Auth::user()->role == 'develop' || (isset($new) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
                         <button id="modifyBtn" type="button" class="btn btn-primary">{{ isset($new) ? '修改' : '新增' }}</button>
                         @endif
                         <a href="{{ url('news') }}" class="btn btn-info">

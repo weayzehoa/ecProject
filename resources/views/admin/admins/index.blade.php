@@ -33,7 +33,7 @@
                                 <div class="col-6">
                                     <div class="float-left d-flex align-items-center">
                                         <button id="showForm" class="btn btn-sm btn-success mr-2" title="使用欄位查詢">使用欄位查詢</button>
-                                        @if(in_array($menuCode.'N',explode(',',Auth::user()->permissions)) || in_array(Auth::user()->role,['develop','admin']))
+                                        @if(Auth::user()->role == 'develop' || in_array($menuCode.'N',explode(',',Auth::user()->permissions)) || in_array(Auth::user()->role,['develop','admin']))
                                         <a href="{{ route('admin.admins.create') }}" class="btn btn-sm btn-primary mr-1"><i class="fas fa-plus mr-1"></i>新增</a>
                                         @endif
                                     </div>
@@ -151,7 +151,7 @@
                                         <td class="text-left align-middle">{{ $admin->last_login_time }}</td>
                                         <td class="text-center align-middle">
                                             @if(in_array(Auth::user()->role,['develop','admin']) && $admin->id != Auth::user()->id && $admin->role != 'develop')
-                                            @if(in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'O',explode(',',Auth::user()->permissions)))
                                             <form action="{{ url('admins/active/' . $admin->id) }}" method="POST">
                                                 @csrf
                                                 <input type="checkbox" name="is_on" value="{{ $admin->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停權" data-off-color="secondary" data-on-color="primary" {{ isset($admin) ? $admin->is_on == 1 ? 'checked' : '' : '' }}>
@@ -163,7 +163,7 @@
                                         </td>
                                         <td class="text-center align-middle">
                                             @if(in_array(Auth::user()->role,['develop','admin']) && $admin->id != Auth::user()->id && $admin->role != 'develop')
-                                            @if(in_array($menuCode.'D',explode(',',Auth::user()->permissions)))
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'D',explode(',',Auth::user()->permissions)))
                                             <form action="{{ route('admin.admins.destroy', $admin->id) }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="_method" value="DELETE">

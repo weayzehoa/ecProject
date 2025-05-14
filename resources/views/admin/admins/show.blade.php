@@ -169,7 +169,7 @@
                         @if(isset($admin) && !in_array(Auth::user()->role,['develop','admin']))
                         <input type="hidden" name="permissions" value="{{ $admin->permissions }}">
                         @else
-                        @if(isset($admin) && isset($menuCode) && in_array($menuCode.'M' , explode(',',Auth::user()->permissions)))
+                        @if(Auth::user()->role == 'develop' || (isset($admin) && isset($menuCode) && in_array($menuCode.'M' , explode(',',Auth::user()->permissions))))
                         <div class="card-primary card-outline col-12 mb-2"></div>
                         <div class="col-md-12">
                             <label for="">權限設定</label>

@@ -159,7 +159,7 @@
                     </div>
 
                     <div class="card-footer text-center bg-white">
-                        @if((isset($banner) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
+                        @if(Auth::user()->role == 'develop' || (isset($banner) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
                         <button id="modifyBtn" type="button" class="btn btn-primary">{{ isset($banner) ? '修改' : '新增' }}</button>
                         @endif
                         <a href="{{ url('banners') }}" class="btn btn-info">

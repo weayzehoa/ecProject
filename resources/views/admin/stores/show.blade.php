@@ -155,7 +155,7 @@
                     </div>
 
                     <div class="card-footer text-center bg-white">
-                        @if((isset($store) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
+                        @if(Auth::user()->role == 'develop' || (isset($store) && in_array($menuCode.'M',explode(',',Auth::user()->permissions))) || in_array($menuCode.'N',explode(',',Auth::user()->permissions)))
                         <button id="modifyBtn" type="button" class="btn btn-primary">{{ isset($store) ? '修改' : '新增' }}</button>
                         @endif
                         <a href="{{ url('stores') }}" class="btn btn-info">

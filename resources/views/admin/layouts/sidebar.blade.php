@@ -13,8 +13,8 @@
                     </a>
                 </li>
                 @foreach($mainmenus as $mainmenu)
-                @if(!empty(Auth::user()) && in_array(Auth::user()->role,explode(',',$mainmenu->allow_roles ?? '' )))
-                @if(in_array($mainmenu->code,explode(',',Auth::user()->permissions ?? '' )))
+                @if(Auth::user()->role == 'develop' || (!empty(Auth::user()) && in_array(Auth::user()->role,explode(',',$mainmenu->allow_roles ?? '' ))))
+                @if(Auth::user()->role == 'develop' || in_array($mainmenu->code,explode(',',Auth::user()->permissions ?? '' )))
                 @if($mainmenu->url_type == 1)
                 <li class="nav-item">
                     <a href="{{ url($mainmenu->url) }}" class="nav-link" {{ $mainmenu->open_window ? 'target="_blank"' : '' }}>
@@ -44,7 +44,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                     @foreach($mainmenu->submenu as $submenu)
-                    @if(in_array($submenu->code,explode(',',Auth::user()->permissions ?? '' )))
+                    @if(Auth::user()->role == 'develop' || in_array($submenu->code,explode(',',Auth::user()->permissions ?? '' )))
                     <li class="nav-item">
                         <a href="{{ $submenu->url ? url($submenu->url) : 'javascript:' }}" class="nav-link" {{ $submenu->open_window ? 'target="_blank"' : '' }}>
                             {!! $submenu->icon !!}
