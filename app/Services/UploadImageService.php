@@ -13,38 +13,27 @@ use App\Models\ImageSetting;
 
 class UploadImageService
 {
+    /**
+     * 上傳圖片主流程：處理原圖、DPI 調整、縮圖、中小圖產出
+     */
     public function upload(UploadedFile $file, string $type = 'default', ?string $oldFilename = null, ?ImageManager $imageManager = null): ?string
     {
         try {
             $imageManager = $imageManager ?: app(ImageManager::class);
             $filename = $type . '_' . time();
             $dir = storage_path("app/public/upload/{$type}");
-
+            // 建立目錄（若不存在）
             if (!File::exists($dir)) {
                 File::makeDirectory($dir, 0775, true);
             }
-
+            // 若有指定舊圖，先刪除
             if ($oldFilename) {
                 $deleteError = $this->delete($oldFilename, $type);
                 if ($deleteError) return $deleteError;
             }
-
-            // Imagick DPI 處理（如有）
-            if (extension_loaded('imagick')) {
-                try {
-                    $imagick = new \Imagick($file->getRealPath());
-                    $dpi = $imagick->getImageResolution();
-                    if (($dpi['x'] ?? 0) > 100 || ($dpi['y'] ?? 0) > 100) {
-                        $imagick->setImageResolution(100, 100);
-                        $imagick->resampleImage(100, 100, \Imagick::FILTER_UNDEFINED, 1);
-                        $imagick->setImageUnits(\Imagick::RESOLUTION_PIXELSPERINCH);
-                        $imagick->writeImage($file->getRealPath());
-                    }
-                } catch (\Exception $e) {
-                    Log::warning('Imagick DPI 處理失敗: ' . $e->getMessage());
-                }
-            }
-
+            // 執行 DPI 調整（預處理）
+            $this->normalizeDPI($file->getRealPath());
+            // 讀取圖片資訊與副檔名
             $image = $imageManager->read($file->getRealPath());
             $mime = $image->origin()->mediaType();
             $ext = match ($mime) {
@@ -53,13 +42,13 @@ class UploadImageService
                 'image/webp' => 'webp',
                 default => $file->getClientOriginalExtension(),
             };
-
+            // 原圖儲存路徑
             $originalPath = "$dir/{$filename}.{$ext}";
-
+            // 圖片主處理（依設定寬高縮圖，含補邊）
             $resizedImage = $this->resizeBySetting($image, $type, $imageManager) ?? $image;
-            $resizedImage->save($originalPath); // ✅ 正確儲存方式
+            $resizedImage->save($originalPath);
             OptimizerChainFactory::create()->optimize($originalPath);
-
+            // 縮圖處理（中圖、小圖）
             $setting = $this->getSizeFromSetting($type);
             if (!isset($setting['small_pic']) || $setting['small_pic']) {
                 if (!$this->generateVariantFromImage($resizedImage, $dir, $filename, $ext, $type, '_m', 2, $imageManager)) {
@@ -77,7 +66,30 @@ class UploadImageService
             return 'ERROR:圖片上傳處理失敗';
         }
     }
+    /**
+     * 若圖片 DPI 高於 100，轉換為標準 DPI 100（解決掃描圖過大問題）
+     */
+    protected function normalizeDPI(string $filePath): void
+    {
+        if (!extension_loaded('imagick')) return;
 
+        try {
+            $imagick = new \Imagick($filePath);
+            $dpi = $imagick->getImageResolution();
+
+            if (($dpi['x'] ?? 0) > 100 || ($dpi['y'] ?? 0) > 100) {
+                $imagick->setImageResolution(100, 100);
+                $imagick->resampleImage(100, 100, \Imagick::FILTER_UNDEFINED, 1);
+                $imagick->setImageUnits(\Imagick::RESOLUTION_PIXELSPERINCH);
+                $imagick->writeImage($filePath);
+            }
+        } catch (\Exception $e) {
+            Log::warning('Imagick DPI 處理失敗: ' . $e->getMessage());
+        }
+    }
+    /**
+     * 產生中圖／小圖：以主圖等比例縮小
+     */
     protected function generateVariantFromImage($baseImage, string $dir, string $filename, string $ext, string $type, string $suffix, int $scale, ImageManager $imageManager): bool
     {
         try {
@@ -101,29 +113,9 @@ class UploadImageService
             return false;
         }
     }
-
-    public function delete(string $filename, string $type): ?string
-    {
-        try {
-            $dir = storage_path("app/public/upload/{$type}");
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            $base = pathinfo($filename, PATHINFO_FILENAME);
-
-            foreach (['', '_m', '_s'] as $suffix) {
-                $path = "$dir/{$base}{$suffix}.{$ext}";
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
-            }
-        } catch (Exception $e) {
-            Log::warning('圖片刪除失敗: ' . $e->getMessage());
-            Session::flash('error', '圖片刪除時發生例外錯誤');
-            return 'ERROR:圖片刪除失敗';
-        }
-
-        return null;
-    }
-
+    /**
+     * 取得圖片尺寸設定（若無該類型則取 default）
+     */
     protected function getSizeFromSetting(?string $type): ?array
     {
         $searchType = $type ?: 'default';
@@ -136,7 +128,9 @@ class UploadImageService
             'small_pic' => (int)$setting->small_pic,
         ] : null;
     }
-
+    /**
+     * 根據設定寬高執行圖片縮放，必要時補白（返回處理後圖片）
+     */
     protected function resizeBySetting($image, string $type, ImageManager $imageManager)
     {
         $setting = $this->getSizeFromSetting($type);
@@ -149,14 +143,16 @@ class UploadImageService
 
         $originalWidth = $image->width();
         $originalHeight = $image->height();
-
+        // 原圖已小於目標尺寸，無需處理
         if (($targetWidth && $originalWidth <= $targetWidth) && ($targetHeight && $originalHeight <= $targetHeight)) {
             return null;
         }
 
         return $this->resizeWithSingleOrDoubleLimit($image, $targetWidth, $targetHeight, $imageManager);
     }
-
+    /**
+     * 執行實際縮圖策略（只限寬、只限高、補邊等情況）
+     */
     protected function resizeWithSingleOrDoubleLimit($image, ?int $targetWidth, ?int $targetHeight, ImageManager $imageManager)
     {
         $originalWidth = $image->width();
@@ -200,7 +196,7 @@ class UploadImageService
             return $resized;
         }
 
-        // 補白處理
+        // 寬高皆有，需補白（置中）
         $mime = $image->origin()->mediaType();
         $transparentSupported = in_array($mime, ['image/png', 'image/webp']);
         $background = $transparentSupported ? 'rgba(0,0,0,0)' : '#000000';
@@ -208,5 +204,28 @@ class UploadImageService
         $canvas = $imageManager->create($targetWidth, $targetHeight)->fill($background);
         return $canvas->place($resized, 'center');
     }
+    /**
+     * 刪除圖片（含中圖／小圖）
+     */
+    public function delete(string $filename, string $type): ?string
+    {
+        try {
+            $dir = storage_path("app/public/upload/{$type}");
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $base = pathinfo($filename, PATHINFO_FILENAME);
 
+            foreach (['', '_m', '_s'] as $suffix) {
+                $path = "$dir/{$base}{$suffix}.{$ext}";
+                if (File::exists($path)) {
+                    File::delete($path);
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning('圖片刪除失敗: ' . $e->getMessage());
+            Session::flash('error', '圖片刪除時發生例外錯誤');
+            return 'ERROR:圖片刪除失敗';
+        }
+
+        return null;
+    }
 }
