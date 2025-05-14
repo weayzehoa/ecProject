@@ -155,6 +155,19 @@ return [
     'uuid'                   => 'The :attribute field must be a valid UUID.',
 
     'attributes' => [
+        'imageSettings' => [
+            'name' => 'Name',
+            'type' => 'Code',
+            'width' => 'Width',
+            'height' => 'Height',
+            'small_pic' => 'Thumbnail',
+            'messages' => [
+                'name' => [
+                    'required' => 'Please enter :attribute',
+                    'max' => ':attribute must not exceed :max characters',
+                ],
+            ],
+        ],
         'company' => [
             'name' => 'Company Name',
             'name_en' => 'Company English Name',

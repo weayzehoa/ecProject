@@ -155,6 +155,19 @@ return [
     'uuid'                   => ':attribute 必須是有效的 UUID。',
 
     'attributes' => [
+        'imageSettings' => [
+            'name' => '名稱',
+            'type' => '代碼',
+            'width' => '寬度',
+            'height' => '高度',
+            'small_pic' => '縮圖',
+            'messages' => [
+                'name' => [
+                    'required' => '請輸入 :attribute',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+            ],
+        ],
         'company' => [
             'name' => '公司名稱',
             'name_en' => '公司英文名稱',

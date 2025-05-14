@@ -155,6 +155,19 @@ return [
     'uuid'                   => ':attribute 必须是有效的 UUID。',
 
     'attributes' => [
+        'imageSettings' => [
+            'name' => '名称',
+            'type' => '代码',
+            'width' => '宽度',
+            'height' => '高度',
+            'small_pic' => '缩图',
+            'messages' => [
+                'name' => [
+                    'required' => '请输入 :attribute',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+            ],
+        ],
         'company' => [
             'name' => '公司名称',
             'name_en' => '公司英文名称',

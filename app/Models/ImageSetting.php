@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ImageSetting extends Model
 {
     protected $fillable = [
+        'name',
         'type',
         'width',
         'height',

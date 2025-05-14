@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\FoodMenuController;
 use App\Http\Controllers\Admin\CKEditorController;
+use App\Http\Controllers\Admin\ImageSettingController;
 
 // 防止未定義的路由錯誤
 Route::fallback(function () {
@@ -99,6 +100,9 @@ Route::name('admin.')->group(function() {
 
         // 測試功能
         Route::get('testing', [DashboardController::class, 'testing'])->name('testing');
+
+        // 圖片上傳設定
+        Route::resource('imageSettings', ImageSettingController::class);
 
         Route::post('ckeditorUpload', [CKEditorController::class, 'upload'])->name('ckeditorUpload');
         Route::post('ckeditorDelete', [CKEditorController::class, 'delete'])->name('ckeditorDelete');

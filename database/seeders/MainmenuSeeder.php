@@ -67,10 +67,10 @@ class MainmenuSeeder extends Seeder
             ],
             [ //開發團隊專用
                 ['sort' => 5, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '後台開發測試', 'url' => 'testing',  'func_code' => ''],
-                ['sort' => 1, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O,S', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '後台選單管理', 'url' => 'menus',  'func_code' => ''],
-                ['sort' => 2, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O,S', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas far fa-circle"></i>', 'name' => '功能管理', 'url' => '',  'func_code' => ''],
-                ['sort' => 3, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O,S', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
-                ['sort' => 4, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O,S', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
+                ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '圖片上傳設定', 'url' => 'imageSettings',  'func_code' => ''],
+                ['sort' => 2, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas far fa-circle"></i>', 'name' => '功能管理', 'url' => '',  'func_code' => ''],
+                ['sort' => 3, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
+                ['sort' => 4, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
             ]
         ];
 
