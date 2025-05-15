@@ -188,7 +188,7 @@ class MakeCrud extends Command
                 array \$where = [],
                 array \$search = [],
                 array \$with = [],
-                array \$orderBy = [['id', 'desc']],
+                array \$orderBy = [],
                 int \$perPage = null
             ) {
                 \$query = \$this->model->newQuery();
