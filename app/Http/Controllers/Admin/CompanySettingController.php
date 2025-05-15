@@ -33,13 +33,13 @@ class CompanySettingController extends Controller
     {
         // 通過驗證後的資料會自動回傳
         $data = $request->validated();
-    
+
         // 增加更新人員欄位
         $data['admin_id'] = auth()->user()->id;
-    
+
         // 更新公司資料
-        $this->companySettingService->update($id, $data);
-    
+        $this->companySettingService->update($data, $id);
+
         return redirect()
             ->route('admin.companySettings.index')
             ->with('success', '公司資料已更新');

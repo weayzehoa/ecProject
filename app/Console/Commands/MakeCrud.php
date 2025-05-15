@@ -91,8 +91,7 @@ class MakeCrud extends Command
         use App\Http\Controllers\Controller;
         use Illuminate\Http\Request;
         use App\Services\\{$class}Service;
-        use App\Http\Requests\\$namespace\\{$class}CreateRequest;
-        use App\Http\Requests\\$namespace\\{$class}UpdateRequest;
+        use App\Http\Requests\\$namespace\\{$class}Request;
 
         class {$class}Controller extends Controller
         {
@@ -131,7 +130,7 @@ class MakeCrud extends Command
                 return view('admin.create'); // 自行調整 view
             }
 
-            public function store({$class}CreateRequest \$request)
+            public function store({$class}Request \$request)
             {
                 \$this->{$serviceVar}->create(\$request->validated());
                 return redirect()->back();
@@ -149,7 +148,7 @@ class MakeCrud extends Command
                 return view('admin.edit', compact('item')); // 自行調整 view
             }
 
-            public function update({$class}UpdateRequest \$request, string \$id)
+            public function update({$class}Request \$request, string \$id)
             {
                 \$this->{$serviceVar}->update(\$request->validated(), \$id);
                 return redirect()->back();
@@ -322,37 +321,14 @@ class MakeCrud extends Command
     {
         $namespace = trim($namespace, '\\');
 
-        $createRequest = <<<PHP
+        $request = <<<PHP
         <?php
 
         namespace App\Http\Requests\\$namespace;
 
         use Illuminate\Foundation\Http\FormRequest;
 
-        class {$class}CreateRequest extends FormRequest
-        {
-            public function authorize(): bool
-            {
-                return true;
-            }
-
-            public function rules(): array
-            {
-                return [
-                    //
-                ];
-            }
-        }
-        PHP;
-
-        $updateRequest = <<<PHP
-        <?php
-
-        namespace App\Http\Requests\\$namespace;
-
-        use Illuminate\Foundation\Http\FormRequest;
-
-        class {$class}UpdateRequest extends FormRequest
+        class {$class}Request extends FormRequest
         {
             public function authorize(): bool
             {
@@ -369,8 +345,7 @@ class MakeCrud extends Command
         PHP;
 
         return [
-            "Http/Requests/{$namespace}/{$class}CreateRequest.php" => $createRequest,
-            "Http/Requests/{$namespace}/{$class}UpdateRequest.php" => $updateRequest,
+            "Http/Requests/{$namespace}/{$class}Request.php" => $request
         ];
     }
 }
