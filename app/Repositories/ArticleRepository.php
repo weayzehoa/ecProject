@@ -95,10 +95,10 @@ class ArticleRepository
 
     public function sort($type)
     {
-        $articles = $this->model->where('type',$type)->orderBy('sort','asc')->get();
+        $models = $this->model->where('type',$type)->orderBy('sort','asc')->get();
         $i = 1;
-        foreach ($articles as $article) {
-            $article->update(['sort' => $i]);
+        foreach ($models as $model) {
+            $model->update(['sort' => $i]);
             $i++;
         }
     }

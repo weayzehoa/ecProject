@@ -75,17 +75,17 @@ class AdminRepository
     {
         isset($data['password']) ? $data['password'] = bcrypt($data['password']) : null;
 
-        $admin = $this->model->create($data);
+        $model = $this->model->create($data);
 
-        $this->logModelCreated('新增管理員', $admin);
+        $this->logModelCreated('新增管理員', $model);
 
-        return $admin;
+        return $model;
     }
 
     public function update(int $id, array $data)
     {
-        $admin = $this->model->findOrFail($id);
-        $original = $admin->getOriginal();
+        $model = $this->model->findOrFail($id);
+        $original = $model->getOriginal();
 
         if (!empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
@@ -93,19 +93,19 @@ class AdminRepository
             unset($data['password']);
         }
 
-        $admin->update($data);
+        $model->update($data);
 
-        $this->logModelChanges('修改管理員資料', $admin, $original);
+        $this->logModelChanges('修改管理員資料', $model, $original);
 
         return true;
     }
 
     public function delete(int $id)
     {
-        $admin = $this->model->findOrFail($id);
+        $model = $this->model->findOrFail($id);
 
-        $this->logModelDeleted('刪除管理員', $admin);
+        $this->logModelDeleted('刪除管理員', $model);
 
-        return $admin->delete();
+        return $model->delete();
     }
 }
