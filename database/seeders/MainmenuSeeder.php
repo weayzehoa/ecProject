@@ -65,8 +65,8 @@ class MainmenuSeeder extends Seeder
                 ['sort' => 9, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,D,O,S', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon  fas fa-store-alt"></i>', 'name' => '分店資訊', 'url' => 'stores',  'func_code' => 'stores'],
             ],
             [ //開發團隊專用
-                ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '圖片上傳設定', 'url' => 'imageSettings',  'func_code' => 'imageSettings'],
-                ['sort' => 2, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '選單設定', 'url' => 'menus',  'func_code' => 'menus'],
+                ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '選單功能設定', 'url' => 'mainmenus',  'func_code' => 'mainmenus'],
+                ['sort' => 2, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '圖片上傳設定', 'url' => 'imageSettings',  'func_code' => 'imageSettings'],
                 ['sort' => 3, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
                 ['sort' => 4, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
                 ['sort' => 5, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '後台開發測試', 'url' => 'testing',  'func_code' => 'testing'],

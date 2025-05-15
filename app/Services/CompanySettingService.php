@@ -18,7 +18,7 @@ class CompanySettingService
         return $this->companySettingRepository->first($id);
     }
 
-    public function update($id, array $data)
+    public function update(array $data, $id)
     {
         return $this->companySettingRepository->update($id, $data);
     }
