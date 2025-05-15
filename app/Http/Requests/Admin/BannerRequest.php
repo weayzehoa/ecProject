@@ -29,4 +29,9 @@ class BannerRequest extends FormRequest
     {
         return trans('validation.attributes.banner');
     }
+
+    public function messages(): array
+    {
+        return flattenMessages(trans('validation.attributes.banner.messages'));
+    }
 }

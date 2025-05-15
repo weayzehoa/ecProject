@@ -19,3 +19,38 @@ if (! function_exists('adminLog')) {
         }
     }
 }
+
+if (!function_exists('flattenMessages')) {
+    /**
+     * 將巢狀 messages 陣列扁平化為 Laravel 驗證可識別格式
+     *
+     * 範例輸入：
+     * [
+     *     'name' => [
+     *         'required' => '請輸入名稱',
+     *         'max' => '最多 :max 字',
+     *     ],
+     *     'tags.*' => [
+     *         'in' => '標籤的值無效',
+     *     ]
+     * ]
+     *
+     * 回傳：
+     * [
+     *     'name.required' => '請輸入名稱',
+     *     'name.max' => '最多 :max 字',
+     *     'tags.*.in' => '標籤的值無效',
+     * ]
+     */
+    function flattenMessages(array $messages): array
+    {
+        return collect($messages)->mapWithKeys(function ($value, $key) {
+            if (is_array($value)) {
+                return collect($value)->mapWithKeys(function ($msg, $rule) use ($key) {
+                    return ["{$key}.{$rule}" => $msg];
+                })->all();
+            }
+            return [$key => $value];
+        })->all();
+    }
+}

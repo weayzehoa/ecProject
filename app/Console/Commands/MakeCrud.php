@@ -184,13 +184,8 @@ class MakeCrud extends Command
                 \$this->model = \$model;
             }
 
-            public function get(
-                array \$where = [],
-                array \$search = [],
-                array \$with = [],
-                array \$orderBy = [],
-                int \$perPage = null
-            ) {
+            public function get(array \$where = [], array \$search = [], array \$with = [], array \$orderBy = [], int \$perPage = null)
+            {
                 \$query = \$this->model->newQuery();
 
                 if (!empty(\$with)) {
@@ -216,7 +211,15 @@ class MakeCrud extends Command
                     \$query->orderBy(\$column, \$direction);
                 }
 
-                return \$perPage ? \$query->paginate(\$perPage) : \$query->get();
+                if (!empty(\$perPage)) {
+                    if (!empty(\$where)) {
+                        return \$query->limit(\$perPage)->get();
+                    } else {
+                        return \$query->paginate(\$perPage);
+                    }
+                } else {
+                    return \$query->get();
+                }
             }
 
             public function first(\$id)
@@ -231,13 +234,6 @@ class MakeCrud extends Command
                 return \$model;
             }
 
-            /**
-             * 更新資料並回傳模型實體
-             *
-             * @param array \$data
-             * @param int \$id
-             * @return \App\Models\\$class
-             */
             public function update(int \$id, array \$data)
             {
                 \$model = \$this->model->findOrFail(\$id);
@@ -263,59 +259,57 @@ class MakeCrud extends Command
         $repositoryVar = lcfirst($repositoryClass); // e.g., companySettingRepository
 
         return <<<PHP
-    <?php
+        <?php
 
-    namespace App\Services;
+        namespace App\Services;
 
-    use App\Repositories\\{$repositoryClass};
+        use App\Repositories\\{$repositoryClass};
 
-    class {$class}Service
-    {
-        protected \${$repositoryVar};
-
-        public function __construct({$repositoryClass} \${$repositoryVar})
+        class {$class}Service
         {
-            \$this->{$repositoryVar} = \${$repositoryVar};
-        }
+            protected \${$repositoryVar};
 
-        public function get(\$perPage = null)
-        {
-            \$with = \$where = \$search = [];
-            \$orderBy = [['id', 'desc']];
-
-            foreach (request()->all() as \$key => \$value) {
-                \${\$key} = \$value;
+            public function __construct({$repositoryClass} \${$repositoryVar})
+            {
+                \$this->{$repositoryVar} = \${$repositoryVar};
             }
 
-            if (request()->filled('keyword')) {
-                \$search = ['name' => request('keyword')];
+            public function get(\$perPage = null, array \$with = [], array \$where = [], array \$orderBy = [['id', 'desc']], array \$search = [])
+            {
+                foreach (request()->all() as \$key => \$value) {
+                    \${\$key} = \$value;
+                }
+
+                if (request()->filled('keyword')) {
+                    \$search = ['name' => request('keyword')];
+                }
+
+                return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage);
             }
 
-            return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage);
-        }
+            public function show(\$id)
+            {
+                return \$this->{$repositoryVar}->first(\$id);
+            }
 
-        public function show(\$id)
-        {
-            return \$this->{$repositoryVar}->first(\$id);
-        }
+            public function create(array \$data)
+            {
+                return \$this->{$repositoryVar}->create(\$data);
+            }
 
-        public function create(array \$data)
-        {
-            return \$this->{$repositoryVar}->create(\$data);
-        }
+            public function update(array \$data, \$id)
+            {
+                return \$this->{$repositoryVar}->update(\$id, \$data);
+            }
 
-        public function update(array \$data, \$id)
-        {
-            return \$this->{$repositoryVar}->update(\$id, \$data);
+            public function delete(\$id)
+            {
+                return \$this->{$repositoryVar}->delete(\$id);
+            }
         }
-
-        public function delete(\$id)
-        {
-            return \$this->{$repositoryVar}->delete(\$id);
-        }
+        PHP;
     }
-    PHP;
-    }
+
 
     private function requestTemplate(string $namespace, string $class): array
     {

@@ -18,7 +18,9 @@ use App\Http\Controllers\Admin\{
     StoreController,
     FoodMenuController,
     CKEditorController,
-    ImageSettingController
+    ImageSettingController,
+    MainmenuController,
+    SubmenuController,
 };
 
 Route::fallback(function () {
@@ -164,6 +166,21 @@ Route::name('admin.')->group(function () {
         // 圖片上傳設定
         Route::middleware(['checkPermission:imageSettings'])->group(function () {
             Route::resource('imageSettings', ImageSettingController::class);
+        });
+
+        // 選單功能設定
+        Route::middleware(['checkPermission:mainmenus'])->group(function () {
+            Route::post('mainmenus/open/{id}', [MainmenuController::class, 'open'])->name('mainmenus.open');
+            Route::post('mainmenus/active/{id}', [MainmenuController::class, 'active'])->name('mainmenus.active');
+            Route::get('mainmenus/sortup/{id}', [MainmenuController::class, 'sortup'])->name('mainmenus.sortup');
+            Route::get('mainmenus/sortdown/{id}', [MainmenuController::class, 'sortdown'])->name('mainmenus.sortdown');
+            Route::get('mainmenus/submenu/{id}',[MainmenuController::class, 'submenu'])->name('mainmenus.submenu');
+            Route::resource('mainmenus', MainmenuController::class);
+            Route::post('mainmenus/submenus/open/{id}', [SubmenuController::class, 'open'])->name('submenus.open');
+            Route::post('mainmenus/submenus/active/{id}', [SubmenuController::class, 'active'])->name('submenus.active');
+            Route::get('mainmenus/submenus/sortup/{id}', [SubmenuController::class, 'sortup'])->name('submenus.sortup');
+            Route::get('mainmenus/submenus/sortdown/{id}', [SubmenuController::class, 'sortdown'])->name('submenus.sortdown');
+            Route::resource('mainmenus/submenus', SubmenuController::class);
         });
 
         // 測試與登出

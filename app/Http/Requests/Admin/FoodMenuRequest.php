@@ -29,4 +29,9 @@ class FoodMenuRequest extends FormRequest
     {
         return trans('validation.attributes.foodmenu');
     }
+
+    public function messages(): array
+    {
+        return flattenMessages(trans('validation.attributes.foodmenu.messages'));
+    }
 }

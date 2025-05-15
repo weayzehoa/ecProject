@@ -155,6 +155,26 @@ return [
     'uuid'                   => 'The :attribute field must be a valid UUID.',
 
     'attributes' => [
+        'mainmenu' => [
+            'name' => 'Main Menu Name',
+            'func_code' => 'Function Code',
+            'power_action' => 'Available Features',
+            'power_action.*' => 'Available Features',
+            'icon' => 'Icon',
+            'url_type' => 'URL Type',
+            'url' => 'Link',
+            'open_window' => 'Open in New Window',
+            'small_pic' => 'Thumbnail',
+            'messages' => [
+                'name' => [
+                    'required' => 'Please enter :attribute',
+                    'max' => ':attribute must be at most :max characters',
+                ],
+                'power_action.*' => [
+                    'in' => 'The value of :attribute is invalid. Please do not tamper with the field.',
+                ],
+            ],
+        ],
         'imageSettings' => [
             'name' => 'Name',
             'type' => 'Code',

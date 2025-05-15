@@ -155,6 +155,26 @@ return [
     'uuid'                   => ':attribute 必须是有效的 UUID。',
 
     'attributes' => [
+        'mainmenu' => [
+            'name' => '主菜单名称',
+            'func_code' => '功能代码',
+            'power_action' => '提供功能',
+            'power_action.*' => '提供的功能',
+            'icon' => '图标',
+            'url_type' => '链接类型',
+            'url' => '链接',
+            'open_window' => '另开窗口',
+            'small_pic' => '缩略图',
+            'messages' => [
+                'name' => [
+                    'required' => '请输入 :attribute',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+                'power_action.*' => [
+                    'in' => ':attribute 的值无效，请勿修改字段内容。',
+                ],
+            ],
+        ],
         'imageSettings' => [
             'name' => '名称',
             'type' => '代码',

@@ -33,4 +33,9 @@ class StoreRequest extends FormRequest
     {
         return trans('validation.attributes.store');
     }
+
+    public function messages(): array
+    {
+        return flattenMessages(trans('validation.attributes.store.messages'));
+    }
 }

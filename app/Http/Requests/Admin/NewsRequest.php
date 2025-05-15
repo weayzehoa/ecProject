@@ -27,6 +27,11 @@ class NewsRequest extends FormRequest
 
     public function attributes(): array
     {
-        return trans('validation.attributes.banner');
+        return trans('validation.attributes.news');
+    }
+
+    public function messages(): array
+    {
+        return flattenMessages(trans('validation.attributes.news.messages'));
     }
 }
