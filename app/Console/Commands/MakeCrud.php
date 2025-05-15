@@ -278,7 +278,7 @@ class MakeCrud extends Command
             \$this->{$repositoryVar} = \${$repositoryVar};
         }
 
-        public function get(\$perPage)
+        public function get(\$perPage = null)
         {
             \$with = \$where = \$search = [];
             \$orderBy = [['id', 'desc']];

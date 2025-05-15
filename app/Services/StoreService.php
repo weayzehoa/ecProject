@@ -15,7 +15,7 @@ class StoreService
         $this->uploadImageService = $uploadImageService;
     }
 
-    public function get($perPage)
+    public function get($perPage = null)
     {
         $with = $where = $search = [];
         $orderBy = [['sort', 'asc']];

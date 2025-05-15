@@ -13,7 +13,7 @@ class ImageSettingService
         $this->imageSettingRepository = $imageSettingRepository;
     }
 
-    public function get($perPage)
+    public function get($perPage = null)
     {
         $orderBy = $with = $where = $search = [];
 
