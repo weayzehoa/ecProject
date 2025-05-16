@@ -43,7 +43,7 @@ class MainmenuService
         return $this->mainmenuRepository->create($data);
     }
 
-    public function update($id, array $data)
+    public function update(array $data, $id)
     {
         isset($data['power_action']) ? $data['power_action'] = implode(',',$data['power_action']) : '';
         return $this->mainmenuRepository->update($id, $data);

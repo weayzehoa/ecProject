@@ -74,7 +74,7 @@ class MainmenuController extends Controller
 
     public function update(MainmenuRequest $request, string $id)
     {
-        $this->mainmenuService->update($id, $request->validated());
+        $this->mainmenuService->update($request->validated(), $id);
         return redirect()->back();
     }
 
@@ -86,14 +86,14 @@ class MainmenuController extends Controller
     public function active(Request $request, $id)
     {
         $is_on = $request->input('is_on', 0);
-        $this->mainmenuService->update($id, ['is_on' => $is_on]);
+        $this->mainmenuService->update(['is_on' => $is_on], $id);
         return redirect()->back();
     }
 
     public function open(Request $request, $id)
     {
         $open_window = $request->input('open_window', 0);
-        $this->mainmenuService->update($id, ['open_window' => $open_window]);
+        $this->mainmenuService->update(['open_window' => $open_window], $id);
         return redirect()->back();
     }
 
@@ -113,13 +113,10 @@ class MainmenuController extends Controller
         return redirect()->back();
     }
 
-        public function submenu($id)
+    public function submenu($id)
     {
         $perPage = null; $with = $search = []; $where = [['mainmenu_id',$id]]; $orderBy = [['sort','asc']];
         $subMenus = $this->submenuService->get($perPage, $with, $where, $orderBy, $search);
-
-        dd($subMenus);
         return view('admin.submenus.index', ['menuCode' => $this->menuCode, 'subMenus' => $subMenus]);
-
     }
 }
