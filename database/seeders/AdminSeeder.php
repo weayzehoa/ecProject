@@ -21,7 +21,7 @@ class AdminSeeder extends Seeder
     {
         if (env('DB_MIGRATE_ADMINS')) {
             $staffPremission = $premission =null; $mpower = $staffPremissions = $premissions = [];
-            $mainmenus = MainmenuDB::with('submenu')->get();
+            $mainmenus = MainmenuDB::with('submenus')->get();
             foreach ($mainmenus as $mainmenu) {
                 $mpower = explode(',',$mainmenu->power_action);
                 if(count($mpower) > 0){
@@ -31,7 +31,7 @@ class AdminSeeder extends Seeder
                 }
                 in_array('staff',explode(',',$mainmenu->allow_roles)) ? $staffPremissions[] = $mainmenu->code : '';
                 in_array('admin',explode(',',$mainmenu->allow_roles)) ? $premissions[] = $mainmenu->code : '';
-                foreach ($mainmenu->submenu as $submenu) {
+                foreach ($mainmenu->submenus as $submenu) {
                     in_array('staff',explode(',',$submenu->allow_roles)) ? $staffPremissions[] = $submenu->code : '';
                     in_array('admin',explode(',',$submenu->allow_roles)) ? $premissions[] = $submenu->code : '';
                     $spower = explode(',',$submenu->power_action);
