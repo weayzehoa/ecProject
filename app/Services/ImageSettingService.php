@@ -13,13 +13,11 @@ class ImageSettingService
         $this->imageSettingRepository = $imageSettingRepository;
     }
 
-    public function get($perPage = null)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [], bool $first = false)
     {
-        $orderBy = $with = $where = $search = [];
-
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
-                $$key = $value;
+               ${$key} = $value;
             }
         }
 
@@ -27,7 +25,7 @@ class ImageSettingService
             $search = ['name' => request('keyword')];
         }
 
-        return $this->imageSettingRepository->get($where, $search, $with, $orderBy, $perPage);
+        return $this->imageSettingRepository->get($where, $search, $with, $orderBy, $perPage, $first);
     }
 
     public function show($id)

@@ -16,13 +16,8 @@ class MainmenuRepository
         $this->model = $model;
     }
 
-    public function get(
-        array $where = [],
-        array $search = [],
-        array $with = [],
-        array $orderBy = [],
-        int $perPage = null
-    ) {
+    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, bool $first = false)
+    {
         $query = $this->model->newQuery();
 
         if (!empty($with)) {
@@ -40,7 +35,6 @@ class MainmenuRepository
         }
 
         foreach ($orderBy as $order) {
-
             if (!is_array($order) || count($order) !== 2) {
                 continue;
             }
@@ -49,7 +43,19 @@ class MainmenuRepository
             $query->orderBy($column, $direction);
         }
 
-        return $perPage ? $query->paginate($perPage) : $query->get();
+        if ($first === true) {
+            return $query->first();
+        }
+
+        if (!empty($perPage)) {
+            if (!empty($where)) {
+                return $query->limit($perPage)->get();
+            } else {
+                return $query->paginate($perPage);
+            }
+        }
+
+        return $query->get();
     }
 
     public function first($id)

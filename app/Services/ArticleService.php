@@ -17,16 +17,11 @@ class ArticleService
         $this->uploadImageService = $uploadImageService;
     }
 
-    public function get(
-        array $where = [],
-        array $search = [],
-        array $with = [],
-        array $orderBy = [],
-        int $perPage = null
-    ) {
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [], bool $first = false)
+    {
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
-                $$key = $value;
+               ${$key} = $value;
             }
         }
 
@@ -34,7 +29,7 @@ class ArticleService
             $search['keyword'] = request('keyword');
         }
 
-        return $this->articleRepository->get($where, $search, $with, $orderBy, $perPage);
+        return $this->articleRepository->get($where, $search, $with, $orderBy, $perPage, $first);
     }
 
     public function show($id)

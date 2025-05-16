@@ -27,23 +27,19 @@ class AdminLogService
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
-    public function get($perPage = null)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['id', 'desc']], array $search = [], bool $first = false)
     {
-        $with = $where = $search = [];
-        $orderBy = [['id', 'desc']];
-
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
-                $$key = $value;
+               ${$key} = $value;
             }
         }
 
-        // 自訂搜尋條件
         if (request()->filled('keyword')) {
-            $search['keyword'] = request('keyword'); // ✅ 改用 keyword 欄位名
+            $search = ['name' => request('keyword')];
         }
 
-        return $this->adminLogRepository->get($where, $search, $with, $orderBy, $perPage);
+        return $this->adminLogRepository->get($where, $search, $with, $orderBy, $perPage, $first);
     }
 
     public function show($id)

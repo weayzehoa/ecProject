@@ -16,7 +16,7 @@ class SubmenuRepository
         $this->model = $model;
     }
 
-    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, $first = false)
+    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, bool $first = false)
     {
         $query = $this->model->newQuery();
 
@@ -43,24 +43,20 @@ class SubmenuRepository
             $query->orderBy($column, $direction);
         }
 
-        // ✅ 優先處理只取第一筆的情況
         if ($first === true) {
             return $query->first();
         }
 
-        // 分頁處理
         if (!empty($perPage)) {
             if (!empty($where)) {
-                return $query->limit($perPage)->get(); // 非 paginate, 手動限制
+                return $query->limit($perPage)->get();
             } else {
-                return $query->paginate($perPage); // 使用 Laravel 分頁元件
+                return $query->paginate($perPage);
             }
         }
 
-        // 預設回傳全結果
         return $query->get();
     }
-
 
     public function first($id)
     {

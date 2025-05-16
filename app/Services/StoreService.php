@@ -15,14 +15,11 @@ class StoreService
         $this->uploadImageService = $uploadImageService;
     }
 
-    public function get($perPage = null)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [], bool $first = false)
     {
-        $with = $where = $search = [];
-        $orderBy = [['sort', 'asc']];
-
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
-                $$key = $value;
+               ${$key} = $value;
             }
         }
 
@@ -30,7 +27,7 @@ class StoreService
             $search['keyword'] = request('keyword');
         }
 
-        return $this->storeRepository->get($where, $search, $with, $orderBy, $perPage);
+        return $this->storeRepository->get($where, $search, $with, $orderBy, $perPage, $first);
     }
 
     public function show($id)
