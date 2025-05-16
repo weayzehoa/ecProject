@@ -44,34 +44,4 @@ class AdminLogController extends Controller
         $compact = array_merge($compact, ['appends', 'menuCode', 'lists', 'roles', 'adminLogs']);
         return view('admin.settings.adminLog', compact($compact)); // 自行調整 view
     }
-
-    public function create()
-    {
-        return redirect()->back();
-    }
-
-    public function store(Request $request)
-    {
-        return redirect()->back();
-    }
-
-    public function show(string $id)
-    {
-        return redirect()->back();
-    }
-
-    public function edit(string $id)
-    {
-        return redirect()->back();
-    }
-
-    public function update(Request $request, string $id)
-    {
-        return redirect()->back();
-    }
-
-    public function destroy(string $id)
-    {
-        return redirect()->back();
-    }
 }

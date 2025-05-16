@@ -66,11 +66,6 @@ class BannerController extends Controller
         return view('admin.banners.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'banner' => $banner]);
     }
 
-    public function edit(string $id)
-    {
-        return redirect()->back();
-    }
-
     public function update(BannerRequest $request, string $id)
     {
         $result = $this->articleService->update($request, $id);

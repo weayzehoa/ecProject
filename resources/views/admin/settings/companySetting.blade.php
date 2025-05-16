@@ -150,7 +150,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-center bg-white">
-                        @if(in_array(isset($company) ? $menuCode.'M' : $menuCode.'N', explode(',',Auth::user()->permissions)))
+                        @if(Auth::user()->role == 'develop' || in_array(isset($company) ? $menuCode.'M' : $menuCode.'N', explode(',',Auth::user()->permissions)))
                         <button type="button" class="btn btn-primary confirm-btn">{{ isset($company) ? '修改' : '新增' }}</button>
                         @endif
                         <a href="{{ url('dashboard') }}" class="btn btn-info">

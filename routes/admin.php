@@ -39,30 +39,23 @@ Route::name('admin.')->group(function () {
         // 公司資料設定
         Route::middleware(['checkPermission:companySettings'])->group(function () {
             Route::get('companySettings', [CompanySettingController::class, 'index'])->name('companySettings.index');
-            Route::get('companySettings/create', [CompanySettingController::class, 'create'])->name('companySettings.create')->middleware('checkPermission:companySettings,N');
-            Route::post('companySettings', [CompanySettingController::class, 'store'])->name('companySettings.store')->middleware('checkPermission:companySettings,N');
-            Route::get('companySettings/{companySetting}', [CompanySettingController::class, 'show'])->name('companySettings.show')->middleware('checkPermission:companySettings,M');
-            Route::get('companySettings/{companySetting}/edit', [CompanySettingController::class, 'edit'])->name('companySettings.edit')->middleware('checkPermission:companySettings,M');
             Route::match(['put', 'patch'], 'companySettings/{companySetting}', [CompanySettingController::class, 'update'])->name('companySettings.update')->middleware('checkPermission:companySettings,M');
-            Route::delete('companySettings/{companySetting}', [CompanySettingController::class, 'destroy'])->name('companySettings.destroy')->middleware('checkPermission:companySettings,D');
         });
 
         // 管理員帳號
         Route::middleware(['checkPermission:admins'])->group(function () {
-            Route::post('admins/unlock/{id}', [AdminController::class, 'unlock'])->name('admins.unlock');
-            Route::post('admins/active/{id}', [AdminController::class, 'active'])->name('admins.active');
+            Route::post('admins/active/{id}', [AdminController::class, 'active'])->name('admins.active')->middleware('checkPermission:admins,O');
             Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
             Route::get('admins/create', [AdminController::class, 'create'])->name('admins.create')->middleware('checkPermission:admins,N');
             Route::post('admins', [AdminController::class, 'store'])->name('admins.store')->middleware('checkPermission:admins,N');
             Route::get('admins/{admin}', [AdminController::class, 'show'])->name('admins.show')->middleware('checkPermission:admins,M');
-            Route::get('admins/{admin}/edit', [AdminController::class, 'edit'])->name('admins.edit')->middleware('checkPermission:admins,M');
             Route::match(['put', 'patch'], 'admins/{admin}', [AdminController::class, 'update'])->name('admins.update')->middleware('checkPermission:admins,M');
             Route::delete('admins/{admin}', [AdminController::class, 'destroy'])->name('admins.destroy')->middleware('checkPermission:admins,D');
         });
 
         // 管理者操作紀錄
         Route::middleware(['checkPermission:adminLogs'])->group(function () {
-            Route::resource('adminLogs', AdminLogController::class);
+            Route::get('adminLogs', [AdminLogController::class, 'index'])->name('adminLogs.index');
         });
 
         // // 商品管理
@@ -111,7 +104,6 @@ Route::name('admin.')->group(function () {
             Route::get('banners/create', [BannerController::class, 'create'])->name('banners.create')->middleware('checkPermission:banners,N');
             Route::post('banners', [BannerController::class, 'store'])->name('banners.store')->middleware('checkPermission:banners,N');
             Route::get('banners/{banner}', [BannerController::class, 'show'])->name('banners.show')->middleware('checkPermission:banners,M');
-            Route::get('banners/{banner}/edit', [BannerController::class, 'edit'])->name('banners.edit')->middleware('checkPermission:banners,M');
             Route::match(['put', 'patch'], 'banners/{banner}', [BannerController::class, 'update'])->name('banners.update')->middleware('checkPermission:banners,M');
             Route::delete('banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy')->middleware('checkPermission:banners,D');
         });
@@ -126,7 +118,6 @@ Route::name('admin.')->group(function () {
             Route::get('news/create', [NewsController::class, 'create'])->name('news.create')->middleware('checkPermission:news,N');
             Route::post('news', [NewsController::class, 'store'])->name('news.store')->middleware('checkPermission:news,N');
             Route::get('news/{news}', [NewsController::class, 'show'])->name('news.show')->middleware('checkPermission:news,M');
-            Route::get('news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit')->middleware('checkPermission:news,M');
             Route::match(['put', 'patch'], 'news/{news}', [NewsController::class, 'update'])->name('news.update')->middleware('checkPermission:news,M');
             Route::delete('news/{news}', [NewsController::class, 'destroy'])->name('news.destroy')->middleware('checkPermission:news,D');
         });
@@ -142,7 +133,6 @@ Route::name('admin.')->group(function () {
             Route::get('stores/create', [StoreController::class, 'create'])->name('stores.create')->middleware('checkPermission:stores,N');
             Route::post('stores', [StoreController::class, 'store'])->name('stores.store')->middleware('checkPermission:stores,N');
             Route::get('stores/{store}', [StoreController::class, 'show'])->name('stores.show')->middleware('checkPermission:stores,M');
-            Route::get('stores/{store}/edit', [StoreController::class, 'edit'])->name('stores.edit')->middleware('checkPermission:stores,M');
             Route::match(['put', 'patch'], 'stores/{store}', [StoreController::class, 'update'])->name('stores.update')->middleware('checkPermission:stores,M');
             Route::delete('stores/{store}', [StoreController::class, 'destroy'])->name('stores.destroy')->middleware('checkPermission:stores,D');
         });
@@ -158,7 +148,6 @@ Route::name('admin.')->group(function () {
             Route::get('foodmenus/create', [FoodMenuController::class, 'create'])->name('foodmenus.create')->middleware('checkPermission:foodmenus,N');
             Route::post('foodmenus', [FoodMenuController::class, 'store'])->name('foodmenus.store')->middleware('checkPermission:foodmenus,N');
             Route::get('foodmenus/{foodmenu}', [FoodMenuController::class, 'show'])->name('foodmenus.show')->middleware('checkPermission:foodmenus,M');
-            Route::get('foodmenus/{foodmenu}/edit', [FoodMenuController::class, 'edit'])->name('foodmenus.edit')->middleware('checkPermission:foodmenus,M');
             Route::match(['put', 'patch'], 'foodmenus/{foodmenu}', [FoodMenuController::class, 'update'])->name('foodmenus.update')->middleware('checkPermission:foodmenus,M');
             Route::delete('foodmenus/{foodmenu}', [FoodMenuController::class, 'destroy'])->name('foodmenus.destroy')->middleware('checkPermission:foodmenus,D');
         });

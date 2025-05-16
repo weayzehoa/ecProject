@@ -67,11 +67,6 @@ class StoreController extends Controller
         return view('admin.stores.show', ['menuCode' => $this->menuCode, 'imageSetting' => $this->imageSetting, 'store' => $store]);
     }
 
-    public function edit(string $id)
-    {
-        return redirect()->back();
-    }
-
     public function update(StoreRequest $request, string $id)
     {
         $result = $this->storeService->update($request, $id);

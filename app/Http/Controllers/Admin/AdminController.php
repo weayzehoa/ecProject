@@ -67,11 +67,6 @@ class AdminController extends Controller
         return view('admin.admins.show', ['menuCode' => $this->menuCode, 'roles' => $this->roles, 'admin' => $admin]);
     }
 
-    public function edit(string $id)
-    {
-        return redirect()->back();
-    }
-
     public function update(AdminUpdateRequest $request, string $id)
     {
         $validated = $request->validated();
