@@ -16,7 +16,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ env('APP_NAME') }}</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ url('mainmenu') }}">選單功能設定</a></li>
+                        <li class="breadcrumb-item active"><a href="{{ url('mainmenus') }}">主選單功能設定</a></li>
                         <li class="breadcrumb-item active">清單</li>
                     </ol>
                 </div>
@@ -56,65 +56,65 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($mainmenus as $mainmenu)
+                                    @foreach ($mainMenus as $mainMenu)
                                     <tr>
-                                        <td class="text-center align-middle">{{ $mainmenu->sort }}</td>
-                                        <td class="text-center align-middle">{{ $mainmenu->code }}</td>
-                                        <td class="text-left align-middle">{{ $mainmenu->func_code }}</td>
-                                        <td class="text-center align-middle">{!! $mainmenu->icon !!}</td>
+                                        <td class="text-center align-middle">{{ $mainMenu->sort }}</td>
+                                        <td class="text-center align-middle">{{ $mainMenu->code }}</td>
+                                        <td class="text-left align-middle">{{ $mainMenu->func_code }}</td>
+                                        <td class="text-center align-middle">{!! $mainMenu->icon !!}</td>
                                         <td class="text-left align-middle">
-                                            <a href="{{ route('admin.mainmenus.show', $mainmenu->id ) }}">{{ $mainmenu->name }}</a>
+                                            <a href="{{ route('admin.mainmenus.show', $mainMenu->id ) }}">{{ $mainMenu->name }}</a>
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if($mainmenu->url_type == 1)
+                                            @if($mainMenu->url_type == 1)
                                             <span class="text-info">內部連結</span>
-                                            @elseif($mainmenu->url_type == 2)
+                                            @elseif($mainMenu->url_type == 2)
                                             <span class="text-danger">外部連結</span>
                                             @else
-                                            @if(count($mainmenu->subMenu) > 0)
-                                            <a href="{{ url('mainmenus/submenu/'. $mainmenu->id) }}" class="btn btn-sm btn-primary">次選單設定</a>
+                                            @if(count($mainMenu->subMenu) > 0)
+                                            <a href="{{ url('mainmenus/submenu/'. $mainMenu->id) }}" class="btn btn-sm btn-primary">次選單設定</a>
                                             @endif
                                             @endif
                                         </td>
                                         <td class="text-left align-middle">
-                                            @if($mainmenu->type == 1)
-                                                @if($mainmenu->url_type == 1)
-                                                <a href="{{ url($mainmenu->url) }}" {{ $mainmenu->open_window == 1 ? 'target="_blank"' : '' }}>{{ url($mainmenu->url) }}</a>
-                                                @elseif($mainmenu->url_type == 2)
-                                                <a href="{{ $mainmenu->url }}" {{ $mainmenu->open_window == 1 ? 'target="_blank"' : '' }}>{{ $mainmenu->url }}</a>
+                                            @if($mainMenu->type == 1)
+                                                @if($mainMenu->url_type == 1)
+                                                <a href="{{ url($mainMenu->url) }}" {{ $mainMenu->open_window == 1 ? 'target="_blank"' : '' }}>{{ url($mainMenu->url) }}</a>
+                                                @elseif($mainMenu->url_type == 2)
+                                                <a href="{{ $mainMenu->url }}" {{ $mainMenu->open_window == 1 ? 'target="_blank"' : '' }}>{{ $mainMenu->url }}</a>
                                                 @endif
                                             @else
-                                                @if($mainmenu->url_type == 1)
-                                                <a href="https://{{ env('ADMIN_DOMAIN').'/'.$mainmenu->url }}" {{ $mainmenu->open_window == 1 ? 'target="_blank"' : '' }}>https://{{ env('ADMIN_DOMAIN').'/'.$mainmenu->url }}</a>
-                                                @elseif($mainmenu->url_type == 2)
-                                                <a href="{{ $mainmenu->url }}" {{ $mainmenu->open_window == 1 ? 'target="_blank"' : '' }}>{{ $mainmenu->url }}</a>
+                                                @if($mainMenu->url_type == 1)
+                                                <a href="https://{{ env('ADMIN_DOMAIN').'/'.$mainMenu->url }}" {{ $mainMenu->open_window == 1 ? 'target="_blank"' : '' }}>https://{{ env('ADMIN_DOMAIN').'/'.$mainMenu->url }}</a>
+                                                @elseif($mainMenu->url_type == 2)
+                                                <a href="{{ $mainMenu->url }}" {{ $mainMenu->open_window == 1 ? 'target="_blank"' : '' }}>{{ $mainMenu->url }}</a>
                                                 @endif
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if(!$mainmenu->url_type == 0)
-                                                <form action="{{ url('mainmenus/open/' . $mainmenu->id) }}" method="POST">
+                                            @if(!$mainMenu->url_type == 0)
+                                                <form action="{{ url('mainmenus/open/' . $mainMenu->id) }}" method="POST">
                                                     @csrf
-                                                    <input type="checkbox" name="open_window" value="{{ $mainmenu->open_window == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="是" data-off-text="否" data-off-color="secondary" data-on-color="success" {{ isset($mainmenu) ? $mainmenu->open_window == 1 ? 'checked' : '' : '' }}>
+                                                    <input type="checkbox" name="open_window" value="{{ $mainMenu->open_window == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="是" data-off-text="否" data-off-color="secondary" data-on-color="success" {{ isset($mainMenu) ? $mainMenu->open_window == 1 ? 'checked' : '' : '' }}>
                                                 </form>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
                                             @if($loop->iteration != 1)
-                                            <a href="{{ url('mainmenus/sortup/' . $mainmenu->id) }}" class="text-navy">
+                                            <a href="{{ url('mainmenus/sortup/' . $mainMenu->id) }}" class="text-navy">
                                                 <i class="fas fa-arrow-alt-circle-up text-lg"></i>
                                             </a>
                                             @endif
-                                            @if($loop->iteration != count($mainmenus))
-                                            <a href="{{ url('mainmenus/sortdown/' . $mainmenu->id) }}" class="text-navy">
+                                            @if($loop->iteration != count($mainMenus))
+                                            <a href="{{ url('mainmenus/sortdown/' . $mainMenu->id) }}" class="text-navy">
                                                 <i class="fas fa-arrow-alt-circle-down text-lg"></i>
                                             </a>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            <form action="{{ url('mainmenus/active/' . $mainmenu->id) }}" method="POST">
+                                            <form action="{{ url('mainmenus/active/' . $mainMenu->id) }}" method="POST">
                                                 @csrf
-                                                <input type="checkbox" name="is_on" value="{{ $mainmenu->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="開" data-off-text="關" data-off-color="secondary" data-on-color="primary" {{ isset($mainmenu) ? $mainmenu->is_on == 1 ? 'checked' : '' : '' }}>
+                                                <input type="checkbox" name="is_on" value="{{ $mainMenu->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="開" data-off-text="關" data-off-color="secondary" data-on-color="primary" {{ isset($mainMenu) ? $mainMenu->is_on == 1 ? 'checked' : '' : '' }}>
                                             </form>
                                         </td>
                                     </tr>

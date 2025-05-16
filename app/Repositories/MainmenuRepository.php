@@ -99,7 +99,6 @@ class MainmenuRepository
         }
     }
 
-
     public function lastId()
     {
         return $this->model->latest('id')->value('id');

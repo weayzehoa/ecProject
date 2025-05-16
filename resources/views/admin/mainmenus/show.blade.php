@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', '選單功能設定')
+@section('title', '後台主選單管理')
 
 @section('content')
 <div class="content-wrapper">
@@ -10,21 +10,21 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark"><b>主選單功能設定</b><small> ({{ isset($mainmenu) ? '修改' : '新增' }})</small></h1>
+                    <h1 class="m-0 text-dark"><b>主選單功能設定</b><small> ({{ isset($mainMenu) ? '修改' : '新增' }})</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ env('APP_NAME') }}</a></li>
                         <li class="breadcrumb-item active"><a href="{{ url('mainmenus') }}">主選單功能設定</a></li>
-                        <li class="breadcrumb-item active">{{ isset($mainmenu) ? '修改' : '新增' }}</li>
+                        <li class="breadcrumb-item active">{{ isset($mainMenu) ? '修改' : '新增' }}</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
     <section class="content">
-        @if(isset($mainmenu))
-        <form id="myform" action="{{ route('admin.mainmenus.update', $mainmenu->id) }}" method="POST">
+        @if(isset($mainMenu))
+        <form id="myform" action="{{ route('admin.mainmenus.update', $mainMenu->id) }}" method="POST">
             <input type="hidden" name="_method" value="PATCH">
         @else
         <form id="myform" action="{{ route('admin.mainmenus.store') }}" method="POST">
@@ -35,14 +35,14 @@
                     <div class="col-md-12">
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">{{ $mainmenu->name ?? ''}}主選單資料</h3>
+                                <h3 class="card-title">{{ $mainMenu->name ?? ''}}主選單資料</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="name"><span class="text-red">* </span>主選單名稱</label>
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" id="name" name="name" value="{{ $mainmenu->name ?? '' }}" placeholder="請輸入主選單名稱">
+                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" id="name" name="name" value="{{ $mainMenu->name ?? '' }}" placeholder="請輸入主選單名稱">
                                             @if ($errors->has('name'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('name') }}</strong>
@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="func_code"><span class="text-red">* </span>功能代碼</label>
-                                            <input type="text" class="form-control {{ $errors->has('func_code') ? ' is-invalid' : '' }}" id="func_code" name="func_code" value="{{ $mainmenu->func_code ?? '' }}" placeholder="請輸入功能代碼">
+                                            <input type="text" class="form-control {{ $errors->has('func_code') ? ' is-invalid' : '' }}" id="func_code" name="func_code" value="{{ $mainMenu->func_code ?? '' }}" placeholder="請輸入功能代碼">
                                             @if ($errors->has('func_code'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('func_code') }}</strong>
@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="icon">Font Awesome 5 圖示 (範例: <span class="text-danger">&lt;i class="nav-icon fas fa-door-open text-danger"&gt;&lt;/i&gt;</span>)</label>
-                                            <input type="text" class="form-control {{ $errors->has('icon') ? ' is-invalid' : '' }}" id="icon" name="icon" value="{{ $mainmenu->icon ?? ''}}" placeholder="請輸入Font Awesome 5圖示完整語法，可在class中加上其他語法">
+                                            <input type="text" class="form-control {{ $errors->has('icon') ? ' is-invalid' : '' }}" id="icon" name="icon" value="{{ $mainMenu->icon ?? ''}}" placeholder="請輸入Font Awesome 5圖示完整語法，可在class中加上其他語法">
                                             @if ($errors->has('icon'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('icon') }}</strong>
@@ -70,9 +70,9 @@
                                         <div class="form-group">
                                             <label for="url_type"><span class="text-red">* </span>連結類型</label>
                                             <select class="form-control select2bs4 select2-primary {{ $errors->has('url_type') ? ' is-invalid' : '' }}" data-dropdown-css-class="select2-primary" name="url_type">
-                                                <option value="0" {{ isset($mainmenu) ? $mainmenu->url_type == 0 ? 'selected' : '' : 'selected'}}>次選單</option>
-                                                <option value="1" {{ isset($mainmenu) ? $mainmenu->url_type == 1 ? 'selected' : '' : ''}}>內部連結</option>
-                                                <option value="2" {{ isset($mainmenu) ? $mainmenu->url_type == 2 ? 'selected' : '' : ''}}>外部連結</option>
+                                                <option value="0" {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'selected' : '' : 'selected'}}>次選單</option>
+                                                <option value="1" {{ isset($mainMenu) ? $mainMenu->url_type == 1 ? 'selected' : '' : ''}}>內部連結</option>
+                                                <option value="2" {{ isset($mainMenu) ? $mainMenu->url_type == 2 ? 'selected' : '' : ''}}>外部連結</option>
                                             </select>
                                             @if ($errors->has('url_type'))
                                             <span class="invalid-feedback" role="alert">
@@ -80,22 +80,22 @@
                                             </span>
                                             @endif
                                         </div>
-                                        <div id="url_d" class="form-group {{ isset($mainmenu) ? $mainmenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
+                                        <div id="url_d" class="form-group {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
                                             <label for="url">連結 (選擇外部連結類型請輸入完整連結 http:// or https://)</label>
-                                            <input type="text" class="form-control {{ $errors->has('url') ? ' is-invalid' : '' }}" id="url" name="url" value="{{ $mainmenu->url ?? '' }}" placeholder="請輸入連結，類型選擇次選單則不需填寫">
+                                            <input type="text" class="form-control {{ $errors->has('url') ? ' is-invalid' : '' }}" id="url" name="url" value="{{ $mainMenu->url ?? '' }}" placeholder="請輸入連結，類型選擇次選單則不需填寫">
                                             @if ($errors->has('url'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('url') }}</strong>
                                             </span>
                                             @endif
                                         </div>
-                                        <div id="power_d" class="form-group {{ isset($mainmenu) ? $mainmenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
+                                        <div id="power_d" class="form-group {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
                                             <label for="url">提供的功能</label>
                                             <div class="row col-md-12">
                                             @foreach($poweractions as $poweraction)
-                                            @if(isset($mainmenu) && in_array($poweraction->code, explode(',',$mainmenu->power_action)))
+                                            @if(isset($mainMenu) && in_array($poweraction->code, explode(',',$mainMenu->power_action)))
                                             <div class="icheck-primary mr-2">
-                                                <input type="checkbox" id="pachkbox{{ $loop->iteration }}" name="power_action[]" value="{{ $poweraction->code }}" {{ isset($mainmenu) ? in_array($poweraction->code, explode(',',$mainmenu->power_action)) ? 'checked' : '' : '' }} disabled>
+                                                <input type="checkbox" id="pachkbox{{ $loop->iteration }}" name="power_action[]" value="{{ $poweraction->code }}" {{ isset($mainMenu) ? in_array($poweraction->code, explode(',',$mainMenu->power_action)) ? 'checked' : '' : '' }} disabled>
                                                 <label for="pachkbox{{ $loop->iteration }}">{{ $poweraction->name }}</label>
                                             </div>
                                             @else
@@ -119,17 +119,17 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <div id="url_type_d" class="form-group col-6 {{ isset($mainmenu) ? $mainmenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
+                                        <div id="url_type_d" class="form-group col-6 {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
                                             <label for="open_window">另開視窗</label>
                                             <div class="input-group">
-                                                <input type="checkbox" name="open_window" value="1" data-bootstrap-switch data-off-color="secondary" data-on-color="success" {{ isset($mainmenu) ? $mainmenu->open_window == 1 ? 'checked' : '' : '' }}>
+                                                <input type="checkbox" name="open_window" value="1" data-bootstrap-switch data-off-color="secondary" data-on-color="success" {{ isset($mainMenu) ? $mainMenu->open_window == 1 ? 'checked' : '' : '' }}>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer text-center bg-white">
-                                <button type="submit" class="btn btn-primary">{{ isset($mainmenu) ? '修改' : '新增' }}</button>
+                                <button type="submit" class="btn btn-primary">{{ isset($mainMenu) ? '修改' : '新增' }}</button>
                                 <a href="{{ url('mainmenus') }}" class="btn btn-info">
                                     <span class="text-white"><i class="fas fa-history"></i> 取消</span>
                                 </a>
@@ -156,12 +156,17 @@
 
     $('select').change(function (e) {
         let val = $(this).val();
-        if( val!=0 ){
+        if( val == 1 ){
             $('#url_d').removeClass('d-none');
             $('#url_type_d').removeClass('d-none');
             $('#power_d').removeClass('d-none');
             $('input[name=url]').val('');
-        }else{
+        }else if(val == 2){
+            $('#url_d').removeClass('d-none');
+            $('#url_type_d').removeClass('d-none');
+            $('#power_d').addClass('d-none');
+            $('input[name=url]').val('');
+        }else if(val == 0){
             $('#url_d').addClass('d-none');
             $('#url_type_d').addClass('d-none');
             $('#power_d').addClass('d-none');
