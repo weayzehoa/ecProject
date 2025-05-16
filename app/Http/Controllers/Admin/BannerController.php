@@ -22,7 +22,7 @@ class BannerController extends Controller
 
     public function index()
     {
-        $where = $search = $with = $orderBy = $banners = $appends = $compact = [];
+        $banners = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
 
@@ -39,7 +39,7 @@ class BannerController extends Controller
             $compact = array_merge($compact, ['list']);
         }
 
-        $banners = $this->articleService->get([['type','banner']], $search, $with, [['sort','asc']], $list);
+        $banners = $this->articleService->get([['type','banner']], [['sort','asc']], $search = [], $list);
         $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'banners']);
         return view('admin.banners.index', compact($compact));
     }

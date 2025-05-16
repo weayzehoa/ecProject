@@ -16,13 +16,9 @@ class ArticleRepository
         $this->model = $model;
     }
 
-    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, bool $first = false)
+    public function get(array $where = [], array $orderBy = [], array $search = [], int $perPage = null)
     {
         $query = $this->model->newQuery();
-
-        if (!empty($with)) {
-            $query->with($with);
-        }
 
         if (!empty($where)) {
             $query->where($where);
@@ -49,19 +45,7 @@ class ArticleRepository
             $query->orderBy($column, $direction);
         }
 
-        if ($first === true) {
-            return $query->first();
-        }
-
-        if (!empty($perPage)) {
-            if (!empty($where)) {
-                return $query->limit($perPage)->get();
-            } else {
-                return $query->paginate($perPage);
-            }
-        }
-
-        return $query->get();
+        return !empty($perPage) ? $query->paginate($perPage) : $query->get();
     }
 
     public function first($id)

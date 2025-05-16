@@ -13,7 +13,7 @@ class ImageSettingService
         $this->imageSettingRepository = $imageSettingRepository;
     }
 
-    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [], bool $first = false)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [], array $search = [], bool $first = false)
     {
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){

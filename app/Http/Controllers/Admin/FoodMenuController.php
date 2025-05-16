@@ -22,7 +22,7 @@ class FoodMenuController extends Controller
 
     public function index()
     {
-        $where = $search = $with = $orderBy = $foodmenus = $appends = $compact = [];
+        $foodmenus = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
 
@@ -39,7 +39,7 @@ class FoodMenuController extends Controller
             $compact = array_merge($compact, ['list']);
         }
 
-        $foodmenus = $this->articleService->get([['type','foodmenu']], $search, $with, [['sort','asc']], $list);
+        $foodmenus = $this->articleService->get([['type','foodmenu']], [['sort','asc']], $search = [], $list);
         $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'foodmenus']);
         return view('admin.foodmenus.index', compact($compact));
     }

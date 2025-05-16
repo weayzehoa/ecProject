@@ -22,7 +22,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $where = $search = $with = $orderBy = $news = $appends = $compact = [];
+        $news = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
 
@@ -38,8 +38,7 @@ class NewsController extends Controller
             $list = 50;
             $compact = array_merge($compact, ['list']);
         }
-
-        $news = $this->articleService->get([['type','news']], $search, $with, [['sort','asc']], $list);
+        $news = $this->articleService->get([['type','news']], [['sort','asc']], $search = [], $list);
         $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'news']);
         return view('admin.news.index', compact($compact));
     }
