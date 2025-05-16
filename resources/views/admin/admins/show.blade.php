@@ -181,6 +181,7 @@
                         <div class="col-md-12">
                             <div class="row">
                                 @foreach($mainmenus as $mainmenu)
+                                @if($mainmenu->func_code != 'develop')
                                 <div class="col-md-4" id="mmid_{{ $mainmenu->id }}">
                                     <div class="icheck-primary col-md-12">
                                         <input type="checkbox" onclick="toggleSelect('#mmid_{{ $mainmenu->id }}',this)" name="mypower" value="{{ $mainmenu->code }}" id="mmchkbox{{ $mainmenu->id }}" {{ isset($admin) ? in_array($mainmenu->code,explode(',',$admin->permissions)) ? 'checked' : '' : ''}}>
@@ -221,6 +222,7 @@
                                         </ol>
                                     </div>
                                 </div>
+                                @endif
                                 @endforeach
                             </div>
                         </div>

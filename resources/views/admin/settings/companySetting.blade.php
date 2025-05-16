@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">後台管理系統</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ env('APP_NAME') }}</a></li>
                         <li class="breadcrumb-item active"><a href="{{ url('companySettings') }}">公司資料設定</a></li>
                         <li class="breadcrumb-item active">修改公司資料</li>
                     </ol>

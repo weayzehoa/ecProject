@@ -15,8 +15,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ url('') }}">後台管理系統</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ route('admin.testing') }}">資訊看板</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ env('APP_NAME') }}</a></li>
+                        <li class="breadcrumb-item active"><a href="{{ route('admin.testing') }}">測試功能</a></li>
                     </ol>
                 </div>
             </div>

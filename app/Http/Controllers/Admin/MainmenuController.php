@@ -27,7 +27,7 @@ class MainmenuController extends Controller
 
     public function index()
     {
-        $mainMenus = $appends = $compact = [];
+        $mainmenus = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
 
@@ -44,9 +44,9 @@ class MainmenuController extends Controller
             $compact = array_merge($compact, ['list']);
         }
 
-        $mainMenus = $this->mainmenuService->get($list);
+        $mainmenus = $this->mainmenuService->get($list);
 
-        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'mainMenus']);
+        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'mainmenus']);
         return view('admin.mainmenus.index', compact($compact));
     }
 
@@ -63,8 +63,8 @@ class MainmenuController extends Controller
 
     public function show(string $id)
     {
-        $mainMenu = $this->mainmenuService->show($id);
-        return view('admin.mainmenus.show', ['menuCode' => $this->menuCode, 'poweractions' => $this->poweractions, 'mainMenu' => $mainMenu]);
+        $mainmenu = $this->mainmenuService->show($id);
+        return view('admin.mainmenus.show', ['menuCode' => $this->menuCode, 'poweractions' => $this->poweractions, 'mainmenu' => $mainmenu]);
     }
 
     public function edit(string $id)
@@ -113,13 +113,12 @@ class MainmenuController extends Controller
         return redirect()->back();
     }
 
-        public function submenu($id)
+    public function submenu($id)
     {
         $perPage = null; $with = $search = []; $where = [['mainmenu_id',$id]]; $orderBy = [['sort','asc']];
-        $subMenus = $this->submenuService->get($perPage, $with, $where, $orderBy, $search);
+        $submenus = $this->submenuService->get($perPage, $with, $where, $orderBy, $search);
 
-        dd($subMenus);
-        return view('admin.submenus.index', ['menuCode' => $this->menuCode, 'subMenus' => $subMenus]);
+        return view('admin.submenus.index', ['menuCode' => $this->menuCode, 'submenus' => $submenus]);
 
     }
 }
