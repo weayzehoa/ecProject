@@ -33,7 +33,9 @@ class AdminLogService
         $orderBy = [['id', 'desc']];
 
         foreach (request()->all() as $key => $value) {
-            $$key = $value;
+            if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
+                $$key = $value;
+            }
         }
 
         // 自訂搜尋條件

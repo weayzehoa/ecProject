@@ -175,6 +175,32 @@ return [
                 ],
             ],
         ],
+        'submenu' => [
+            'name' => 'Sub Menu Name',
+            'func_code' => 'Function Code',
+            'power_action' => 'Available Features',
+            'power_action.*' => 'Available Features',
+            'icon' => 'Icon',
+            'url_type' => 'URL Type',
+            'url' => 'Link',
+            'open_window' => 'Open in New Window',
+            'small_pic' => 'Thumbnail',
+            'messages' => [
+                'name' => [
+                    'required' => 'Please enter :attribute.',
+                    'max' => ':attribute must be at most :max characters.',
+                ],
+                'power_action.*' => [
+                    'in' => 'The value of :attribute is invalid. Do not modify the field content.',
+                ],
+                'url' => [
+                    'required' => 'Please enter :attribute.',
+                    'regex' => 'Please enter a valid internal link.',
+                    'url' => 'Please enter a valid external URL.',
+                    'max' => ':attribute must be at most :max characters.',
+                ],
+            ],
+        ],
         'imageSettings' => [
             'name' => 'Name',
             'type' => 'Code',

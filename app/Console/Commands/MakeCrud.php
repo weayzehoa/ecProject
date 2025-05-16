@@ -184,7 +184,7 @@ class MakeCrud extends Command
                 \$this->model = \$model;
             }
 
-            public function get(array \$where = [], array \$search = [], array \$with = [], array \$orderBy = [], int \$perPage = null)
+            public function get(array \$where = [], array \$search = [], array \$with = [], array \$orderBy = [], int \$perPage = null, bool \$first = false)
             {
                 \$query = \$this->model->newQuery();
 
@@ -211,15 +211,19 @@ class MakeCrud extends Command
                     \$query->orderBy(\$column, \$direction);
                 }
 
+                if (\$first === true) {
+                    return \$query->first();
+                }
+
                 if (!empty(\$perPage)) {
                     if (!empty(\$where)) {
                         return \$query->limit(\$perPage)->get();
                     } else {
                         return \$query->paginate(\$perPage);
                     }
-                } else {
-                    return \$query->get();
                 }
+
+                return \$query->get();
             }
 
             public function first(\$id)
@@ -274,17 +278,19 @@ class MakeCrud extends Command
                 \$this->{$repositoryVar} = \${$repositoryVar};
             }
 
-            public function get(\$perPage = null, array \$with = [], array \$where = [], array \$orderBy = [['id', 'desc']], array \$search = [])
+            public function get(\$perPage = null, array \$with = [], array \$where = [], array \$orderBy = [['id', 'desc']], array \$search = [], bool \$first = false)
             {
                 foreach (request()->all() as \$key => \$value) {
-                    \${\$key} = \$value;
+                    if(!in_array(\$key,['where','with','search','orderBy','perPage','first'])){
+                       \${\$key} = \$value;
+                    }
                 }
 
                 if (request()->filled('keyword')) {
                     \$search = ['name' => request('keyword')];
                 }
 
-                return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage);
+                return \$this->{$repositoryVar}->get(\$where, \$search, \$with, \$orderBy, \$perPage, \$first);
             }
 
             public function show(\$id)

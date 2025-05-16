@@ -30,7 +30,9 @@ class AdminService
         auth('admin')->user()->role != 'develop' ? $where[] = ['role','!=','develop'] : null;
 
         foreach (request()->all() as $key => $value) {
-            $$key = $value;
+            if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
+                $$key = $value;
+            }
         }
 
         isset($role) && $role != '' ? $where[] = ['role', '=', $role] : null;

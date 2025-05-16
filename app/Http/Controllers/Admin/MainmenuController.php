@@ -116,7 +116,8 @@ class MainmenuController extends Controller
     public function submenu($id)
     {
         $perPage = null; $with = $search = []; $where = [['mainmenu_id',$id]]; $orderBy = [['sort','asc']];
+        $mainMenu = $this->mainmenuService->show($id);
         $subMenus = $this->submenuService->get($perPage, $with, $where, $orderBy, $search);
-        return view('admin.submenus.index', ['menuCode' => $this->menuCode, 'subMenus' => $subMenus]);
+        return view('admin.submenus.index', ['menuCode' => $this->menuCode, 'subMenus' => $subMenus, 'mainMenu' => $mainMenu]);
     }
 }

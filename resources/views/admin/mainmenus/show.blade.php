@@ -69,7 +69,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="url_type"><span class="text-red">* </span>連結類型</label>
-                                            <select class="form-control select2bs4 select2-primary {{ $errors->has('url_type') ? ' is-invalid' : '' }}" data-dropdown-css-class="select2-primary" name="url_type">
+                                            <select class="form-control {{ $errors->has('url_type') ? ' is-invalid' : '' }}" data-dropdown-css-class="select2-primary" name="url_type">
                                                 <option value="0" {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'selected' : '' : 'selected'}}>次選單</option>
                                                 <option value="1" {{ isset($mainMenu) ? $mainMenu->url_type == 1 ? 'selected' : '' : ''}}>內部連結</option>
                                                 <option value="2" {{ isset($mainMenu) ? $mainMenu->url_type == 2 ? 'selected' : '' : ''}}>外部連結</option>
@@ -119,10 +119,20 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <div id="url_type_d" class="form-group col-6 {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
-                                            <label for="open_window">另開視窗</label>
-                                            <div class="input-group">
-                                                <input type="checkbox" name="open_window" value="1" data-bootstrap-switch data-off-color="secondary" data-on-color="success" {{ isset($mainMenu) ? $mainMenu->open_window == 1 ? 'checked' : '' : '' }}>
+                                        <div class="row">
+                                            <div id="url_type_d" class="form-group col-6 {{ isset($mainMenu) ? $mainMenu->url_type == 0 ? 'd-none' : '' : 'd-none'}}">
+                                                <label for="open_window">另開視窗</label>
+                                                <div class="input-group">
+                                                    <input type="hidden" name="open_window" value="0">
+                                                    <input type="checkbox" name="open_window" value="1" data-bootstrap-switch data-off-color="secondary" data-on-color="success" {{ isset($mainMenu) ? $mainMenu->open_window == 1 ? 'checked' : '' : '' }}>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="is_on">啟用狀態</label>
+                                                <div class="input-group">
+                                                    <input type="hidden" name="is_on" value="0">
+                                                    <input type="checkbox" name="is_on" value="1" data-bootstrap-switch data-off-color="secondary" data-on-color="primary" {{ isset($mainMenu) ? $mainMenu->is_on == 1 ? 'checked' : '' : '' }}>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

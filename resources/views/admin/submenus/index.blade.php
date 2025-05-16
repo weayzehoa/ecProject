@@ -30,7 +30,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="float-left">
-                                <a href="{{ route('admin.submenus.edit', $submenus[0]->mainmenu->id ) }}" class="btn btn-sm btn-primary mr-2"><i class="fas fa-plus mr-1"></i>新增次選單</a>
+                                <a href="{{ route('admin.submenus.edit', $mainMenu->id ) }}" class="btn btn-sm btn-primary mr-2"><i class="fas fa-plus mr-1"></i>新增次選單</a>
                                 <a href="{{ url('mainmenus') }}" class="btn btn-sm btn-info"><i class="fas fa-history mr-1"></i>返回主選單</a>
                             </div>
                             <div class="float-right">
@@ -38,7 +38,7 @@
                         </div>
                         <div class="card-header">
                             <div class="float-left">
-                                <p>所屬主選單：{{ $submenus[0]->mainmenu->name }}</p>
+                                <p>所屬主選單：{{ $mainMenu->name }}</p>
                             </div>
                             <div class="float-right">
                             </div>
@@ -60,7 +60,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($submenus as $subMenu)
+                                    @foreach ($subMenus as $subMenu)
                                     <tr>
                                         <td class="text-center align-middle">{{ $subMenu->sort }}</td>
                                         <td class="text-center align-middle">{{ $subMenu->code }}</td>
@@ -85,7 +85,7 @@
                                         </td>
                                         <td class="text-center align-middle">
                                             @if(!$subMenu->url_type == 0)
-                                                <form action="{{ url('submenus/open/' . $subMenu->id) }}"
+                                                <form action="{{ url('mainmenus/submenus/open/' . $subMenu->id) }}"
                                                     method="POST">
                                                     @csrf
                                                     <input type="checkbox" name="open_window" value="{{ $subMenu->open_window == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="開" data-off-text="關" data-off-color="secondary" data-on-color="success" {{ isset($subMenu) ? $subMenu->open_window == 1 ? 'checked' : '' : '' }}>
@@ -94,18 +94,18 @@
                                         </td>
                                         <td class="text-center align-middle">
                                             @if($subMenu->sort != 1)
-                                            <a href="{{ url('submenus/sortup/' . $subMenu->id) }}" class="text-navy">
+                                            <a href="{{ url('mainmenus/submenus/sortup/' . $subMenu->id) }}" class="text-navy">
                                                 <i class="fas fa-arrow-alt-circle-up text-lg"></i>
                                             </a>
                                             @endif
-                                            @if($subMenu->sort != count($submenus))
-                                            <a href="{{ url('submenus/sortdown/' . $subMenu->id) }}" class="text-navy">
+                                            @if($subMenu->sort != count($subMenus))
+                                            <a href="{{ url('mainmenus/submenus/sortdown/' . $subMenu->id) }}" class="text-navy">
                                                 <i class="fas fa-arrow-alt-circle-down text-lg"></i>
                                             </a>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            <form action="{{ url('submenus/active/' . $subMenu->id) }}" method="POST">
+                                            <form action="{{ url('mainmenus/submenus/active/' . $subMenu->id) }}" method="POST">
                                                 @csrf
                                                 <input type="checkbox" name="is_on" value="{{ $subMenu->is_on == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="開" data-off-text="關" data-off-color="secondary" data-on-color="primary" {{ isset($subMenu) ? $subMenu->is_on == 1 ? 'checked' : '' : '' }}>
                                             </form>
@@ -126,21 +126,20 @@
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endpush
+
 @push('scripts')
-    <script src="{{ asset('vendor/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
-    <script>
-        (function($) {
-            "use strict";
-
-            $("input[data-bootstrap-switch]").each(function() {
-                $(this).bootstrapSwitch('state', $(this).prop('checked'));
-            });
-
-            $('input[data-bootstrap-switch]').on('switchChange.bootstrapSwitch', function (event, state) {
-                $(this).parents('form').submit();
-            });
-        })(jQuery);
-    </script>
+<script src="{{ asset('vendor/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
+<script>
+    (function($) {
+        "use strict";
+        $("input[data-bootstrap-switch]").each(function() {
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        });
+        $('input[data-bootstrap-switch]').on('switchChange.bootstrapSwitch', function (event, state) {
+            $(this).parents('form').submit();
+        });
+    })(jQuery);
+</script>
 @endpush

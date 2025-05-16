@@ -175,6 +175,32 @@ return [
                 ],
             ],
         ],
+        'submenu' => [
+            'name' => '次選單名稱',
+            'func_code' => '功能代碼',
+            'power_action' => '提供功能',
+            'power_action.*' => '提供的功能',
+            'icon' => '圖示',
+            'url_type' => '連結類型',
+            'url' => '連結',
+            'open_window' => '另開視窗',
+            'small_pic' => '縮圖',
+            'messages' => [
+                'name' => [
+                    'required' => '請輸入 :attribute',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+                'power_action.*' => [
+                    'in' => ':attribute 的值無效，請勿修改欄位內容。',
+                ],
+                'url' => [
+                    'required' => '請輸入 :attribute',
+                    'regex' => '請輸入合法的內部連結',
+                    'url' => '請輸入合法的外部網址',
+                    'max' => ':attribute 最多 :max 字',
+                ],
+            ],
+        ],
         'imageSettings' => [
             'name' => '名稱',
             'type' => '代碼',

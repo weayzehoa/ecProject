@@ -71,7 +71,7 @@
                                             @elseif($mainMenu->url_type == 2)
                                             <span class="text-danger">外部連結</span>
                                             @else
-                                            @if(count($mainMenu->subMenu) > 0)
+                                            @if(count($mainMenu->submenus) > 0)
                                             <a href="{{ url('mainmenus/submenu/'. $mainMenu->id) }}" class="btn btn-sm btn-primary">次選單設定</a>
                                             @endif
                                             @endif

@@ -27,7 +27,7 @@ class Mainmenu extends Model
     ];
 
     //關聯submenu
-    public function submenu(){
+    public function submenus(){
         return $this->hasMany(SubmenuDB::class)->where('is_on',1)->orderBy('sort','asc');
     }
 }

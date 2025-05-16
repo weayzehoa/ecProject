@@ -167,6 +167,32 @@ return [
             'small_pic' => '缩略图',
             'messages' => [
                 'name' => [
+                    'required' => '请输入 :attribute。',
+                    'max' => ':attribute 最多 :max 个字符。',
+                ],
+                'power_action.*' => [
+                    'in' => ':attribute 的值无效，请勿修改字段内容。',
+                ],
+                'url' => [
+                    'required' => '请输入 :attribute。',
+                    'regex' => '请输入合法的内部链接。',
+                    'url' => '请输入合法的外部网址。',
+                    'max' => ':attribute 最多 :max 个字符。',
+                ],
+            ],
+        ],
+        'submenu' => [
+            'name' => '次菜单名称',
+            'func_code' => '功能代码',
+            'power_action' => '提供功能',
+            'power_action.*' => '提供的功能',
+            'icon' => '图标',
+            'url_type' => '链接类型',
+            'url' => '链接',
+            'open_window' => '另开窗口',
+            'small_pic' => '缩略图',
+            'messages' => [
+                'name' => [
                     'required' => '请输入 :attribute',
                     'max' => ':attribute 最多 :max 字',
                 ],

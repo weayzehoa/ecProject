@@ -18,7 +18,9 @@ class ImageSettingService
         $orderBy = $with = $where = $search = [];
 
         foreach (request()->all() as $key => $value) {
-            ${$key} = $value;
+            if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
+                $$key = $value;
+            }
         }
 
         if (request()->filled('keyword')) {

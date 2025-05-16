@@ -16,7 +16,7 @@ class MainmenuRequest extends FormRequest
         return [
             'name' => 'required|string|max:30',
             'icon' => 'nullable|string|max:100',
-            'func_code' => 'required|string|max:50',
+            'func_code' => 'nullable|string|max:50',
             'url_type' => 'required|numeric|in:0,1,2',
             'url' => 'nullable|string|max:255',
             'power_action' => 'nullable|array',

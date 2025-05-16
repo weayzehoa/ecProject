@@ -16,11 +16,13 @@ class MainmenuService
     public function get($perPage = null)
     {
         $where = $search = [];
-        $with = ['submenu'];
+        $with = ['submenus'];
         $orderBy = [['sort', 'asc']];
 
         foreach (request()->all() as $key => $value) {
-            ${$key} = $value;
+            if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
+                $$key = $value;
+            }
         }
 
         if (request()->filled('keyword')) {
@@ -64,6 +66,6 @@ class MainmenuService
             $sort = ($article->sort) + 1.5;
         }
 
-        $this->mainmenuRepository->update($id, ['sort' => $sort]);
+        $this->mainmenuRepository->update(['sort' => $sort], $id);
     }
 }

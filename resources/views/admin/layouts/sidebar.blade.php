@@ -43,7 +43,7 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                    @foreach($mainmenu->submenu as $submenu)
+                    @foreach($mainmenu->submenus as $submenu)
                     @if(Auth::user()->role == 'develop' || in_array($submenu->code,explode(',',Auth::user()->permissions ?? '' )))
                     <li class="nav-item">
                         <a href="{{ $submenu->url ? url($submenu->url) : 'javascript:' }}" class="nav-link" {{ $submenu->open_window ? 'target="_blank"' : '' }}>

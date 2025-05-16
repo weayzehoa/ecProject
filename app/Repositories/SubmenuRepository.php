@@ -16,7 +16,8 @@ class SubmenuRepository
         $this->model = $model;
     }
 
-    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null) {
+    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, $first = false)
+    {
         $query = $this->model->newQuery();
 
         if (!empty($with)) {
@@ -41,16 +42,25 @@ class SubmenuRepository
             $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
             $query->orderBy($column, $direction);
         }
-        if(!empty($perPage)){
-            if(!empty($where)){
-                return $query->limit($perPage)->get();
-            }else{
-                return $query->paginate($perPage);
-            }
-        }else{
-            return $query->get();
+
+        // ✅ 優先處理只取第一筆的情況
+        if ($first === true) {
+            return $query->first();
         }
+
+        // 分頁處理
+        if (!empty($perPage)) {
+            if (!empty($where)) {
+                return $query->limit($perPage)->get(); // 非 paginate, 手動限制
+            } else {
+                return $query->paginate($perPage); // 使用 Laravel 分頁元件
+            }
+        }
+
+        // 預設回傳全結果
+        return $query->get();
     }
+
 
     public function first($id)
     {
@@ -60,7 +70,8 @@ class SubmenuRepository
     public function create(array $data)
     {
         $model = $this->model->create($data);
-        $this->logModelCreated('新增Submenu', $model);
+        $this->sort($model->mainmenu_id);
+        $this->logModelCreated('新增次選單', $model);
         return $model;
     }
 
@@ -76,14 +87,30 @@ class SubmenuRepository
         $model = $this->model->findOrFail($id);
         $original = $model->getOriginal();
         $model->update($data);
-        $this->logModelChanges('修改Submenu', $model, $original);
+        $original['sort'] != $model->sort ?  $this->sort($model->mainmenu_id) : '';
+        $this->logModelChanges('修改次選單', $model, $original);
         return $model;
     }
 
     public function delete(int $id)
     {
         $model = $this->model->findOrFail($id);
-        $this->logModelDeleted('刪除Submenu', $model);
+        $this->logModelDeleted('刪除次選單', $model);
         return $model->delete();
+    }
+
+    public function sort($mainmenuId)
+    {
+        $models = $this->model->where('mainmenu_id',$mainmenuId)->orderBy('sort','asc')->get();
+        $i = 1;
+        foreach ($models as $model) {
+            $model->update(['sort' => $i]);
+            $i++;
+        }
+    }
+
+    public function lastId()
+    {
+        return $this->model->latest('id')->value('id');
     }
 }
