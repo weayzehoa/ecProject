@@ -33,7 +33,7 @@ class CompanySettingController extends Controller
     {
         // 通過驗證後的資料會自動回傳
         $data = $request->validated();
-        dd($data);
+
         // 增加更新人員欄位
         $data['admin_id'] = auth()->user()->id;
 
