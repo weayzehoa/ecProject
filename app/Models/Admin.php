@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use App\Notifications\AdminResetPasswordNotification;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements CanResetPasswordContract
 {
-    use Notifiable,SoftDeletes;
+    use Notifiable,SoftDeletes,CanResetPassword;
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
@@ -58,5 +61,10 @@ class Admin extends Authenticatable
             'staff'   => '一般員工',
             default   => '未知角色',
         };
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new AdminResetPasswordNotification($token));
     }
 }

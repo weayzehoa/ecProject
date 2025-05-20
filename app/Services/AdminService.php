@@ -27,7 +27,7 @@ class AdminService
         $with = $where = $search = [];
         $orderBy = [['id', 'desc']];
 
-        auth('admin')->user()->role != 'develop' ? $where[] = ['role','!=','develop'] : null;
+        !empty(auth('admin')->user()) && auth('admin')->user()->role != 'develop' ? $where[] = ['role','!=','develop'] : null;
 
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){

@@ -28,6 +28,11 @@ Route::fallback(function () {
 });
 
 Route::name('admin.')->group(function () {
+    Route::get('forgetPass', [LoginController::class, 'showForgetForm'])->name('forgetPass');
+    Route::post('forgetPass', [LoginController::class, 'sendForgetMail'])->name('forgetPass.submit');
+    Route::get('resetPass/{token}', [LoginController::class, 'showRestForm'])->name('resetPass');
+    Route::post('resetPass', [LoginController::class, 'resetPass'])->name('resetPass.submit');
+
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
         Route::post('login', [LoginController::class, 'login'])->name('login.submit');
@@ -181,5 +186,5 @@ Route::name('admin.')->group(function () {
         Route::post('ckeditorDelete', [CKEditorController::class, 'delete'])->name('ckeditorDelete');
     });
 });
-
+Route::get('resetPass/{token}', [LoginController::class, 'showRestForm'])->name('password.reset');
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');

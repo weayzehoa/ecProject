@@ -88,10 +88,10 @@
                                     @foreach ($adminLogs as $adminLog)
                                     <tr>
                                         <td class="text-left align-middle">
-                                            {{ $adminLog->admin->name }}
+                                            {{ !empty($adminLog->admin) ? $adminLog->admin->name : '' }}
                                         </td>
                                         <td class="text-left align-middle">
-                                            {{ $adminLog->admin->roleLabel }}
+                                            {{ !empty($adminLog->admin) ? $adminLog->admin->roleLabel : '' }}
                                         </td>
                                         <td class="text-left align-middle">
                                             {{ $adminLog->action }}

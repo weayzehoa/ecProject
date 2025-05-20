@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <title>登入</title>
+    <title>重設密碼</title>
     @include('admin.layouts.css')
 </head>
 <body class="hold-transition login-page bg-navy" style="background-image: url({{ asset('img/bg.jpg') }});">
     {{-- 背景動畫使用區塊 --}}
     <div id="particles-js"></div>
-    @include('admin.layouts.alert_message')
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header text-center text-navy">
-                <h2><b>iCoding.cc</b><br>{{ env('APP_NAME') }}</h2>
+                <h2><b>重設密碼</h2>
             </div>
             <div class="card-body login-card-body">
-                <p class="login-box-msg">請輸入 電子郵件 與 密碼</p>
-                <form id="loginForm" action="{{ route('admin.login.submit') }}" method="post" data-parsley-validate>
+                <p class="login-box-msg">請輸入新密碼</p>
+                <form id="forgetForm" action="{{ route('admin.resetPass.submit') }}" method="post" data-parsley-validate>
                     @csrf
+                    <input type="hidden" name="token" value="{{ $token }}">
                     <div class="input-group mb-3">
                         <input id="email" type="email"
                             placeholder="請輸入電子郵件"
                             class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
-                            name="email" value="{{ old('email') }}"
+                            name="email" value="{{ old('email', request('email')) }}"
                             required
                             data-parsley-type="email"
                             data-parsley-required-message="請輸入有效的電子郵件"
@@ -35,14 +35,13 @@
                             <strong>{{ $errors->first('email') }}</strong>
                         </span>
                     </div>
-
                     <div class="input-group mb-3">
                         <input id="password" type="password"
-                            placeholder="請輸入密碼"
+                            placeholder="請輸入新密碼"
                             class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
                             name="password"
                             required
-                            data-parsley-required-message="請輸入密碼">
+                            data-parsley-required-message="請輸入新密碼" autocomplete="new-password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -52,17 +51,31 @@
                             <strong>{{ $errors->first('password') }}</strong>
                         </span>
                     </div>
-
-                    {!! app('GoogleRecaptcha')->v3Input() !!}
+                    <div class="input-group mb-3">
+                        <input id="password_confirmation" type="password"
+                            placeholder="請再次輸入新密碼"
+                            class="form-control {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
+                            name="password_confirmation"
+                            required
+                            data-parsley-required-message="請輸入新密碼" autocomplete="new-password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('password_confirmation') }}</strong>
+                        </span>
+                    </div>
+                    {!! app('GoogleRecaptcha')->v3Input('resetPass') !!}
                     {{-- {!! app('GoogleRecaptcha')->v2Widget() !!} --}}
 
                     <div class="row">
                         <div class="col-4">
-                            <a href="{{ route('admin.forgetPass') }}" class="text-primary text-sm">忘記密碼</a>
                         </div>
                         <div class="col-4"></div>
                         <div class="col-4">
-                            <button type="button" class="btn btn-primary btn-block btn-submit">登入</button>
+                            <button type="button" class="btn btn-primary btn-block btn-submit">送出</button>
                         </div>
                     </div>
                 </form>
@@ -74,13 +87,13 @@
     <script src="{{ asset('vendor/particles.js/particles.min.js') }}"></script>
     <script src="{{ asset('vendor/parsley/parsley.min.js') }}"></script>
     <script src="{{ asset('vendor/parsley/zh_tw.js') }}"></script>
-    {!! app('GoogleRecaptcha')->v3Script('login','visibility') !!}
+    {!! app('GoogleRecaptcha')->v3Script('resetPass','visibility') !!}
     {{-- {!! app('GoogleRecaptcha')->v2Script() !!} --}}
 
     <script>
         $(document).ready(function () {
             // 啟動 Parsley
-            $('#loginForm').parsley({
+            $('#forgetForm').parsley({
                 errorClass: 'is-invalid',
                 successClass: 'is-valid',
                 classHandler: function (ParsleyField) {
@@ -92,7 +105,7 @@
             });
 
             $('.btn-submit').click(function () {
-                if ($('#loginForm').parsley().validate()) {
+                if ($('#forgetForm').parsley().validate()) {
                     $(this).attr('disabled', true);
 
                     // 等待 Recaptcha token 被填入再送出
@@ -100,7 +113,7 @@
                         const token = $('#g-recaptcha-response').val();
                         if (token) {
                             clearInterval(tokenInterval);
-                            $('#loginForm').submit();
+                            $('#forgetForm').submit();
                         }
                     }, 100);
                 }
@@ -108,14 +121,14 @@
 
             $('body').keydown(function (e) {
                 if (e.keyCode === 13) {
-                    if ($('#loginForm').parsley().validate()) {
+                    if ($('#forgetForm').parsley().validate()) {
                         $('.btn-submit').attr('disabled', true);
 
                         const tokenInterval = setInterval(() => {
                             const token = $('#g-recaptcha-response').val();
                             if (token) {
                                 clearInterval(tokenInterval);
-                                $('#loginForm').submit();
+                                $('#forgetForm').submit();
                             }
                         }, 100);
                     }

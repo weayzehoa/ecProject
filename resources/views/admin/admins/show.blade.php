@@ -204,7 +204,7 @@
                                     @endif
                                     <div class="col-md-12">
                                         <ol>
-                                            @foreach($mainmenu->submenu as $submenu)
+                                            @foreach($mainmenu->submenus as $submenu)
                                             <div class="icheck-primary">
                                                 <input type="checkbox" onclick="toggleSelect('#smid_{{ $submenu->id }}',this)" name="mypower" value="{{ $submenu->code }}" id="smchkbox{{ $submenu->id }}" {{ isset($admin) ? in_array($submenu->code,explode(',',$admin->permissions)) ? 'checked' : '' : ''}}>
                                                 <label for="smchkbox{{ $submenu->id }}">{!! $submenu->icon !!} {{ $submenu->name }}</label>
