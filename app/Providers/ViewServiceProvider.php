@@ -21,8 +21,8 @@ class ViewServiceProvider extends ServiceProvider
 
         View::composer('admin.*', function ($view) use ($powerActions) {
             if (Auth::check()) {
-                // 呼叫 MainmenuService 的 get 方法 // 預設就有 with('submenu') 並已排序
-                $mainmenus = app(MainmenuService::class)->get();
+                // 呼叫 MainmenuService 的 get 方法
+                $mainmenus = app(MainmenuService::class)->get(null, ['submenus'], [['is_on',1]], [['sort', 'asc']]);
                 $view->with('mainmenus', $mainmenus);
                 $view->with('powerActions', $powerActions);
             }
