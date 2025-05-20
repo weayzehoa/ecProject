@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\{
     LoginController,
     DashboardController,
     CompanySettingController,
+    SystemSettingController,
     AdminController,
     AdminLogController,
     UserController,
@@ -47,6 +48,12 @@ Route::name('admin.')->group(function () {
             Route::match(['put', 'patch'], 'companySettings/{companySetting}', [CompanySettingController::class, 'update'])->name('companySettings.update')->middleware('checkPermission:companySettings,M');
         });
 
+        // 系統設定
+        Route::middleware(['checkPermission:systemSettings'])->group(function () {
+            Route::get('systemSettings', [SystemSettingController::class, 'index'])->name('systemSettings.index');
+            Route::match(['put', 'patch'], 'systemSettings/{systemSettings}', [SystemSettingController::class, 'update'])->name('systemSettings.update')->middleware('checkPermission:systemSettings,M');
+        });
+
         // 管理員帳號
         Route::middleware(['checkPermission:admins'])->group(function () {
             Route::post('admins/active/{id}', [AdminController::class, 'active'])->name('admins.active')->middleware('checkPermission:admins,O');
@@ -88,10 +95,16 @@ Route::name('admin.')->group(function () {
         //     Route::resource('payMethods', PayMethodController::class);
         // });
 
-        // // 運費折扣設定
-        // Route::middleware(['checkPermission:shippingFees'])->group(function () {
-        //     Route::resource('shippingFees', ShippingFeeController::class);
-        // });
+        // 運費折扣設定
+        Route::middleware(['checkPermission:shippingFees'])->group(function () {
+            Route::post('shippingFees/active/{id}', [ShippingFeeController::class, 'active'])->name('shippingFees.active')->middleware('checkPermission:foodmenus,O');
+            Route::get('shippingFees', [ShippingFeeController::class, 'index'])->name('shippingFees.index');
+            Route::get('shippingFees/create', [ShippingFeeController::class, 'create'])->name('shippingFees.create')->middleware('checkPermission:foodmenus,N');
+            Route::post('shippingFees', [ShippingFeeController::class, 'store'])->name('shippingFees.store')->middleware('checkPermission:foodmenus,N');
+            Route::get('shippingFees/{shippingFees}', [ShippingFeeController::class, 'show'])->name('shippingFees.show')->middleware('checkPermission:foodmenus,M');
+            Route::match(['put', 'patch'], 'shippingFees/{shippingFees}', [ShippingFeeController::class, 'update'])->name('shippingFees.update')->middleware('checkPermission:foodmenus,M');
+            Route::delete('shippingFees/{shippingFees}', [ShippingFeeController::class, 'destroy'])->name('shippingFees.destroy')->middleware('checkPermission:foodmenus,D');
+        });
 
         // // 關於我們
         // Route::middleware(['checkPermission:aboutUs'])->group(function () {

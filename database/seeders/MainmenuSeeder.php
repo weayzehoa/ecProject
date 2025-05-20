@@ -27,7 +27,7 @@ class MainmenuSeeder extends Seeder
         $submenu = [
             [ //系統管理
                 ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'M', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-money-check"></i>', 'name' => '公司資料設定', 'url' => 'companySettings', 'func_code' => 'companySettings'],
-                ['sort' => 2, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'M', 'allow_roles' => 'develop,admin', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '系統參數設定', 'url' => 'systemSettings', 'func_code' => 'systemSettings'],
+                ['sort' => 2, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'M', 'allow_roles' => 'develop,admin', 'icon' => '<i class="nav-icon fas fa-tools"></i>', 'name' => '系統參數設定', 'url' => 'systemSettings', 'func_code' => 'systemSettings'],
                 ['sort' => 3, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,D,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-users-cog""></i>', 'name' => '管理員帳號', 'url' => 'admins', 'func_code' => 'admins'],
                 ['sort' => 4, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin', 'icon' => '<i class="nav-icon fas fa-clipboard-list"></i>', 'name' => '管理者操作紀錄', 'url' => 'adminLogs', 'func_code' => 'adminLogs'],
                 ['sort' => 5, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => '', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '', 'func_code' => ''],
@@ -42,7 +42,7 @@ class MainmenuSeeder extends Seeder
             [ //產品管理
                 ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-list-ol"></i>', 'name' => '商品管理', 'url' => 'products',  'func_code' => 'products'],
                 ['sort' => 2, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fab fa-buromobelexperte"></i>', 'name' => '商品分類設定', 'url' => 'categories',  'func_code' => 'categories'],
-                ['sort' => 3, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
+                ['sort' => 3, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fas fa-bullhorn"></i>', 'name' => '商品限時優惠', 'url' => 'productPromos',  'func_code' => 'productPromos'],
                 ['sort' => 4, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
                 ['sort' => 5, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,D,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
             ],

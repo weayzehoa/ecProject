@@ -25,9 +25,9 @@ class CheckPermissionAccess
 
         $permissions = explode(',', $user->permissions ?? '');
 
-        $submenu = Mainmenu::with('submenu')
+        $submenu = Mainmenu::with('submenus')
             ->get()
-            ->flatMap(fn ($main) => $main->submenu)
+            ->flatMap(fn ($main) => $main->submenus)
             ->first(fn ($sub) => $sub->func_code === $funcCode);
 
         if (!$submenu) {
