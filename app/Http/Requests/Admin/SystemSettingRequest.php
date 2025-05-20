@@ -15,6 +15,8 @@ class SystemSettingRequest extends FormRequest
     {
         return [
             'shippingFees' => 'nullable|numeric|in:0,1',
+            'totalDiscounts' => 'nullable|numeric|in:0,1',
+            'productPromos' => 'nullable|numeric|in:0,1',
         ];
     }
 }

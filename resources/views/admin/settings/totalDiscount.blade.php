@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', '運費折扣設定')
+@section('title', '滿額折扣設定')
 
 @section('content')
 
@@ -11,12 +11,12 @@
             {{-- @include('admin.layouts.alert_message') --}}
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark"><b>運費折扣設定</b></h1>
+                    <h1 class="m-0 text-dark"><b>滿額折扣設定</b></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ env('APP_NAME') }}</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ url('shippingFees') }}">運費折扣設定</a></li>
+                        <li class="breadcrumb-item active"><a href="{{ url('totalDiscounts') }}">滿額折扣設定</a></li>
                         <li class="breadcrumb-item active">清單</li>
                     </ol>
                 </div>
@@ -34,17 +34,17 @@
                                     <form action="{{ route('admin.systemSettings.update', 1) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <input type="hidden" name="shippingFees" value="0">
-                                        <input type="checkbox" name="shippingFees" value="{{ isset($systemSetting) && $systemSetting->shippingFees == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->shippingFees == 1 ? 'checked' : '' : '' }}>
+                                        <input type="hidden" name="totalDiscounts" value="0">
+                                        <input type="checkbox" name="totalDiscounts" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->totalDiscounts == 1 ? 'checked' : '' : '' }}>
                                     </form>
                                 </div>
                                 <div class="col-8">
                                     <div class="float-left d-flex align-items-center">
                                         <ul>
-                                            <li>此設定為商品運送方式運費模組。</li>
-                                            <li>若未啟用則代表該運送方式的商品不計算運費，啟用則計算運費。</li>
-                                            <li>免運門檻設定為該運送方式的商品累計超過免運門檻時，則免除該運送方式的商品運費。</li>
-                                            <li>折扣設定則為該運送方式運費折扣，可設定開始與結束時間。<span class="text-danger">(可運用於特殊時段減免運費)</span></li>
+                                            <li>此設定為訂單滿額折扣模組，當訂單付款金額(包含運費)達到門檻時可折扣金額。</li>
+                                            <li>可設定多個門檻，先以滿額數值最大優先判斷。</li>
+                                            <li>若滿額金額、折扣金額為 0 或 未啟用則代表該組設定不使用。</li>
+                                            <li>可設定折扣開始與折扣結束時間。<span class="text-danger">(可運用於特殊時段活動安排)</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -52,27 +52,18 @@
                                     <div class="float-right">
                                     </div>
                                 </div>
-                                @if(Auth::user()->role == 'develop')
                                 <div class="col-10 offset-1">
-                                    <form id="newForm" method="POST" action="{{ route('admin.shippingFees.store') }}" novalidate>
+                                    <form id="newForm" method="POST" action="{{ route('admin.totalDiscounts.store') }}" novalidate>
                                         @csrf
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text">名稱</span>
+                                                <span class="input-group-text">滿額金額</span>
                                             </div>
-                                            <input type="text" name="name" value="{{ !old('id') ? old('name') : '' }}" class="form-control {{ $errors->has('name') && !old('id') ? 'is-invalid' : '' }}" placeholder="請輸入名稱">
+                                            <input type="text" name="amount" value="{{ !old('id') ? old('amount') ? 0 : 0 : 0 }}" class="form-control {{ $errors->has('amount') && !old('id') ? 'is-invalid' : '' }}" placeholder="請輸入滿額金額">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text">代碼</span>
+                                                <span class="input-group-text">折扣金額</span>
                                             </div>
-                                            <input type="text" name="type" value="{{ !old('id') ? old('type') : '' }}" class="form-control {{ $errors->has('type') && !old('id') ? 'is-invalid' : '' }}" placeholder="請輸入代碼">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">運費</span>
-                                            </div>
-                                            <input type="text" name="fee" value="{{ !old('id') ? old('fee') : '' }}" class="form-control {{ $errors->has('fee') && !old('id') ? 'is-invalid' : '' }}" placeholder="請輸入運費">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">免運門檻</span>
-                                            </div>
-                                            <input type="text" name="free" value="{{ !old('id') ? old('free') : '' }}" class="form-control {{ $errors->has('free') && !old('id') ? 'is-invalid' : '' }}" placeholder="請輸入免運門檻">
+                                            <input type="text" name="discount" value="{{ !old('id') ? old('discount') ? 0 : 0 : 0 }}" class="form-control {{ $errors->has('discount') && !old('id') ? 'is-invalid' : '' }}" placeholder="請輸入折扣金額">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">啟用</span>
                                             </div>
@@ -99,18 +90,14 @@
                                         @endif
                                     </form>
                                 </div>
-                                @endif
                             </div>
                         </div>
                         <div class="card-body">
                             <table class="table table-hover table-sm">
                                 <thead>
                                     <tr>
-                                        <th class="text-left" width="10%">名稱</th>
-                                        <th class="text-left" width="10%">代碼</th>
-                                        <th class="text-left" width="8%">運費</th>
-                                        <th class="text-left" width="10%">免運門檻</th>
-                                        <th class="text-left" width="8%">折扣</th>
+                                        <th class="text-left" width="10%">滿額金額</th>
+                                        <th class="text-left" width="10%">折扣金額</th>
                                         <th class="text-left" width="15%">折扣開始時間</th>
                                         <th class="text-left" width="15%">折扣結束時間</th>
                                         <th class="text-center" width="8%">啟用</th>
@@ -124,27 +111,9 @@
                                     @foreach ($settings as $setting)
                                     <tr>
                                         <td class="text-left align-middle">
-                                            <input class="form-control form-control-sm {{ $errors->has('name') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="name" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('name') : $setting->name }}" readonly>
-                                            @if ($errors->has('name') && old('id') == $setting->id)
-                                            <div class="text-danger small">{{ $errors->first('name') }}</div>
-                                            @endif
-                                        </td>
-                                        <td class="text-left align-middle">
-                                            <input class="form-control form-control-sm {{ $errors->has('type') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="type" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('type') : $setting->type }}" readonly>
-                                            @if ($errors->has('type') && old('id') == $setting->id)
-                                            <div class="text-danger small">{{ $errors->first('type') }}</div>
-                                            @endif
-                                        </td>
-                                        <td class="text-left align-middle">
-                                            <input class="form-control form-control-sm {{ $errors->has('fee') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="fee" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('fee') : $setting->fee }}">
-                                            @if ($errors->has('fee') && old('id') == $setting->id)
-                                            <div class="text-danger small">{{ $errors->first('fee') }}</div>
-                                            @endif
-                                        </td>
-                                        <td class="text-left align-middle">
-                                            <input class="form-control form-control-sm {{ $errors->has('free') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="free" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('free') : $setting->free }}">
-                                            @if ($errors->has('free') && old('id') == $setting->id)
-                                            <div class="text-danger small">{{ $errors->first('free') }}</div>
+                                            <input class="form-control form-control-sm {{ $errors->has('amount') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="amount" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('amount') : $setting->amount }}">
+                                            @if ($errors->has('amount') && old('id') == $setting->id)
+                                            <div class="text-danger small">{{ $errors->first('amount') }}</div>
                                             @endif
                                         </td>
                                         <td class="text-left align-middle">
@@ -176,7 +145,7 @@
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <form id="form-{{ $setting->id }}" action="{{ route('admin.shippingFees.update', $setting->id) }}" method="POST">
+                                            <form id="form-{{ $setting->id }}" action="{{ route('admin.totalDiscounts.update', $setting->id) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <input type="hidden" name="id" value="{{ $setting->id }}">
@@ -187,7 +156,7 @@
                                         </td>
                                         @if(Auth::user()->role == 'develop')
                                         <td class="text-center align-middle">
-                                            <form action="{{ route('admin.shippingFees.destroy', $setting->id) }}" method="POST">
+                                            <form action="{{ route('admin.totalDiscounts.destroy', $setting->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-sm btn-danger delete-btn">

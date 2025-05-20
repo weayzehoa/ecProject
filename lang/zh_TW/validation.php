@@ -216,6 +216,13 @@ return [
                 ],
             ],
         ],
+        'totalDiscounts' => [
+            'amount' => '滿額金額',
+            'discount' => '折扣金額',
+            'start_time' => '開始時間',
+            'end_time' => '結束時間',
+            'is_on' => '啟用狀態',
+        ],
         'imageSettings' => [
             'name' => '名稱',
             'type' => '代碼',

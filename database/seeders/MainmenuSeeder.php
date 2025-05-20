@@ -50,7 +50,7 @@ class MainmenuSeeder extends Seeder
                 ['sort' => 1, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'M', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-file-invoice-dollar"></i>', 'name' => '訂單管理', 'url' => 'orders',  'func_code' => 'orders'],
                 ['sort' => 2, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-credit-card"></i>', 'name' => '付款方式設定', 'url' => 'payMethods',  'func_code' => 'payMethods'],
                 ['sort' => 3, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-truck"></i>', 'name' => '運費折扣設定', 'url' => 'shippingFees',  'func_code' => 'shippingFees'],
-                ['sort' => 4, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
+                ['sort' => 4, 'is_on' => 1, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon fas fa-percent"></i>', 'name' => '滿額折扣設定', 'url' => 'totalDiscounts',  'func_code' => 'totalDiscounts'],
                 ['sort' => 5, 'is_on' => 0, 'url_type' => 1, 'open_window' => 0, 'power_action' => 'N,M,O', 'allow_roles' => 'develop,admin,staff', 'icon' => '<i class="nav-icon far fa-circle"></i>', 'name' => '預留功能', 'url' => '',  'func_code' => ''],
             ],
             [ //行銷策展

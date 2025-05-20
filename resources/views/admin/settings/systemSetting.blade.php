@@ -34,21 +34,21 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="form-group col-md-2">
-                                <label for="name">運費模組</label><br>
+                                <label for="shippingFees">運費模組</label><br>
                                 <input type="hidden" name="shippingFees" value="0">
-                                <input type="checkbox" name="shippingFees" value="{{ isset($systemSetting) && $systemSetting->shippingFees == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->shippingFees == 1 ? 'checked' : '' : '' }}>
+                                <input type="checkbox" name="shippingFees" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ old('shippingFees', $systemSetting->shippingFees) ? 'checked' : '' }}>
                                 @error('shippingFees')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="form-group col-md-2">
-                                <label for="name">滿額折扣模組</label><br>
+                                <label for="totalDiscounts">滿額折扣模組</label><br>
                                 <input type="hidden" name="totalDiscounts" value="0">
-                                <input type="checkbox" name="totalDiscounts" value="{{ isset($systemSetting) && $systemSetting->totalDiscounts == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->totalDiscounts == 1 ? 'checked' : '' : '' }}>
+                                <input type="checkbox" name="totalDiscounts" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ old('totalDiscounts', $systemSetting->totalDiscounts) ? 'checked' : '' }}>
                                 @error('totalDiscounts')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="name">商品限時優惠模組</label><br>
                                 <input type="hidden" name="productPromos" value="0">
-                                <input type="checkbox" name="productPromos" value="{{ isset($systemSetting) && $systemSetting->productPromos == 1 ? 0 : 1 }}" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->productPromos == 1 ? 'checked' : '' : '' }}>
+                                <input type="checkbox" name="productPromos" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ old('productPromos', $systemSetting->productPromos) ? 'checked' : '' }}>
                                 @error('productPromos')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="form-group col-md-2">

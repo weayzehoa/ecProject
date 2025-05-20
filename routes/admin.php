@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\{
     OrderController,
     PayMethodController,
     ShippingFeeController,
+    TotalDiscountController,
     AboutUsController,
     BannerController,
     NewsController,
@@ -97,13 +98,24 @@ Route::name('admin.')->group(function () {
 
         // 運費折扣設定
         Route::middleware(['checkPermission:shippingFees'])->group(function () {
-            Route::post('shippingFees/active/{id}', [ShippingFeeController::class, 'active'])->name('shippingFees.active')->middleware('checkPermission:foodmenus,O');
+            Route::post('shippingFees/active/{id}', [ShippingFeeController::class, 'active'])->name('shippingFees.active')->middleware('checkPermission:shippingFees,O');
             Route::get('shippingFees', [ShippingFeeController::class, 'index'])->name('shippingFees.index');
-            Route::get('shippingFees/create', [ShippingFeeController::class, 'create'])->name('shippingFees.create')->middleware('checkPermission:foodmenus,N');
-            Route::post('shippingFees', [ShippingFeeController::class, 'store'])->name('shippingFees.store')->middleware('checkPermission:foodmenus,N');
-            Route::get('shippingFees/{shippingFees}', [ShippingFeeController::class, 'show'])->name('shippingFees.show')->middleware('checkPermission:foodmenus,M');
-            Route::match(['put', 'patch'], 'shippingFees/{shippingFees}', [ShippingFeeController::class, 'update'])->name('shippingFees.update')->middleware('checkPermission:foodmenus,M');
-            Route::delete('shippingFees/{shippingFees}', [ShippingFeeController::class, 'destroy'])->name('shippingFees.destroy')->middleware('checkPermission:foodmenus,D');
+            Route::get('shippingFees/create', [ShippingFeeController::class, 'create'])->name('shippingFees.create')->middleware('checkPermission:shippingFees,N');
+            Route::post('shippingFees', [ShippingFeeController::class, 'store'])->name('shippingFees.store')->middleware('checkPermission:shippingFees,N');
+            Route::get('shippingFees/{shippingFees}', [ShippingFeeController::class, 'show'])->name('shippingFees.show')->middleware('checkPermission:shippingFees,M');
+            Route::match(['put', 'patch'], 'shippingFees/{shippingFees}', [ShippingFeeController::class, 'update'])->name('shippingFees.update')->middleware('checkPermission:shippingFees,M');
+            Route::delete('shippingFees/{shippingFees}', [ShippingFeeController::class, 'destroy'])->name('shippingFees.destroy')->middleware('checkPermission:shippingFees,D');
+        });
+
+        // 滿額折扣設定
+        Route::middleware(['checkPermission:totalDiscounts'])->group(function () {
+            Route::post('totalDiscounts/active/{id}', [TotalDiscountController::class, 'active'])->name('totalDiscounts.active')->middleware('checkPermission:totalDiscounts,O');
+            Route::get('totalDiscounts', [TotalDiscountController::class, 'index'])->name('totalDiscounts.index');
+            Route::get('totalDiscounts/create', [TotalDiscountController::class, 'create'])->name('totalDiscounts.create')->middleware('checkPermission:totalDiscounts,N');
+            Route::post('totalDiscounts', [TotalDiscountController::class, 'store'])->name('totalDiscounts.store')->middleware('checkPermission:totalDiscounts,N');
+            Route::get('totalDiscounts/{totalDiscounts}', [TotalDiscountController::class, 'show'])->name('totalDiscounts.show')->middleware('checkPermission:totalDiscounts,M');
+            Route::match(['put', 'patch'], 'totalDiscounts/{totalDiscounts}', [TotalDiscountController::class, 'update'])->name('totalDiscounts.update')->middleware('checkPermission:totalDiscounts,M');
+            Route::delete('totalDiscounts/{totalDiscounts}', [TotalDiscountController::class, 'destroy'])->name('totalDiscounts.destroy')->middleware('checkPermission:totalDiscounts,D');
         });
 
         // // 關於我們

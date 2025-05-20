@@ -9,6 +9,6 @@ class SystemSetting extends Model
     protected $fillable = [
         'shippingFees',
         'productPromos',
-        'TotalDiscounts',
+        'totalDiscounts',
     ];
 }

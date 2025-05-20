@@ -201,6 +201,28 @@ return [
                 ],
             ],
         ],
+        'shippingFees' => [
+            'name' => 'Name',
+            'type' => 'Code',
+            'fee' => 'Shipping Fee',
+            'free' => 'Free Shipping Threshold',
+            'is_on' => 'Enabled',
+            'start_time' => 'Start Time',
+            'end_time' => 'End Time',
+            'messages' => [
+                'name' => [
+                    'required' => 'Please enter :attribute.',
+                    'max' => ':attribute may not be greater than :max characters.',
+                ],
+            ],
+        ],
+        'totalDiscounts' => [
+            'amount' => 'Minimum Amount',
+            'discount' => 'Discount Amount',
+            'start_time' => 'Start Time',
+            'end_time' => 'End Time',
+            'is_on' => 'Enabled',
+        ],
         'imageSettings' => [
             'name' => 'Name',
             'type' => 'Code',

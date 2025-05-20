@@ -201,6 +201,28 @@ return [
                 ],
             ],
         ],
+        'shippingFees' => [
+            'name' => '名稱',
+            'type' => '代碼',
+            'fee' => '運費',
+            'free' => '免運門檻',
+            'is_on' => '啟用狀態',
+            'start_time' => '開始時間',
+            'end_time' => '結束時間',
+            'messages' => [
+                'name' => [
+                    'required' => '請輸入 :attribute',
+                    'max' => ':attribute 最多不能超過 :max 個字',
+                ],
+            ],
+        ],
+        'totalDiscounts' => [
+            'amount' => '滿額金額',
+            'discount' => '折扣金額',
+            'start_time' => '開始時間',
+            'end_time' => '結束時間',
+            'is_on' => '啟用狀態',
+        ],
         'imageSettings' => [
             'name' => '名称',
             'type' => '代码',
