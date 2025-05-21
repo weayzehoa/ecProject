@@ -26,7 +26,7 @@ class AdminRepository
      * @param  int|null    $perPage   每頁筆數，若為 null 則不分頁
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
-    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, bool $first = false)
+    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null)
     {
         $query = $this->model->newQuery();
 
@@ -57,25 +57,17 @@ class AdminRepository
             $query->orderBy($column, $direction);
         }
 
-        if ($first === true) {
-            return $query->first();
-        }
-
-        if (!empty($perPage)) {
-            if (!empty($where)) {
-                return $query->limit($perPage)->get();
-            } else {
-                return $query->paginate($perPage);
-            }
-        }
-
-        return $query->get();
+        return !empty($perPage) ? $query->paginate($perPage) : $query->get();
     }
-
 
     public function first($id)
     {
         return $this->model->find($id);
+    }
+
+    public function firstWhere($where)
+    {
+        return $this->model->where($where)->first();
     }
 
     public function create(array $data)

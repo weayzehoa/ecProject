@@ -22,7 +22,7 @@ class AdminService
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
      */
-    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['id', 'desc']], array $search = [], bool $first = false)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['id', 'desc']], array $search = [])
     {
         $with = $where = $search = [];
         $orderBy = [['id', 'desc']];
@@ -42,12 +42,17 @@ class AdminService
         isset($tel) && $tel != '' ? $where[] = ['tel', 'like', "%$tel%"] : null;
         isset($mobile) && $mobile != '' ? $where[] = ['mobile', 'like', "%$mobile%"] : null;
 
-        return $this->adminRepository->get($where, $search, $with, $orderBy, $perPage, $first);
+        return $this->adminRepository->get($where, $search, $with, $orderBy, $perPage);
     }
 
     public function show($id)
     {
         return $this->adminRepository->first($id);
+    }
+
+    public function firstWhere($where)
+    {
+        return $this->adminRepository->firstWhere($where);
     }
 
     public function create(array $data)
