@@ -182,6 +182,7 @@
                                 </tbody>
 
                             </table>
+                            <div class="float-right"><span class="text-danger">*注意：修改資料請記得按右邊修改按鈕。</span></div>
                         </div>
                         <div class="card-footer bg-white">
                             <div class="float-right">
