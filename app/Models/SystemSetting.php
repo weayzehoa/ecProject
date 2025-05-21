@@ -10,5 +10,7 @@ class SystemSetting extends Model
         'shippingFees',
         'productPromos',
         'totalDiscounts',
+        'referCodes',
+        'promoCOdes',
     ];
 }

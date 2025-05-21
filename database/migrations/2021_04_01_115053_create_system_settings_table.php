@@ -19,6 +19,8 @@ class CreateSystemSettingsTable extends Migration
                 $table->boolean('shippingFees')->nullable()->comment('運費模組啟用狀態 0:停用 1:啟用');
                 $table->boolean('totalDiscounts')->nullable()->comment('滿額折扣模組啟用狀態 0:停用 1:啟用');
                 $table->boolean('productPromos')->nullable()->comment('商品限時優惠模組啟用狀態 0:停用 1:啟用');
+                $table->boolean('promoCodes')->nullable()->comment('促銷代碼模組啟用狀態 0:停用 1:啟用');
+                $table->boolean('referCodes')->nullable()->comment('推薦碼模組啟用狀態 0:停用 1:啟用');
                 $table->timestamps();
             });
         }

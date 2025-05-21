@@ -22,6 +22,8 @@ class SettingSeeder extends Seeder
                     'shippingFees' => 1,
                     'productPromos' => 0,
                     'TotalDiscounts' => 0,
+                    'referCodes' => 0,
+                    'promoCodes' => 0,
                 ];
             SystemSettingDB::Create($data);
             echo "系統設定建立完成\n";

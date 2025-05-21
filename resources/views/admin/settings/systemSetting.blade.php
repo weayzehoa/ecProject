@@ -46,6 +46,18 @@
                                 @error('totalDiscounts')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                             </div>
                             <div class="form-group col-md-2">
+                                <label for="promoCodes">促銷代碼模組</label><br>
+                                <input type="hidden" name="promoCodes" value="0">
+                                <input type="checkbox" name="promoCodes" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ old('promoCodes', $systemSetting->promoCodes) ? 'checked' : '' }}>
+                                @error('promoCodes')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="referCodes">推薦碼模組</label><br>
+                                <input type="hidden" name="referCodes" value="0">
+                                <input type="checkbox" name="referCodes" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ old('referCodes', $systemSetting->referCodes) ? 'checked' : '' }}>
+                                @error('referCodes')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                            </div>
+                            <div class="form-group col-md-2">
                                 <label for="name">商品限時優惠模組</label><br>
                                 <input type="hidden" name="productPromos" value="0">
                                 <input type="checkbox" name="productPromos" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ old('productPromos', $systemSetting->productPromos) ? 'checked' : '' }}>
