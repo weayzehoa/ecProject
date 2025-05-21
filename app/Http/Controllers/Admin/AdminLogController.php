@@ -11,12 +11,13 @@ use App\Http\Requests\Admin\AdminLogUpdateRequest;
 class AdminLogController extends Controller
 {
     protected $adminLogService;
-    protected $menuCode = 'M1S4';
+    protected $funcCode = 'adminLogs';
     protected $lists = ['15', '30', '50', '100'];
     protected $roles = ['' => '請選擇角色群組', 'develop' => '開發團隊', 'admin' => '管理員', 'staff' => '一般員工'];
 
     public function __construct(AdminLogService $adminLogService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->adminLogService = $adminLogService;
     }
 

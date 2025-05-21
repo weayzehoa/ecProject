@@ -10,15 +10,17 @@ use App\Http\Requests\Admin\SystemSettingRequest;
 class SystemSettingController extends Controller
 {
     protected $systemSettingService;
+    protected $funcCode = 'systemSettings';
 
     public function __construct(SystemSettingService $systemSettingService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->systemSettingService = $systemSettingService;
     }
 
     public function index()
     {
-        $menuCode = 'M1S2';
+        $menuCode = $this->menuCode;
         $systemSetting = $this->systemSettingService->show(1);
         return view('admin.settings.systemSetting', compact(['systemSetting','menuCode']));
     }

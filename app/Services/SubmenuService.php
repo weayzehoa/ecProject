@@ -13,7 +13,7 @@ class SubmenuService
         $this->submenuRepository = $submenuRepository;
     }
 
-    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [], bool $first = false)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [])
     {
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
@@ -25,12 +25,17 @@ class SubmenuService
             $search = ['name' => request('keyword')];
         }
 
-        return $this->submenuRepository->get($where, $search, $with, $orderBy, $perPage, $first);
+        return $this->submenuRepository->get($where, $search, $with, $orderBy, $perPage);
     }
 
     public function show($id)
     {
         return $this->submenuRepository->first($id);
+    }
+
+    public function firstWhere($where)
+    {
+        return $this->submenuRepository->firstWhere($where);
     }
 
     public function create(array $data)

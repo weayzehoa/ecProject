@@ -63,6 +63,11 @@ class MainmenuRepository
         return $this->model->find($id);
     }
 
+    public function firstWhere($where)
+    {
+        return $this->model->where($where)->first();
+    }
+
     public function create(array $data)
     {
         $model = $this->model->create($data);

@@ -11,11 +11,12 @@ use App\Models\ImageSetting as ImageSettingDB;
 class FoodMenuController extends Controller
 {
     protected $articleService;
-    protected $menuCode = 'M5S8';
+    protected $funcCode = 'foodmenus';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(ArticleService $articleService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->articleService = $articleService;
         $this->imageSetting = ImageSettingDB::where('type','foodmenu')->first();
     }

@@ -10,11 +10,12 @@ use App\Http\Requests\Admin\ImageSettingRequest;
 class ImageSettingController extends Controller
 {
     protected $imageSettingService;
-    protected $menuCode = 'M6S2';
+    protected $funcCode = 'imageSettings';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(ImageSettingService $imageSettingService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->imageSettingService = $imageSettingService;
     }
 

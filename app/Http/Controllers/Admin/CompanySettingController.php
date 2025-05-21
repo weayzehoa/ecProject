@@ -10,9 +10,11 @@ use App\Http\Requests\Admin\CompanySettingRequest;
 class CompanySettingController extends Controller
 {
     private $companySettingService;
+    protected $funcCode = 'companySettings';
 
     public function __construct(CompanySettingService $companySettingService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->companySettingService = $companySettingService;
     }
 
@@ -21,7 +23,7 @@ class CompanySettingController extends Controller
      */
     public function index()
     {
-        $menuCode = 'M1S1';
+        $menuCode = $this->menuCode;
         $company = $this->companySettingService->show(1);
         return view('admin.settings.companySetting', compact(['company','menuCode']));
     }

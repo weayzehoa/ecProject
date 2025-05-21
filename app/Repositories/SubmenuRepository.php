@@ -16,7 +16,7 @@ class SubmenuRepository
         $this->model = $model;
     }
 
-    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null, bool $first = false)
+    public function get(array $where = [], array $search = [], array $with = [], array $orderBy = [], int $perPage = null)
     {
         $query = $this->model->newQuery();
 
@@ -43,10 +43,6 @@ class SubmenuRepository
             $query->orderBy($column, $direction);
         }
 
-        if ($first === true) {
-            return $query->first();
-        }
-
         if (!empty($perPage)) {
             if (!empty($where)) {
                 return $query->limit($perPage)->get();
@@ -61,6 +57,11 @@ class SubmenuRepository
     public function first($id)
     {
         return $this->model->find($id);
+    }
+
+    public function firstWhere($where)
+    {
+        return $this->model->where($where)->first();
     }
 
     public function create(array $data)

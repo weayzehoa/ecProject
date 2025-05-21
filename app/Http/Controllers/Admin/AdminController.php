@@ -13,13 +13,14 @@ use Validator;
 class AdminController extends Controller
 {
     protected $adminService;
-    protected $menuCode = 'M1S3';
+    protected $funcCode = 'admins';
     protected $roles = ['' => '請選擇角色群組', 'develop' => '開發團隊', 'admin' => '管理員', 'staff' => '一般員工'];
     protected $status = ['' => '請選擇狀態', '0' => '停權中', '1' => '啟用中'];
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(AdminService $adminService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->adminService = $adminService;
     }
 

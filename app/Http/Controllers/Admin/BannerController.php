@@ -11,11 +11,12 @@ use App\Models\ImageSetting as ImageSettingDB;
 class BannerController extends Controller
 {
     protected $articleService;
-    protected $menuCode = 'M5S6';
+    protected $funcCode = 'banners';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(ArticleService $articleService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->articleService = $articleService;
         $this->imageSetting = ImageSettingDB::where('type','banner')->first();
     }
@@ -25,7 +26,6 @@ class BannerController extends Controller
         $banners = $appends = $compact = [];
         $menuCode = $this->menuCode;
         $lists = $this->lists;
-
         foreach (request()->all() as $key => $value) {
             $$key = $value;
             if (isset($$key)) {

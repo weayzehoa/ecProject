@@ -12,11 +12,12 @@ class ShippingFeeController extends Controller
 {
     protected $shippingFeeService;
     protected $systemSettingService;
-    protected $menuCode = 'M6S3';
+    protected $funcCode = 'shippingFees';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(ShippingFeeService $shippingFeeService, SystemSettingService $systemSettingService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->shippingFeeService = $shippingFeeService;
         $this->systemSettingService = $systemSettingService;
     }

@@ -12,11 +12,12 @@ class SubmenuController extends Controller
 {
     protected $submenuService;
     protected $mainmenuService;
-    protected $menuCode = 'M6S1';
+    protected $funcCode = 'mainmenus';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(SubmenuService $submenuService, MainmenuService $mainmenuService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->submenuService = $submenuService;
         $this->mainmenuService = $mainmenuService;
         $powerActions = config('menuSetting.powerActions');
@@ -27,30 +28,12 @@ class SubmenuController extends Controller
 
     public function index()
     {
-        $items = $appends = $compact = [];
-
-        foreach (request()->all() as $key => $value) {
-            $$key = $value;
-            if (isset($$key)) {
-                $appends = array_merge($appends, [$key => $value]);
-                $compact = array_merge($compact, [$key]);
-            }
-        }
-
-        if (!isset($list)) {
-            $list = 50;
-            $compact = array_merge($compact, ['list']);
-        }
-
-        $items = $this->submenuService->get($list);
-
-        $compact = array_merge($compact, ['appends', 'items']);
-        return view('admin.index', compact($compact)); // 自行調整 view
+        return redirect()->back();
     }
 
     public function create()
     {
-        return view('admin.create'); // 自行調整 view
+        return redirect()->back();
     }
 
     public function store(SubmenuRequest $request)

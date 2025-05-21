@@ -12,11 +12,12 @@ class MainmenuController extends Controller
 {
     protected $mainmenuService;
     protected $submenuService;
-    protected $menuCode = 'M6S1';
+    protected $funcCode = 'mainmenus';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(MainmenuService $mainmenuService, SubmenuService $submenuService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->mainmenuService = $mainmenuService;
         $this->submenuService = $submenuService;
         $powerActions = config('menuSetting.powerActions');

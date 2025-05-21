@@ -13,7 +13,7 @@ class MainmenuService
         $this->mainmenuRepository = $mainmenuRepository;
     }
 
-    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [], bool $first = false)
+    public function get($perPage = null, array $with = [], array $where = [], array $orderBy = [['sort', 'asc']], array $search = [])
     {
         foreach (request()->all() as $key => $value) {
             if(!in_array($key,['where','with','search','orderBy','perPage','first'])){
@@ -25,12 +25,17 @@ class MainmenuService
             $search = ['name' => request('keyword')];
         }
 
-        return $this->mainmenuRepository->get($where, $search, $with, $orderBy, $perPage, $first);
+        return $this->mainmenuRepository->get($where, $search, $with, $orderBy, $perPage);
     }
 
     public function show($id)
     {
         return $this->mainmenuRepository->first($id);
+    }
+
+    public function firstWhere($where)
+    {
+        return $this->mainmenuRepository->firstWhere($where);
     }
 
     public function create(array $data)

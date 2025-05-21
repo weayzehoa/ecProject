@@ -12,13 +12,14 @@ class TotalDiscountController extends Controller
 {
     protected $totalDiscountService;
     protected $systemSettingService;
-    protected $menuCode = 'M6S4';
+    protected $funcCode = 'totalDiscounts';
     protected $lists = ['15', '30', '50', '100'];
 
     public function __construct(TotalDiscountService $totalDiscountService, SystemSettingService $systemSettingService)
     {
+        $this->menuCode = getMenuCode($this->funcCode);
         $this->totalDiscountService = $totalDiscountService;
-                $this->systemSettingService = $systemSettingService;
+        $this->systemSettingService = $systemSettingService;
     }
 
     public function index()

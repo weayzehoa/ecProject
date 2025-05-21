@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\AdminLogService;
+use App\Services\MainmenuService;
+use App\Services\SubmenuService;
 
 if (! function_exists('adminLog')) {
     /**
@@ -52,5 +54,25 @@ if (!function_exists('flattenMessages')) {
             }
             return [$key => $value];
         })->all();
+    }
+}
+
+if (!function_exists('getMenuCode')) {
+    function getMenuCode(string $funcCode): string
+    {
+        $menuCode = null;
+        $where = ['func_code' => $funcCode];
+
+        $submenu = app(SubmenuService::class)->firstWhere($where);
+        if(!empty($submenu)){
+            $menuCode = $submenu->code;
+        }else{
+            $mainmenu = app(MainmenuService::class)->firstWhere($where);
+            if(!empty($mainmenu)){
+                $menuCode = $mainmenu->code;
+            }
+        }
+
+        return $menuCode;
     }
 }
