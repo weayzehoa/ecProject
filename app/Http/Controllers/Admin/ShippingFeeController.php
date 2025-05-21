@@ -42,8 +42,8 @@ class ShippingFeeController extends Controller
 
         $settings = $this->shippingFeeService->get($list);
         $systemSetting = $this->systemSettingService->show(1);
-
-        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'settings','systemSetting']);
+        $systemSettingMenuCode = getMenuCode('systemSettings');
+        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'settings','systemSetting','systemSettingMenuCode']);
         return view('admin.settings.shippingFee', compact($compact));
     }
 

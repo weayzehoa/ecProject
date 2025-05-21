@@ -31,12 +31,20 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                    <form action="{{ route('admin.systemSettings.update', 1) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="hidden" name="totalDiscounts" value="0">
-                                        <input type="checkbox" name="totalDiscounts" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->totalDiscounts == 1 ? 'checked' : '' : '' }}>
-                                    </form>
+                                    @if(Auth::user()->role == 'develop' || in_array($menuCode.'M', explode(',',Auth::user()->permissions)))
+                                        @if(in_array($systemSettingMenuCode.'M', explode(',',Auth::user()->permissions)))
+                                        <form action="{{ route('admin.systemSettings.update', 1) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="totalDiscounts" value="0">
+                                            <input type="checkbox" name="totalDiscounts" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->totalDiscounts == 1 ? 'checked' : '' : '' }}>
+                                        </form>
+                                        @else
+                                        <input type="checkbox" name="totalDiscounts" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->totalDiscounts == 1 ? 'checked' : '' : '' }} disabled>
+                                        @endif
+                                    @else
+                                    <input type="checkbox" name="totalDiscounts" value="1" data-bootstrap-switch data-on-text="啟用" data-off-text="停用" data-off-color="secondary" data-on-color="success" {{ isset($systemSetting) ? $systemSetting->totalDiscounts == 1 ? 'checked' : '' : '' }} disabled>
+                                    @endif
                                 </div>
                                 <div class="col-8">
                                     <div class="float-left d-flex align-items-center">
@@ -52,6 +60,7 @@
                                     <div class="float-right">
                                     </div>
                                 </div>
+                                @if(Auth::user()->role == 'develop' || in_array($menuCode.'N', explode(',',Auth::user()->permissions)))
                                 <div class="col-10 offset-1">
                                     <form id="newForm" method="POST" action="{{ route('admin.totalDiscounts.store') }}" novalidate>
                                         @csrf
@@ -90,6 +99,7 @@
                                         @endif
                                     </form>
                                 </div>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">
@@ -108,51 +118,52 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($settings as $setting)
+                                @foreach ($settings as $setting)
+                                <form id="form-{{ $setting->id }}" action="{{ route('admin.totalDiscounts.update', $setting->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="id" value="{{ $setting->id }}">
                                     <tr>
                                         <td class="text-left align-middle">
-                                            <input class="form-control form-control-sm {{ $errors->has('amount') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="amount" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('amount') : $setting->amount }}">
+                                            <input class="form-control form-control-sm {{ $errors->has('amount') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="amount" value="{{ old('id') == $setting->id ? old('amount') : $setting->amount }}">
                                             @if ($errors->has('amount') && old('id') == $setting->id)
                                             <div class="text-danger small">{{ $errors->first('amount') }}</div>
                                             @endif
                                         </td>
                                         <td class="text-left align-middle">
-                                            <input class="form-control form-control-sm {{ $errors->has('discount') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="discount" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('discount') : $setting->discount }}">
+                                            <input class="form-control form-control-sm {{ $errors->has('discount') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="discount" value="{{ old('id') == $setting->id ? old('discount') : $setting->discount }}">
                                             @if ($errors->has('discount') && old('id') == $setting->id)
                                             <div class="text-danger small">{{ $errors->first('discount') }}</div>
                                             @endif
                                         </td>
                                         <td class="text-left align-middle">
-                                            <input class="datetimepicker form-control form-control-sm {{ $errors->has('start_time') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="start_time" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('start_time') : $setting->start_time }}">
+                                            <input class="datetimepicker form-control form-control-sm {{ $errors->has('start_time') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="start_time" value="{{ old('id') == $setting->id ? old('start_time') : $setting->start_time }}">
                                             @if ($errors->has('start_time') && old('id') == $setting->id)
                                             <div class="text-danger small">{{ $errors->first('start_time') }}</div>
                                             @endif
                                         </td>
                                         <td class="text-left align-middle">
-                                            <input class="datetimepicker form-control form-control-sm {{ $errors->has('end_time') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="end_time" form="form-{{ $setting->id }}" value="{{ old('id') == $setting->id ? old('end_time') : $setting->end_time }}">
+                                            <input class="datetimepicker form-control form-control-sm {{ $errors->has('end_time') && old('id') == $setting->id ? 'is-invalid' : '' }}" type="text" name="end_time" value="{{ old('id') == $setting->id ? old('end_time') : $setting->end_time }}">
                                             @if ($errors->has('end_time') && old('id') == $setting->id)
                                             <div class="text-danger small">{{ $errors->first('end_time') }}</div>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
                                             <div class="icheck-success d-inline">
-                                                <input type="radio" name="is_on" value="1" id="is_on_yes_{{ $setting->id }}" form="form-{{ $setting->id }}" {{ $setting->is_on ? 'checked' : '' }}>
+                                                <input type="radio" name="is_on" value="1" id="is_on_yes_{{ $setting->id }}" {{ $setting->is_on == 1 ? 'checked' : '' }}>
                                                 <label for="is_on_yes_{{ $setting->id }}">是</label>
                                             </div>
                                             <div class="icheck-secondary d-inline ml-2">
-                                                <input type="radio" name="is_on" value="0" id="is_on_no_{{ $setting->id }}" form="form-{{ $setting->id }}" {{ !$setting->is_on ? 'checked' : '' }}>
+                                                <input type="radio" name="is_on" value="0" id="is_on_no_{{ $setting->id }}" {{ $setting->is_on == 0 ? 'checked' : '' }}>
                                                 <label for="is_on_no_{{ $setting->id }}">否</label>
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <form id="form-{{ $setting->id }}" action="{{ route('admin.totalDiscounts.update', $setting->id) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="id" value="{{ $setting->id }}">
-                                                <button type="button" class="btn btn-sm btn-primary modify-btn" data-id="{{ $setting->id }}">
-                                                    <i class="far fa-edit"></i>
-                                                </button>
-                                            </form>
+                                            @if(Auth::user()->role == 'develop' || in_array($menuCode.'M', explode(',',Auth::user()->permissions)))
+                                            <button type="button" class="btn btn-sm btn-primary modify-btn" data-id="{{ $setting->id }}">
+                                                <i class="far fa-edit"></i>
+                                            </button>
+                                            @endif
                                         </td>
                                         @if(Auth::user()->role == 'develop')
                                         <td class="text-center align-middle">
@@ -166,8 +177,10 @@
                                         </td>
                                         @endif
                                     </tr>
-                                    @endforeach
+                                </form>
+                                @endforeach
                                 </tbody>
+
                             </table>
                         </div>
                         <div class="card-footer bg-white">

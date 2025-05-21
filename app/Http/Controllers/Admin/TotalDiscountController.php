@@ -42,8 +42,8 @@ class TotalDiscountController extends Controller
 
         $settings = $this->totalDiscountService->get($list);
         $systemSetting = $this->systemSettingService->show(1);
-
-        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'settings','systemSetting']);
+        $systemSettingMenuCode = getMenuCode('systemSettings');
+        $compact = array_merge($compact, ['menuCode', 'lists', 'appends', 'settings','systemSetting','systemSettingMenuCode']);
         return view('admin.settings.totalDiscount', compact($compact));
     }
 
