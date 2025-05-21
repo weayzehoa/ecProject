@@ -77,7 +77,7 @@ class LoginController extends Controller
         }
 
         if(!empty($request->email)){
-            $admin = $this->adminService->get(null, [], [['email',$email]],[] , [], true);
+            $admin = $this->adminService->get(null, [], [['email',$request->email]],[] , [], true);
 
             if (!empty($admin)) {
                 $status = Password::broker('admins')->sendResetLink(
@@ -89,7 +89,7 @@ class LoginController extends Controller
                     ? back()->with('status', __($status))
                     : back()->withErrors(['email' => __($status)]);
             }else{
-                adminLog('重設密碼失敗', $email.' 找不到管理者');
+                adminLog('重設密碼失敗', $request->email.' 找不到管理者');
             }
         }
 
